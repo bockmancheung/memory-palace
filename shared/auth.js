@@ -135,7 +135,10 @@
 
   async function signUp(email, password){
     if (!client) throw new Error('Cloud sync is not configured yet.');
-    const { data, error } = await client.auth.signUp({ email, password });
+    const { data, error } = await client.auth.signUp({
+      email, password,
+      options: { emailRedirectTo: window.location.origin + window.location.pathname }
+    });
     if (error) throw error;
     return data;
   }
