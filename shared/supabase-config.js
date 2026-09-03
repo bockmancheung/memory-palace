@@ -15,6 +15,6 @@
    sign-in button explains that cloud sync isn't set up yet.
    ========================================================= */
 window.SUPABASE_CONFIG = {
-  url: 'YOUR-PROJECT-URL',
-  anonKey: 'YOUR-ANON-KEY'
+  url: 'https://vvzsqytucujepomgfzdg.supabase.co',
+  anonKey: 'sb_publishable_60XKVZF0OIHdf9mActRbhg_oPMuZ44v'
 };
