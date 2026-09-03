@@ -43,6 +43,7 @@
 
   let currentUser = null;
   let sessionReady;
+  let inRecovery = false;
   const listeners = [];
 
   function notify(){ listeners.forEach(fn => { try{ fn(currentUser); }catch(e){} }); }
@@ -82,6 +83,7 @@
     client.auth.onAuthStateChange((event, session) => {
       const wasSignedOut = !currentUser;
       currentUser = session ? session.user : null;
+      if (event === 'PASSWORD_RECOVERY') inRecovery = true;
       notify();
       if (wasSignedOut && currentUser) migrateLocalProgress();
     });
@@ -159,11 +161,19 @@
     });
     if (error) throw error;
   }
+  async function updatePassword(newPassword){
+    if (!client) throw new Error('Cloud sync is not configured yet.');
+    const { error } = await client.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+    inRecovery = false;
+    notify();
+  }
 
   window.AuthStorage = {
-    get, set, signUp, signIn, signOut, resetPassword,
+    get, set, signUp, signIn, signOut, resetPassword, updatePassword,
     isCloudEnabled: () => cloudEnabled,
     getUser: () => currentUser,
+    isRecovering: () => inRecovery,
     onChange: (fn) => { listeners.push(fn); },
     ready: () => ensureSession()
   };
@@ -233,6 +243,28 @@
 
     function renderPanel(){
       const user = window.AuthStorage.getUser();
+      if (window.AuthStorage.isRecovering()) {
+        panel.innerHTML =
+          '<h4>Set a new password</h4>' +
+          '<p>Choose a new password for ' + escapeHtml((user && user.email) || 'your account') + '.</p>' +
+          '<input type="password" id="as-newpw" placeholder="New password" autocomplete="new-password">' +
+          '<button class="as-primary" id="as-newpw-submit">Set password</button>' +
+          '<div class="as-msg" id="as-msg"></div>';
+        panel.querySelector('#as-newpw-submit').onclick = async () => {
+          const pw = panel.querySelector('#as-newpw').value;
+          const msg = panel.querySelector('#as-msg');
+          msg.className = 'as-msg'; msg.textContent = '';
+          if (!pw || pw.length < 6) { msg.className='as-msg as-err'; msg.textContent='Password must be at least 6 characters.'; return; }
+          try {
+            await window.AuthStorage.updatePassword(pw);
+            msg.className='as-msg as-ok'; msg.textContent="Password updated — you're signed in.";
+            setTimeout(renderPanel, 900);
+          } catch(e) {
+            msg.className='as-msg as-err'; msg.textContent=(e && e.message) || 'Could not update password.';
+          }
+        };
+        return;
+      }
       if (user) {
         panel.innerHTML =
           '<div class="as-signedin-row"><h4>Signed in</h4>' +
@@ -313,8 +345,24 @@
       if (!wrap.contains(e.target)) panel.classList.remove('as-open');
     });
 
-    window.AuthStorage.onChange(() => { renderPill(); if (panel.classList.contains('as-open')) renderPanel(); });
+    function openAndRenderIfRecovering(){
+      if (window.AuthStorage.isRecovering()) {
+        panel.classList.add('as-open');
+        renderPanel();
+        return true;
+      }
+      return false;
+    }
+
+    window.AuthStorage.onChange(() => {
+      renderPill();
+      if (!openAndRenderIfRecovering() && panel.classList.contains('as-open')) renderPanel();
+    });
     renderPill();
+    // Covers the case where the recovery link's auth event fired before this
+    // widget finished mounting (it's processed as soon as the Supabase client
+    // loads, which can be earlier than DOMContentLoaded).
+    openAndRenderIfRecovering();
   }
 
   if (document.readyState === 'loading') {
