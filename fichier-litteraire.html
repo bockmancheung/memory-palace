@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichier Littéraire — Francophone Authors</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap');
+
+:root{
+  --bg-0:#101d17;
+  --bg-1:#16261f;
+  --bg-2:#1e332a;
+  --card:#dccd9c;
+  --card-alt:#e6dab3;
+  --ink:#2a2013;
+  --ink-soft:#4a3d29;
+  --gold:#b8933e;
+  --gold-bright:#d9b567;
+  --burgundy:#7a2130;
+  --burgundy-bright:#9c3245;
+  --pine:#2f4a3d;
+  --pine-bright:#3d6350;
+  --cream:#ede6d3;
+  --cream-dim:#b9b092;
+  --shadow:rgba(0,0,0,.45);
+  --rule:rgba(42,32,19,.28);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, #21382d 0%, transparent 60%),
+    repeating-linear-gradient(115deg, rgba(0,0,0,.05) 0px, rgba(0,0,0,.05) 1px, transparent 1px, transparent 3px),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'EB Garamond', serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:760px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header / drawer label ---------- */
+.header{
+  display:flex;justify-content:center;padding:10px 0 6px;
+}
+.plate{
+  position:relative;
+  background:linear-gradient(180deg,#c9a24e,#9c7a30);
+  border:1px solid #6f5620;
+  border-radius:3px;
+  padding:14px 34px 12px;
+  box-shadow:0 6px 16px var(--shadow), inset 0 1px 0 rgba(255,255,255,.25);
+  text-align:center;
+}
+.plate::before,.plate::after,.plate .screw-tl,.plate .screw-br{
+  content:"";position:absolute;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #4a3a17, #1c1608);
+}
+.plate::before{top:5px;left:6px;}
+.plate::after{bottom:5px;right:6px;}
+.plate h1{
+  margin:0;font-family:'Playfair Display',serif;font-weight:900;
+  font-size:1.5rem;letter-spacing:.03em;color:#231b0c;text-shadow:0 1px 0 rgba(255,255,255,.2);
+}
+.plate .subtitle{
+  margin:4px 0 0;font-family:'Special Elite',monospace;font-size:.62rem;
+  letter-spacing:.12em;color:#3a2c10;text-transform:uppercase;
+}
+
+/* ---------- Ribbon progress ---------- */
+.ribbon-wrap{margin:16px auto 6px;max-width:520px;padding:0 4px;}
+.ribbon-track{
+  position:relative;height:22px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#0c1712,#182920);
+  border:1px solid rgba(0,0,0,.4);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.5);
+}
+.ribbon-fill{
+  height:100%;width:0%;
+  background:linear-gradient(180deg,var(--burgundy-bright),var(--burgundy));
+  transition:width .5s ease;
+  position:relative;
+}
+.ribbon-fill::after{
+  content:"";position:absolute;right:-1px;top:0;bottom:0;width:2px;
+  background:rgba(255,255,255,.25);
+}
+.ribbon-label{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Special Elite',monospace;font-size:.66rem;letter-spacing:.05em;
+  color:var(--cream);text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:4px;margin:18px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:110px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(184,147,62,.25);border-bottom:none;
+  border-radius:6px 6px 0 0;
+  padding:9px 10px 8px;cursor:pointer;
+  font-family:'Playfair Display',serif;font-weight:600;font-size:.92rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Special Elite',monospace;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:1px;}
+.tab.active{
+  background:var(--card);color:var(--ink);top:0;
+  border-color:var(--gold);box-shadow:0 -3px 8px rgba(0,0,0,.25);
+}
+.tab.active small{color:var(--ink-soft);opacity:.8;}
+.tab:not(.active):hover{background:#25392f;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(184,147,62,.2);border-radius:0 8px 8px 8px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-family:'Special Elite',monospace;font-size:.72rem;letter-spacing:.06em;
+  color:var(--gold-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Flash card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border-radius:4px;
+  background:
+    linear-gradient(90deg, transparent 0 34px, rgba(122,33,48,.35) 34px 35px, transparent 35px 100%),
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(42,32,19,.08) 27px 28px),
+    linear-gradient(160deg,var(--card-alt),var(--card) 70%);
+  border:1px solid #a98f5a;
+  box-shadow:0 14px 30px var(--shadow), inset 0 0 0 6px rgba(255,255,255,.08);
+  padding:20px 20px 16px 44px;
+  display:flex;flex-direction:column;
+  color:var(--ink);
+}
+.card-face.back{transform:rotateY(180deg);}
+.card-id{
+  position:absolute;top:10px;right:14px;font-family:'Special Elite',monospace;
+  font-size:.64rem;color:var(--ink-soft);opacity:.6;letter-spacing:.05em;
+}
+.era-stamp{
+  position:absolute;top:12px;left:-6px;width:44px;height:44px;border-radius:50%;
+  border:2px solid var(--burgundy);color:var(--burgundy);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  transform:rotate(-14deg);font-family:'Special Elite',monospace;font-size:.62rem;
+  font-weight:bold;line-height:1.05;opacity:.85;background:rgba(122,33,48,.05);
+}
+.card-front-body{margin-top:auto;margin-bottom:auto;text-align:center;}
+.card-name{font-family:'Playfair Display',serif;font-weight:700;font-size:1.5rem;line-height:1.15;margin:0 0 8px;}
+.card-years{font-family:'Special Elite',monospace;font-size:.78rem;color:var(--ink-soft);}
+.card-hint{margin-top:22px;text-align:center;font-family:'Special Elite',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);opacity:.65;}
+
+.back-row{margin-bottom:9px;}
+.back-label{font-family:'Special Elite',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--burgundy);display:block;margin-bottom:2px;}
+.back-value{font-size:.95rem;}
+.back-name{font-family:'Playfair Display',serif;font-weight:700;font-size:1.15rem;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+.back-profile{font-size:.95rem;line-height:1.42;margin:2px 0 8px;}
+.back-works{font-size:.88rem;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating stamps ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:20px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:5px;cursor:pointer;
+  font-family:'Playfair Display',serif;font-weight:700;font-size:.78rem;letter-spacing:.03em;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Special Elite',monospace;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;}
+.stamp em{font-style:normal;font-family:'Special Elite',monospace;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--burgundy-bright);color:var(--burgundy-bright);}
+.stamp.hard{border-color:var(--gold);color:var(--gold-bright);}
+.stamp.good{border-color:var(--pine-bright);color:#8fd4b6;}
+.stamp.easy{border-color:var(--gold-bright);background:rgba(217,181,103,.12);color:var(--gold-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(217,181,103,.12);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold-bright);margin-bottom:6px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:5px;border:1px solid rgba(184,147,62,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'EB Garamond',serif;font-size:1rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(184,147,62,.4);
+  background:transparent;color:var(--cream-dim);font-size:.74rem;cursor:pointer;
+  font-family:'Special Elite',monospace;letter-spacing:.02em;
+}
+.chip.active{background:var(--gold);border-color:var(--gold);color:#241c0c;font-weight:bold;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(184,147,62,.18);border-radius:5px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;color:var(--cream);}
+.row-years{font-family:'Special Elite',monospace;font-size:.68rem;color:var(--cream-dim);white-space:nowrap;}
+.row-meta{font-size:.76rem;color:var(--gold-bright);margin-top:2px;font-style:italic;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(184,147,62,.2);font-size:.88rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.row-works{margin-top:6px;font-style:italic;color:var(--gold-bright);font-size:.82rem;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--card);color:var(--ink);border-radius:5px;padding:14px 12px;text-align:center;
+  border:1px solid #a98f5a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Playfair Display',serif;font-weight:900;font-size:1.7rem;color:var(--burgundy);}
+.stat-label{font-family:'Special Elite',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-family:'Special Elite',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
+.settings-row input[type=number]{
+  width:100px;padding:8px 10px;border-radius:5px;border:1px solid rgba(184,147,62,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'EB Garamond',serif;
+}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:420px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:5px;border:1px solid var(--burgundy-bright);background:transparent;
+  color:var(--burgundy-bright);font-family:'Playfair Display',serif;font-weight:600;cursor:pointer;font-size:.88rem;
+}
+.btn:hover{background:rgba(122,33,48,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--burgundy-bright);border-radius:5px;
+  background:rgba(122,33,48,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.88rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--burgundy-bright);color:#fff;background:var(--burgundy);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.6;
+  max-width:520px;margin:22px auto 0;line-height:1.5;
+}
+
+@media (max-width:480px){
+  .plate h1{font-size:1.2rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.8rem;padding:8px 6px 7px;}
+  .card-face{padding:16px 14px 14px 38px;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.66rem;padding:9px 2px 7px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.ribbon-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="plate">
+      <h1>Fichier Littéraire</h1>
+      <p class="subtitle">Auteurs francophones · XIXᵉ–XXᵉ siècle</p>
+    </div>
+  </div>
+
+  <div class="ribbon-wrap">
+    <div class="ribbon-track">
+      <div class="ribbon-fill" id="ribbonFill"></div>
+      <div class="ribbon-label" id="ribbonLabel">0 / 20 nouvelles aujourd'hui</div>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Étudier<small>study</small></button>
+    <button class="tab" data-tab="browse">Parcourir<small>browse</small></button>
+    <button class="tab" data-tab="stats">Statistiques<small>stats</small></button>
+    <button class="tab" data-tab="settings">Réglages<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="session-bar">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="era-stamp" id="eraStamp">—</div>
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="card-front-body">
+                <p class="card-name" id="frontName">—</p>
+                <p class="card-years" id="frontYears">—</p>
+              </div>
+              <p class="card-hint">Tap to reveal · appuyez pour révéler</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <div class="card-id" id="cardIdBack"></div>
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Origin</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Style / movement</span>
+                <span class="back-value" id="backMovement">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+              <p class="back-works" id="backWorks">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Encore<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Difficile<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Bien<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Facile<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Le tiroir est fermé</h3>
+        <p>Nothing left to study right now. Come back tomorrow for new cards, or visit <strong>Parcourir</strong> to browse the full catalogue at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, country, or movement…">
+        <div class="chip-row" id="eraChips"></div>
+        <div class="chip-row" id="regionChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Authors learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in catalogue</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit</label>
+        <input type="number" id="dailyLimitInput" min="1" max="200">
+        <p class="settings-hint">How many brand-new authors are introduced per day, before you're reviewing already-seen ones. Raise this if 20/day feels light, or lower it if you'd like the catalogue to last even longer.</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total authors currently in the catalogue: <strong id="catalogSize">0</strong> — spanning France, Belgium, Switzerland, Québec, the Maghreb, sub-Saharan Africa, the Caribbean, the Middle East, and the Indian Ocean.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Author profiles are AI-generated summaries meant as a study aid — names, dates, and titles may occasionally be imprecise, so double-check anything you plan to cite. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — 19th & 20th century Francophone authors
+   r = region key, e = era ('19','20','19-20')
+   ========================================================= */
+const REGIONS = {
+  fr:"France", be:"Belgium", ch:"Switzerland", qc:"Québec / Acadia",
+  mg:"Maghreb", af:"Sub-Saharan Africa", car:"Caribbean",
+  po:"Middle East", oi:"Indian Ocean / Egypt"
+};
+const ERAS = { "19":"19th century", "20":"20th century", "19-20":"19th–20th (bridge)" };
+
+const AUTHORS = [
+{id:'a001',n:`Victor Hugo`,y:`1802–1885`,c:`France`,r:'fr',e:'19',m:`Romanticism`,p:`The towering figure of French Romanticism — poet, playwright, and exiled political conscience who turned fiction into a weapon for social justice.`,w:[`Les Misérables`,`Notre-Dame de Paris`]},
+{id:'a002',n:`Honoré de Balzac`,y:`1799–1850`,c:`France`,r:'fr',e:'19',m:`Realism`,p:`Built La Comédie humaine, a sprawling multi-novel portrait of French society obsessed with money, ambition, and social climbing.`,w:[`Le Père Goriot`,`Eugénie Grandet`]},
+{id:'a003',n:`Stendhal`,y:`1783–1842`,c:`France`,r:'fr',e:'19',m:`Psychological realism`,p:`Pen name of Henri Beyle; pioneered the modern psychological novel, tracing ambition and self-deception with cool, ironic precision.`,w:[`Le Rouge et le Noir`,`La Chartreuse de Parme`]},
+{id:'a004',n:`Gustave Flaubert`,y:`1821–1880`,c:`France`,r:'fr',e:'19',m:`Realism`,p:`A relentless stylistic perfectionist whose exacting prose set the standard for the modern novel; scandalized and then defined French realism.`,w:[`Madame Bovary`,`L'Éducation sentimentale`]},
+{id:'a005',n:`Émile Zola`,y:`1840–1902`,c:`France`,r:'fr',e:'19',m:`Naturalism`,p:`Leader of literary naturalism, chronicling industrial-era France through the twenty-novel Rougon-Macquart cycle; later famous for defending Dreyfus in "J'accuse".`,w:[`Germinal`,`L'Assommoir`]},
+{id:'a006',n:`Guy de Maupassant`,y:`1850–1893`,c:`France`,r:'fr',e:'19',m:`Realism / Naturalism`,p:`Flaubert's protégé and a master of the short story, prized for lean, devastating narrative economy.`,w:[`Boule de Suif`,`Bel-Ami`]},
+{id:'a007',n:`Alexandre Dumas`,y:`1802–1870`,c:`France`,r:'fr',e:'19',m:`Popular Romanticism`,p:`Prolific author of swashbuckling serialized adventure novels that made him one of the most widely read writers in the world.`,w:[`Les Trois Mousquetaires`,`Le Comte de Monte-Cristo`]},
+{id:'a008',n:`George Sand`,y:`1804–1876`,c:`France`,r:'fr',e:'19',m:`Romanticism`,p:`Pen name of Aurore Dupin; a hugely prolific and independent novelist who became a symbol of women's emancipation in 19th-century letters.`,w:[`Indiana`,`La Mare au diable`]},
+{id:'a009',n:`Charles Baudelaire`,y:`1821–1867`,c:`France`,r:'fr',e:'19',m:`Symbolism (precursor)`,p:`Poet of urban modernity and moral unease whose 1857 collection was prosecuted for obscenity yet reshaped all poetry after it.`,w:[`Les Fleurs du mal`,`Le Spleen de Paris`]},
+{id:'a010',n:`Arthur Rimbaud`,y:`1854–1891`,c:`France`,r:'fr',e:'19',m:`Symbolism`,p:`A teenage prodigy who reinvented poetic language and imagery, then abandoned writing entirely by age twenty.`,w:[`Une saison en enfer`,`Illuminations`]},
+{id:'a011',n:`Paul Verlaine`,y:`1844–1896`,c:`France`,r:'fr',e:'19',m:`Symbolism`,p:`Poet of musicality and impressionistic mood, famous for his turbulent relationship with Rimbaud and his ear for verse melody.`,w:[`Poèmes saturniens`,`Romances sans paroles`]},
+{id:'a012',n:`Stéphane Mallarmé`,y:`1842–1898`,c:`France`,r:'fr',e:'19',m:`Symbolism`,p:`A deliberately hermetic poet and theorist of language whose Tuesday literary salons shaped a generation of symbolist writers.`,w:[`L'Après-midi d'un faune`,`Un coup de dés`]},
+{id:'a013',n:`Alphonse Daudet`,y:`1840–1897`,c:`France`,r:'fr',e:'19',m:`Realism`,p:`Warm chronicler of Provence and gentle satirist of Parisian society, beloved for his light narrative touch.`,w:[`Lettres de mon moulin`,`Tartarin de Tarascon`]},
+{id:'a014',n:`Théophile Gautier`,y:`1811–1872`,c:`France`,r:'fr',e:'19',m:`Parnassianism / Art for art's sake`,p:`Theorist of "art for art's sake" and influential critic who bridged Romanticism and the more austere Parnassian school.`,w:[`Mademoiselle de Maupin`,`Le Capitaine Fracasse`]},
+{id:'a015',n:`Prosper Mérimée`,y:`1803–1870`,c:`France`,r:'fr',e:'19',m:`Realism`,p:`A restrained, precise short-story writer and historic-monuments inspector whose exotic tales inspired Bizet's opera.`,w:[`Carmen`,`Colomba`]},
+{id:'a016',n:`Jules Verne`,y:`1828–1905`,c:`France`,r:'fr',e:'19',m:`Adventure / proto science fiction`,p:`Pioneer of the scientific adventure novel whose "Voyages extraordinaires" anticipated space travel, submarines, and more.`,w:[`Vingt mille lieues sous les mers`,`Le Tour du monde en quatre-vingts jours`]},
+{id:'a017',n:`Alfred de Musset`,y:`1810–1857`,c:`France`,r:'fr',e:'19',m:`Romanticism`,p:`Poet and playwright of Romantic melancholy, remembered for his stormy affair with George Sand and his "mal du siècle" voice.`,w:[`Lorenzaccio`,`La Confession d'un enfant du siècle`]},
+{id:'a018',n:`Alfred de Vigny`,y:`1797–1863`,c:`France`,r:'fr',e:'19',m:`Romanticism`,p:`A stoic, disillusioned Romantic poet who treated art and duty as noble consolations for a hostile universe.`,w:[`Les Destinées`,`Chatterton`]},
+{id:'a019',n:`François-René de Chateaubriand`,y:`1768–1848`,c:`France`,r:'fr',e:'19',m:`Pre-Romanticism`,p:`Statesman and memoirist whose lush, melancholic prose is considered the seed of French Romanticism.`,w:[`René`,`Mémoires d'outre-tombe`]},
+{id:'a020',n:`Gérard de Nerval`,y:`1808–1855`,c:`France`,r:'fr',e:'19',m:`Romanticism / proto-Surrealism`,p:`Poet of dream and madness whose visionary, fragmented writing anticipated Symbolism and Surrealism alike.`,w:[`Aurélia`,`Les Chimères`]},
+{id:'a021',n:`Villiers de l'Isle-Adam`,y:`1838–1889`,c:`France`,r:'fr',e:'19',m:`Symbolism`,p:`A cruel, visionary storyteller whose philosophical fable about an artificial woman prefigures science fiction.`,w:[`Contes cruels`,`L'Ève future`]},
+{id:'a022',n:`Joris-Karl Huysmans`,y:`1848–1907`,c:`France`,r:'fr',e:'19',m:`Decadence`,p:`Emblem of fin-de-siècle Decadence, moving from Naturalism to a cult of aesthetic excess and eventually religious mysticism.`,w:[`À rebours`,`Là-bas`]},
+{id:'a023',n:`Anatole France`,y:`1844–1924`,c:`France`,r:'fr',e:'19',m:`Ironic classicism`,p:`Elegant, skeptical stylist and 1921 Nobel laureate, prominent in defending Alfred Dreyfus during the famous affair.`,w:[`Le Crime de Sylvestre Bonnard`,`L'Île des pingouins`]},
+{id:'a024',n:`Pierre Loti`,y:`1850–1923`,c:`France`,r:'fr',e:'19',m:`Exoticism`,p:`A naval officer turned novelist whose nostalgic, sensory travel fiction popularized literary exoticism.`,w:[`Pêcheur d'Islande`,`Madame Chrysanthème`]},
+{id:'a025',n:`Comtesse de Ségur`,y:`1799–1874`,c:`France`,r:'fr',e:'19',m:`Children's literature`,p:`Russian-born grandmother who essentially founded modern French children's literature with moralizing, vivid tales.`,w:[`Les Malheurs de Sophie`,`Les Petites Filles modèles`]},
+{id:'a026',n:`Barbey d'Aurevilly`,y:`1808–1889`,c:`France`,r:'fr',e:'19',m:`Dandyism / Catholic literature`,p:`A dandy and Catholic polemicist who wrote unsettling tales of sin and pride set in his native Normandy.`,w:[`Les Diaboliques`,`Le Chevalier des Touches`]},
+{id:'a027',n:`Leconte de Lisle`,y:`1818–1894`,c:`France`,r:'fr',e:'19',m:`Parnassianism`,p:`Born on Réunion island, he led the Parnassian school with impassive, sculpted verse drawn from ancient and exotic myth.`,w:[`Poèmes antiques`,`Poèmes barbares`]},
+{id:'a028',n:`Eugène Sue`,y:`1804–1857`,c:`France`,r:'fr',e:'19',m:`Serial fiction`,p:`Pioneer of the social serialized novel, whose sprawling tale of Parisian misery became a massive popular sensation.`,w:[`Les Mystères de Paris`,`Le Juif errant`]},
+{id:'a029',n:`Marcel Proust`,y:`1871–1922`,c:`France`,r:'fr',e:'20',m:`Modernism`,p:`Explored involuntary memory and high-society Paris across a single monumental novel-cycle about time, love, and loss.`,w:[`À la recherche du temps perdu`]},
+{id:'a030',n:`André Gide`,y:`1869–1951`,c:`France`,r:'fr',e:'20',m:`Modernism`,p:`A restless moralist probing sincerity, desire, and freedom; awarded the Nobel Prize in 1947.`,w:[`Les Faux-Monnayeurs`,`L'Immoraliste`]},
+{id:'a031',n:`Colette`,y:`1873–1954`,c:`France`,r:'fr',e:'20',m:`Sensualist prose`,p:`A stylist of sensation and the body who became the first woman given a French state funeral for a writer.`,w:[`Le Blé en herbe`,`Sido`]},
+{id:'a032',n:`Jean-Paul Sartre`,y:`1905–1980`,c:`France`,r:'fr',e:'20',m:`Existentialism`,p:`Philosopher-novelist who led postwar Existentialism; famously declined the Nobel Prize in 1964.`,w:[`La Nausée`,`Huis clos`]},
+{id:'a033',n:`Simone de Beauvoir`,y:`1908–1986`,c:`France`,r:'fr',e:'20',m:`Existentialism / feminism`,p:`Existentialist philosopher whose landmark study of women's condition became a founding text of modern feminism.`,w:[`Le Deuxième Sexe`,`Mémoires d'une jeune fille rangée`]},
+{id:'a034',n:`Antoine de Saint-Exupéry`,y:`1900–1944`,c:`France`,r:'fr',e:'20',m:`Aviation literature`,p:`Pilot-writer who vanished on a wartime reconnaissance flight; his tale of a stranded aviator's encounter with a child endures worldwide.`,w:[`Le Petit Prince`,`Vol de nuit`]},
+{id:'a035',n:`Louis-Ferdinand Céline`,y:`1894–1961`,c:`France`,r:'fr',e:'20',m:`Vernacular modernism`,p:`Revolutionized novelistic syntax with raw, spoken-language prose; a brilliant and deeply controversial stylist.`,w:[`Voyage au bout de la nuit`]},
+{id:'a036',n:`André Malraux`,y:`1901–1976`,c:`France`,r:'fr',e:'20',m:`Engaged fiction`,p:`Adventurer, later Minister of Culture, whose novels turned revolutionary history into existential drama.`,w:[`La Condition humaine`]},
+{id:'a037',n:`François Mauriac`,y:`1885–1970`,c:`France`,r:'fr',e:'20',m:`Catholic novel`,p:`Nobel laureate (1952) who examined sin, guilt, and provincial bourgeois life through a Catholic moral lens.`,w:[`Thérèse Desqueyroux`]},
+{id:'a038',n:`Jean Cocteau`,y:`1889–1963`,c:`France`,r:'fr',e:'20',m:`Avant-garde`,p:`A dazzlingly versatile artist moving between poetry, theatre, film, and drawing with equal flair.`,w:[`Les Enfants terribles`,`La Belle et la Bête`]},
+{id:'a039',n:`Guillaume Apollinaire`,y:`1880–1918`,c:`France`,r:'fr',e:'20',m:`Avant-garde`,p:`A hinge figure between Symbolism and modernity who coined the word "surrealism" shortly before his death.`,w:[`Alcools`,`Calligrammes`]},
+{id:'a040',n:`André Breton`,y:`1896–1966`,c:`France`,r:'fr',e:'20',m:`Surrealism`,p:`Founder and chief theorist of Surrealism, championing the unconscious and chance as sources of art.`,w:[`Nadja`,`Manifeste du surréalisme`]},
+{id:'a041',n:`Paul Éluard`,y:`1895–1952`,c:`France`,r:'fr',e:'20',m:`Surrealism`,p:`Poet of love and wartime Resistance, moving from Surrealist circles toward committed political poetry.`,w:[`Capitale de la douleur`,`Liberté`]},
+{id:'a042',n:`Louis Aragon`,y:`1897–1982`,c:`France`,r:'fr',e:'20',m:`Surrealism / engaged literature`,p:`Surrealism co-founder turned Communist poet-novelist, known for blending fact and invention in his later prose.`,w:[`Aurélien`,`Le Paysan de Paris`]},
+{id:'a043',n:`Raymond Queneau`,y:`1903–1976`,c:`France`,r:'fr',e:'20',m:`Oulipo`,p:`Co-founder of the Oulipo group, playing with slang, math, and constrained forms to reinvent what prose could do.`,w:[`Zazie dans le métro`,`Exercices de style`]},
+{id:'a044',n:`Boris Vian`,y:`1920–1959`,c:`France`,r:'fr',e:'20',m:`Avant-garde / jazz culture`,p:`Jazzman, novelist, and inventive wordsmith at the heart of postwar Saint-Germain-des-Prés bohemia.`,w:[`L'Écume des jours`]},
+{id:'a045',n:`Marguerite Duras`,y:`1914–1996`,c:`France`,r:'fr',e:'20',m:`Nouveau Roman`,p:`Born in French Indochina, she wrote elliptical, desire-charged prose that reshaped both literature and film.`,w:[`L'Amant`,`Hiroshima mon amour`]},
+{id:'a046',n:`Nathalie Sarraute`,y:`1900–1999`,c:`France`,r:'fr',e:'20',m:`Nouveau Roman`,p:`Theorist and practitioner of the Nouveau Roman, mapping the subtle psychic undercurrents she called "tropisms".`,w:[`Tropismes`,`Enfance`]},
+{id:'a047',n:`Alain Robbe-Grillet`,y:`1922–2008`,c:`France`,r:'fr',e:'20',m:`Nouveau Roman`,p:`Leading figure of the Nouveau Roman, favoring flat, objective description over traditional psychology.`,w:[`La Jalousie`]},
+{id:'a048',n:`Georges Perec`,y:`1936–1982`,c:`France`,r:'fr',e:'20',m:`Oulipo`,p:`Oulipo member and virtuoso of formal constraint, famous for a novel written entirely without the letter "e".`,w:[`La Vie mode d'emploi`,`La Disparition`]},
+{id:'a049',n:`Michel Tournier`,y:`1924–2016`,c:`France`,r:'fr',e:'20',m:`Mythic reinvention`,p:`Reworked classic myths — Robinson Crusoe, the Erl-King — in poised, classical prose with philosophical undertones.`,w:[`Vendredi ou les limbes du Pacifique`]},
+{id:'a050',n:`Romain Gary`,y:`1914–1980`,c:`France`,r:'fr',e:'20',m:`Engaged fiction`,p:`The only writer to win the Prix Goncourt twice — once under his own name, once as "Émile Ajar".`,w:[`La Vie devant soi`,`Les Racines du ciel`]},
+{id:'a051',n:`Marguerite Yourcenar`,y:`1903–1987`,c:`France / Belgium`,r:'fr',e:'20',m:`Historical fiction`,p:`Born in Brussels, she became the first woman elected to the Académie française, in 1980.`,w:[`Mémoires d'Hadrien`]},
+{id:'a052',n:`Jean Giono`,y:`1895–1970`,c:`France`,r:'fr',e:'20',m:`Provençal regionalism`,p:`Lyrical chronicler of Provence and rural life, and a committed pacifist across two world wars.`,w:[`Le Hussard sur le toit`,`Un roi sans divertissement`]},
+{id:'a053',n:`Julien Gracq`,y:`1910–2007`,c:`France`,r:'fr',e:'20',m:`Poetic prose`,p:`A dreamlike, atmospheric prose stylist who famously refused the 1951 Prix Goncourt.`,w:[`Le Rivage des Syrtes`]},
+{id:'a054',n:`Françoise Sagan`,y:`1935–2004`,c:`France`,r:'fr',e:'20',m:`Novel of manners`,p:`Became a literary sensation at eighteen with a cool, disenchanted portrait of youthful high society.`,w:[`Bonjour tristesse`]},
+{id:'a055',n:`René Char`,y:`1907–1988`,c:`France`,r:'fr',e:'20',m:`Resistance poetry`,p:`A Resistance fighter turned poet, allied briefly with the Surrealists before forging a dense, aphoristic voice of his own.`,w:[`Fureur et mystère`]},
+{id:'a056',n:`Jacques Prévert`,y:`1900–1977`,c:`France`,r:'fr',e:'20',m:`Popular poetry`,p:`A screenwriter and hugely beloved poet of everyday life, tenderness, and gentle irreverence.`,w:[`Paroles`]},
+{id:'a057',n:`Eugène Ionesco`,y:`1909–1994`,c:`France`,r:'fr',e:'20',m:`Theatre of the Absurd`,p:`Romanian-born co-founder of the Theatre of the Absurd, staging language's collapse into comic, unsettling nonsense.`,w:[`La Cantatrice chauve`,`Rhinocéros`]},
+{id:'a058',n:`Samuel Beckett`,y:`1906–1989`,c:`France (Ireland-born)`,r:'fr',e:'20',m:`Theatre of the Absurd`,p:`Irish writer settled in Paris who composed much of his starkly minimal, Nobel-winning work directly in French.`,w:[`En attendant Godot`]},
+{id:'a059',n:`Georges Simenon`,y:`1903–1989`,c:`Belgium`,r:'be',e:'20',m:`Detective fiction`,p:`Astonishingly prolific Belgian creator of Inspector Maigret, and a keen psychological observer of ordinary crime.`,w:[`the Maigret series`,`La Neige était sale`]},
+{id:'a060',n:`Maurice Maeterlinck`,y:`1862–1949`,c:`Belgium`,r:'be',e:'19-20',m:`Symbolism`,p:`Belgian Symbolist playwright of mood and mystery, awarded the Nobel Prize in Literature in 1911.`,w:[`Pelléas et Mélisande`,`L'Oiseau bleu`]},
+{id:'a061',n:`Émile Verhaeren`,y:`1855–1916`,c:`Belgium`,r:'be',e:'19-20',m:`Symbolism / Unanimism`,p:`Belgian poet who turned the modern industrial city and its restless energy into a subject for verse.`,w:[`Les Villes tentaculaires`]},
+{id:'a062',n:`Charles De Coster`,y:`1827–1879`,c:`Belgium`,r:'be',e:'19',m:`Epic legend`,p:`Considered the founder of modern Belgian francophone literature with his epic Flemish folk-hero tale.`,w:[`La Légende d'Ulenspiegel`]},
+{id:'a063',n:`Henri Michaux`,y:`1899–1984`,c:`Belgium`,r:'be',e:'20',m:`Inward exploration`,p:`Poet and painter of interior voyages — imaginary lands, altered states, and restless self-exploration.`,w:[`Voyage en Grande Garabagne`,`Plume`]},
+{id:'a064',n:`Suzanne Lilar`,y:`1901–1992`,c:`Belgium`,r:'be',e:'20',m:`Essay / novel`,p:`Belgian essayist and novelist known for probing reflections on love, the couple, and moral philosophy.`,w:[`Le Couple`]},
+{id:'a065',n:`Franz Hellens`,y:`1881–1972`,c:`Belgium`,r:'be',e:'20',m:`Fantastic literature`,p:`A central figure of Belgian fantastic fiction and an influential editor of literary reviews.`,w:[`Mélusine`]},
+{id:'a066',n:`Benjamin Constant`,y:`1767–1830`,c:`Switzerland`,r:'ch',e:'19',m:`Analytical novel`,p:`Born in Lausanne; a liberal political thinker whose short, incisive novel dissected the psychology of a failing love affair.`,w:[`Adolphe`]},
+{id:'a067',n:`Germaine de Staël`,y:`1766–1817`,c:`Switzerland`,r:'ch',e:'19',m:`Pre-Romanticism`,p:`Salon hostess and theorist exiled by Napoleon, whose writing bridged French and German Romantic thought.`,w:[`De l'Allemagne`,`Corinne`]},
+{id:'a068',n:`Charles-Ferdinand Ramuz`,y:`1878–1947`,c:`Switzerland`,r:'ch',e:'20',m:`Alpine regionalism`,p:`Chronicled the peasant world of the Swiss Vaud region in a stark, almost biblical prose style.`,w:[`La Grande Peur dans la montagne`]},
+{id:'a069',n:`Blaise Cendrars`,y:`1887–1961`,c:`Switzerland`,r:'ch',e:'20',m:`Avant-garde`,p:`Swiss-born poet-adventurer at the heart of Parisian modernism, close to the Cubist painters of his day.`,w:[`La Prose du Transsibérien`]},
+{id:'a070',n:`Nicolas Bouvier`,y:`1929–1998`,c:`Switzerland`,r:'ch',e:'20',m:`Travel literature`,p:`A contemplative travel writer whose account of a slow overland journey to Asia became a genre classic.`,w:[`L'Usage du monde`]},
+{id:'a071',n:`Émile Nelligan`,y:`1879–1941`,c:`Québec`,r:'qc',e:'19-20',m:`Symbolism`,p:`A precocious Symbolist poet silenced by mental illness at twenty; a near-mythic figure in Québec letters.`,w:[`Le Vaisseau d'or`]},
+{id:'a072',n:`Louis Hémon`,y:`1880–1913`,c:`Québec (France-born)`,r:'qc',e:'20',m:`Rural realism`,p:`A French writer who died in Québec, leaving behind the foundational novel of French-Canadian rural identity.`,w:[`Maria Chapdelaine`]},
+{id:'a073',n:`Gabrielle Roy`,y:`1909–1983`,c:`Québec`,r:'qc',e:'20',m:`Urban realism`,p:`A Manitoba-born novelist who captured working-class Montreal life with clear-eyed compassion.`,w:[`Bonheur d'occasion`]},
+{id:'a074',n:`Anne Hébert`,y:`1916–2000`,c:`Québec`,r:'qc',e:'20',m:`Poetic novel`,p:`A major voice in Québec letters known for dark, sensual, tightly wound poetry and fiction.`,w:[`Kamouraska`]},
+{id:'a075',n:`Michel Tremblay`,y:`b. 1942`,c:`Québec`,r:'qc',e:'20',m:`Vernacular theatre`,p:`Playwright who brought working-class Montreal "joual" speech to the stage, transforming Québec theatre.`,w:[`Les Belles-Sœurs`]},
+{id:'a076',n:`Réjean Ducharme`,y:`1941–2017`,c:`Québec`,r:'qc',e:'20',m:`Inventive language`,p:`A reclusive novelist celebrated for dazzling, playful inventiveness with the French language.`,w:[`L'Avalée des avalés`]},
+{id:'a077',n:`Marie-Claire Blais`,y:`1939–2021`,c:`Québec`,r:'qc',e:'20',m:`Novel`,p:`A literary prodigy from her teens, she probed family violence and social hardship with unflinching intensity.`,w:[`Une saison dans la vie d'Emmanuel`]},
+{id:'a078',n:`Hubert Aquin`,y:`1929–1977`,c:`Québec`,r:'qc',e:'20',m:`Novel of national crisis`,p:`Novelist of Québec's identity crisis and an ardent, restless voice for independence.`,w:[`Prochain épisode`]},
+{id:'a079',n:`Gaston Miron`,y:`1928–1996`,c:`Québec`,r:'qc',e:'20',m:`National poetry`,p:`Poet-publisher whose work became the rallying voice of Québec's national self-affirmation.`,w:[`L'Homme rapaillé`]},
+{id:'a080',n:`Antonine Maillet`,y:`b. 1929`,c:`Acadia`,r:'qc',e:'20',m:`Acadian novel`,p:`First writer outside Europe to win the Prix Goncourt (1979), giving literary voice to Acadian history and speech.`,w:[`Pélagie-la-Charrette`]},
+{id:'a081',n:`Yves Thériault`,y:`1915–1983`,c:`Québec`,r:'qc',e:'20',m:`Novel`,p:`A prolific storyteller who explored Indigenous and rural cultures across dozens of novels.`,w:[`Agaguk`]},
+{id:'a082',n:`Albert Camus`,y:`1913–1960`,c:`Algeria (Maghreb)`,r:'mg',e:'20',m:`Absurdism`,p:`Born to a poor pied-noir family in Algeria, he became the philosopher-novelist of the Absurd and won the Nobel Prize in 1957.`,w:[`L'Étranger`,`La Peste`]},
+{id:'a083',n:`Kateb Yacine`,y:`1929–1989`,c:`Algeria`,r:'mg',e:'20',m:`Engaged fiction / theatre`,p:`A major Algerian writer whose fractured, ambitious novel mixes French with the rhythms of dialectal Arabic.`,w:[`Nedjma`]},
+{id:'a084',n:`Mouloud Feraoun`,y:`1913–1962`,c:`Algeria`,r:'mg',e:'20',m:`Realism`,p:`A Kabyle schoolteacher-novelist, assassinated by the OAS, who portrayed traditional Berber village life with quiet dignity.`,w:[`Le Fils du pauvre`]},
+{id:'a085',n:`Mohammed Dib`,y:`1920–2003`,c:`Algeria`,r:'mg',e:'20',m:`Novel / poetry`,p:`One of the founding voices of Algerian francophone literature, moving fluidly between realism and later, more poetic modes.`,w:[`La Grande Maison`]},
+{id:'a086',n:`Assia Djebar`,y:`1936–2015`,c:`Algeria`,r:'mg',e:'20',m:`Feminist novel`,p:`First Maghrebi writer elected to the Académie française (2005), weaving memory and women's history into her fiction.`,w:[`L'Amour, la fantasia`]},
+{id:'a087',n:`Rachid Boudjedra`,y:`b. 1941`,c:`Algeria`,r:'mg',e:'20',m:`Provocative fiction`,p:`A bilingual Algerian writer known for a deliberately provocative, politically charged style.`,w:[`La Répudiation`]},
+{id:'a088',n:`Driss Chraïbi`,y:`1926–2007`,c:`Morocco`,r:'mg',e:'20',m:`Critical realism`,p:`A Moroccan novelist whose sharp critique of patriarchal family structures scandalized readers on publication.`,w:[`Le Passé simple`]},
+{id:'a089',n:`Tahar Ben Jelloun`,y:`b. 1944`,c:`Morocco`,r:'mg',e:'20',m:`Novel / poetry`,p:`The first Maghrebi author to win the Prix Goncourt (1987), blending poetic and narrative traditions.`,w:[`La Nuit sacrée`]},
+{id:'a090',n:`Abdelkébir Khatibi`,y:`1938–2009`,c:`Morocco`,r:'mg',e:'20',m:`Essay / novel`,p:`A Moroccan thinker of the "bi-langue," writing at the crossing point of Arabic and French identity.`,w:[`La Mémoire tatouée`]},
+{id:'a091',n:`Albert Memmi`,y:`1920–2020`,c:`Tunisia`,r:'mg',e:'20',m:`Essay`,p:`A Tunisian Jewish writer and theorist whose portrait of colonizer and colonized became a foundational postcolonial text.`,w:[`Portrait du colonisé`]},
+{id:'a092',n:`Abdelwahab Meddeb`,y:`1946–2014`,c:`Tunisia`,r:'mg',e:'20',m:`Essay / poetry`,p:`A Tunisian essayist and poet devoted to dialogue between the Islamic world and the West.`,w:[`La Maladie de l'islam`]},
+{id:'a093',n:`Malek Haddad`,y:`1927–1978`,c:`Algeria`,r:'mg',e:'20',m:`Poetry / novel`,p:`An Algerian writer torn by his decision to stop writing in French after independence, calling it "exile" from Arabic.`,w:[`Le Quai aux fleurs ne répond plus`]},
+{id:'a094',n:`Nabile Farès`,y:`1940–2016`,c:`Algeria`,r:'mg',e:'20',m:`Novel`,p:`An Algerian novelist whose poetic, fragmented fiction explored Berber identity and postcolonial memory.`,w:[`Le Champ des oliviers`]},
+{id:'a095',n:`Léopold Sédar Senghor`,y:`1906–2001`,c:`Senegal`,r:'af',e:'20',m:`Négritude`,p:`Poet and Senegal's first president, co-founder of the Négritude movement celebrating Black identity and culture.`,w:[`Chants d'ombre`]},
+{id:'a096',n:`Birago Diop`,y:`1906–1989`,c:`Senegal`,r:'af',e:'20',m:`Oral tale tradition`,p:`A Senegalese storyteller who transposed West African oral tale traditions into elegant written French.`,w:[`Les Contes d'Amadou Koumba`]},
+{id:'a097',n:`Cheikh Hamidou Kane`,y:`b. 1928`,c:`Senegal`,r:'af',e:'20',m:`Initiatory novel`,p:`Senegalese author of a philosophical coming-of-age novel about the tension between Islamic tradition and Western schooling.`,w:[`L'Aventure ambiguë`]},
+{id:'a098',n:`Mariama Bâ`,y:`1929–1981`,c:`Senegal`,r:'af',e:'20',m:`Feminist novel`,p:`Senegalese writer whose epistolary novel against polygamy became a landmark of African women's writing.`,w:[`Une si longue lettre`]},
+{id:'a099',n:`Ousmane Sembène`,y:`1923–2007`,c:`Senegal`,r:'af',e:'20',m:`Engaged fiction / film`,p:`Novelist and filmmaker who gave voice to workers and the decolonization struggle across both mediums.`,w:[`Les Bouts de bois de Dieu`]},
+{id:'a100',n:`Aminata Sow Fall`,y:`b. 1941`,c:`Senegal`,r:'af',e:'20',m:`Social satire`,p:`Widely considered the first published woman novelist of Black francophone Africa, known for sharp social satire.`,w:[`La Grève des Bàttu`]},
+{id:'a101',n:`Camara Laye`,y:`1928–1980`,c:`Guinea`,r:'af',e:'20',m:`Autobiographical novel`,p:`Guinean writer celebrated for his tender, nostalgic evocation of an African childhood.`,w:[`L'Enfant noir`]},
+{id:'a102',n:`Ahmadou Kourouma`,y:`1927–2003`,c:`Côte d'Ivoire`,r:'af',e:'20',m:`Novel`,p:`Ivorian novelist who forged a hybrid French infused with Malinké rhythms and oral storytelling patterns.`,w:[`Les Soleils des indépendances`]},
+{id:'a103',n:`Bernard Dadié`,y:`1916–2019`,c:`Côte d'Ivoire`,r:'af',e:'20',m:`Tale / theatre`,p:`A founding figure of Ivorian literature, working across folktale, theatre, and travel writing.`,w:[`Climbié`]},
+{id:'a104',n:`Sony Labou Tansi`,y:`1947–1995`,c:`Congo`,r:'af',e:'20',m:`Baroque satire`,p:`Congolese novelist known for baroque, satirical prose skewering postcolonial dictatorship and power.`,w:[`La Vie et demie`]},
+{id:'a105',n:`Henri Lopes`,y:`1937–2023`,c:`Congo`,r:'af',e:'20',m:`Novel`,p:`Congolese novelist and diplomat exploring mixed heritage and postcolonial identity with wry humor.`,w:[`Le Pleurer-rire`]},
+{id:'a106',n:`Tierno Monénembo`,y:`b. 1947`,c:`Guinea`,r:'af',e:'20',m:`Novel`,p:`Exiled Guinean novelist and winner of the Prix Renaudot (2008) for his historical fiction.`,w:[`Le Roi de Kahel`]},
+{id:'a107',n:`Ferdinand Oyono`,y:`1929–2010`,c:`Cameroon`,r:'af',e:'20',m:`Colonial satire`,p:`Cameroonian writer whose sharp, satirical novel exposed the absurdities of the colonial system from a houseboy's viewpoint.`,w:[`Une vie de boy`]},
+{id:'a108',n:`Mongo Beti`,y:`1932–2001`,c:`Cameroon`,r:'af',e:'20',m:`Engaged fiction`,p:`A fierce critic of both colonialism and post-independence corruption in Cameroon, in sharply political novels.`,w:[`Le Pauvre Christ de Bomba`]},
+{id:'a109',n:`Yambo Ouologuem`,y:`1940–2017`,c:`Mali`,r:'af',e:'20',m:`Novel`,p:`Malian writer and first African to win the Prix Renaudot (1968), for a controversial, unsparing historical novel.`,w:[`Le Devoir de violence`]},
+{id:'a110',n:`Aimé Césaire`,y:`1913–2008`,c:`Martinique`,r:'car',e:'20',m:`Négritude`,p:`Martinican poet and statesman, co-founder with Senghor of the Négritude movement in 1930s Paris.`,w:[`Cahier d'un retour au pays natal`]},
+{id:'a111',n:`Édouard Glissant`,y:`1928–2011`,c:`Martinique`,r:'car',e:'20',m:`Antillanité / Tout-monde`,p:`Martinican thinker of "Relation" and the interconnected "Tout-monde," a major voice in Caribbean and postcolonial theory.`,w:[`Le Discours antillais`]},
+{id:'a112',n:`Patrick Chamoiseau`,y:`b. 1953`,c:`Martinique`,r:'car',e:'20',m:`Créolité`,p:`Martinican novelist and co-founder of the Créolité movement; won the Prix Goncourt in 1992.`,w:[`Texaco`]},
+{id:'a113',n:`Raphaël Confiant`,y:`b. 1951`,c:`Martinique`,r:'car',e:'20',m:`Créolité`,p:`Martinican novelist and Créolité co-manifesto author who also writes extensively in Creole.`,w:[`Le Nègre et l'Amiral`]},
+{id:'a114',n:`Maryse Condé`,y:`1934–2024`,c:`Guadeloupe`,r:'car',e:'20',m:`Historical novel`,p:`Guadeloupean novelist whose sweeping historical fiction traced slavery and the African diaspora across continents.`,w:[`Ségou`,`Moi, Tituba sorcière`]},
+{id:'a115',n:`Simone Schwarz-Bart`,y:`b. 1938`,c:`Guadeloupe`,r:'car',e:'20',m:`Novel`,p:`Guadeloupean writer known for a poetic, deeply felt novel of Antillean women's memory and endurance.`,w:[`Pluie et vent sur Télumée Miracle`]},
+{id:'a116',n:`Jacques Roumain`,y:`1907–1944`,c:`Haiti`,r:'car',e:'20',m:`Peasant realism`,p:`Haitian writer and activist who founded a realist tradition centered on the island's rural peasantry.`,w:[`Gouverneurs de la rosée`]},
+{id:'a117',n:`Jacques Stephen Alexis`,y:`1922–1961`,c:`Haiti`,r:'car',e:'20',m:`Marvelous realism`,p:`Haitian novelist and theorist of "marvelous realism," assassinated under the Duvalier regime.`,w:[`Compère Général Soleil`]},
+{id:'a118',n:`René Depestre`,y:`b. 1926`,c:`Haiti`,r:'car',e:'20',m:`Poetry / novel`,p:`Exiled Haitian poet whose work moves between eroticism, political engagement, and Caribbean myth.`,w:[`Hadriana dans tous mes rêves`]},
+{id:'a119',n:`Marie Vieux-Chauvet`,y:`1916–1973`,c:`Haiti`,r:'car',e:'20',m:`Novel`,p:`Haitian novelist whose unflinching trilogy denounced the violence of the Duvalier dictatorship.`,w:[`Amour, colère et folie`]},
+{id:'a120',n:`Dany Laferrière`,y:`b. 1953`,c:`Haiti / Québec`,r:'car',e:'20',m:`Novel`,p:`Haitian-Québécois novelist elected to the Académie française in 2013, known for wit and autobiographical fiction.`,w:[`Comment faire l'amour avec un nègre sans se fatiguer`]},
+{id:'a121',n:`Saint-John Perse`,y:`1887–1975`,c:`Guadeloupe`,r:'car',e:'20',m:`Poetry`,p:`Pen name of Alexis Leger; a diplomat-poet born in Guadeloupe who won the Nobel Prize in Literature in 1960.`,w:[`Éloges`,`Anabase`]},
+{id:'a122',n:`Amin Maalouf`,y:`b. 1949`,c:`Lebanon`,r:'po',e:'20',m:`Historical novel`,p:`Lebanese-born novelist settled in France, exploring crossed identities and the entangled history of East and West.`,w:[`Léon l'Africain`,`Les Identités meurtrières`]},
+{id:'a123',n:`Georges Schehadé`,y:`1905–1989`,c:`Lebanon`,r:'po',e:'20',m:`Poetic theatre`,p:`Lebanese poet and playwright whose dreamlike theatre won admiration from André Breton himself.`,w:[`Histoire de Vasco`]},
+{id:'a124',n:`Andrée Chedid`,y:`1920–2011`,c:`Egypt / Lebanon`,r:'po',e:'20',m:`Poetry / novel`,p:`Born in Cairo to a Lebanese family, she wrote luminous poetry and fiction devoted to peace and memory across generations.`,w:[`Le Sixième Jour`]},
+{id:'a125',n:`Vénus Khoury-Ghata`,y:`b. 1937`,c:`Lebanon`,r:'po',e:'20',m:`Poetry`,p:`Lebanese-born poet and novelist long settled in France, blending Middle Eastern imagery with French verse.`,w:[`Les Mille et Unième Nuit`]},
+{id:'a126',n:`Jean-Joseph Rabearivelo`,y:`1901–1937`,c:`Madagascar`,r:'oi',e:'20',m:`Poetry`,p:`Widely regarded as the first great modern Malagasy poet writing in French, his life ended in suicide at thirty-five.`,w:[`Traduit de la nuit`]},
+{id:'a127',n:`Albert Cossery`,y:`1913–2008`,c:`Egypt`,r:'oi',e:'20',m:`Novel`,p:`Egyptian-born novelist who lived most of his life in a single Paris hotel room, championing idle defiance against power.`,w:[`Mendiants et orgueilleux`]}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'francophone-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{date:null,newDone:0},
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{dailyLimit:20}
+  };
+}
+
+function mergeDefaults(parsed){
+  return Object.assign(defaultState(), parsed, {
+    srs: parsed.srs || {},
+    daily: Object.assign({date:null,newDone:0}, parsed.daily||{}),
+    streak: Object.assign({lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0}, parsed.streak||{}),
+    settings: Object.assign({dailyLimit:20}, parsed.settings||{})
+  });
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){
+  return addDays(dateStr,-1);
+}
+
+/* =========================================================
+   SESSION / SRS ENGINE
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+
+function ensureDailyReset(){
+  const t = todayStr();
+  if(state.daily.date !== t){
+    state.daily.date = t;
+    state.daily.newDone = 0;
+  }
+}
+
+function buildQueue(){
+  ensureDailyReset();
+  const today = todayStr();
+  const dueReviews = AUTHORS.filter(a=>{
+    const s = state.srs[a.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit - state.daily.newDone);
+  const newCandidates = AUTHORS.filter(a=>!state.srs[a.id]);
+  // stable-ish shuffle so new cards vary a little between sessions
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(a=>combined.push({authorId:a.id,isNew:false}));
+  newToAdd.forEach(a=>combined.push({authorId:a.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)){
+      state.streak.current += 1;
+    } else {
+      state.streak.current = 1;
+    }
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(authorId){
+  const s = state.srs[authorId] || {ease:2.5, interval:0, reps:0};
+  const previews = {};
+  previews.again = 'soon';
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1;
+  else if(s.reps===1) goodInt = 6;
+  else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const authorId = currentItem.authorId;
+  const wasNew = currentItem.isNew && !state.srs[authorId];
+  let s = state.srs[authorId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0;
+    s.interval = 0;
+    s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1;
+      else if(s.reps===1) s.interval = 6;
+      else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1;
+    s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[authorId] = s;
+  if(wasNew) state.daily.newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderRibbon();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+const authorsById = {};
+AUTHORS.forEach(a=>authorsById[a.id]=a);
+
+function renderRibbon(){
+  ensureDailyReset();
+  const limit = state.settings.dailyLimit;
+  const done = Math.min(state.daily.newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('ribbonFill').style.width = pct+'%';
+  document.getElementById('ribbonLabel').textContent = done+' / '+limit+" nouvelles aujourd'hui";
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const a = authorsById[currentItem.authorId];
+
+  document.getElementById('frontName').textContent = a.n;
+  document.getElementById('frontYears').textContent = a.y;
+  document.getElementById('eraStamp').textContent = a.e==='19-20' ? '19e–20e' : (a.e==='19' ? '19e s.' : '20e s.');
+  document.getElementById('cardIdFront').textContent = a.id.replace('a','N° ');
+  document.getElementById('cardIdBack').textContent = a.id.replace('a','N° ');
+
+  document.getElementById('backName').textContent = a.n;
+  document.getElementById('backOrigin').textContent = a.c;
+  document.getElementById('backMovement').textContent = a.m;
+  document.getElementById('backProfile').textContent = a.p;
+  document.getElementById('backWorks').textContent = a.w.join(' · ');
+
+  const previews = previewIntervals(a.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const today = todayStr();
+  const dueCount = AUTHORS.filter(a=>{
+    const s = state.srs[a.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).length;
+  const remainingNew = Math.max(0, state.settings.dailyLimit - state.daily.newDone);
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+Math.min(state.settings.dailyLimit,state.daily.newDone+newLeftInQueue)+'/'+state.settings.dailyLimit+' today)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+queue.filter(q=>!q.isNew).length;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseEra = 'all';
+let browseRegion = 'all';
+
+function initBrowseChips(){
+  const eraWrap = document.getElementById('eraChips');
+  const eraOptions = [['all','All eras'],['19','19th c.'],['20','20th c.'],['19-20','Bridge']];
+  eraOptions.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.dataset.era = key;
+    btn.addEventListener('click', ()=>{
+      browseEra = key;
+      document.querySelectorAll('#eraChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderAuthorList();
+    });
+    eraWrap.appendChild(btn);
+  });
+
+  const regionWrap = document.getElementById('regionChips');
+  const regionOptions = [['all','All regions']].concat(Object.entries(REGIONS));
+  regionOptions.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.dataset.region = key;
+    btn.addEventListener('click', ()=>{
+      browseRegion = key;
+      document.querySelectorAll('#regionChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderAuthorList();
+    });
+    regionWrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderAuthorList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = AUTHORS.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseEra!=='all') list = list.filter(a=>a.e===browseEra);
+  if(browseRegion!=='all') list = list.filter(a=>a.r===browseRegion);
+  if(query){
+    list = list.filter(a=> normalize(a.n).includes(query) || normalize(a.c).includes(query) || normalize(a.m).includes(query));
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No authors match that search.</div>';
+    return;
+  }
+  list.forEach(a=>{
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+a.n+'</span>'+
+        '<span class="row-years">'+a.y+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+a.c+' · '+a.m+'</div>'+
+      '<div class="row-detail">'+a.p+'<div class="row-works">'+a.w.join(' · ')+'</div></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = AUTHORS.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = AUTHORS.length;
+  const input = document.getElementById('dailyLimitInput');
+  input.max = AUTHORS.length;
+  input.value = state.settings.dailyLimit;
+  input.addEventListener('change', ()=>{
+    let v = parseInt(input.value,10);
+    if(isNaN(v) || v<1) v = 1;
+    if(v>AUTHORS.length) v = AUTHORS.length;
+    input.value = v;
+    state.settings.dailyLimit = v;
+    saveState();
+    queue = buildQueue();
+    renderRibbon();
+    renderCurrentCard();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue();
+    renderRibbon();
+    renderCurrentCard();
+    renderStats();
+    document.getElementById('dailyLimitInput').value = state.settings.dailyLimit;
+  });
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderAuthorList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){
+      e.preventDefault();
+      flipCard();
+      return;
+    }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset();
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderAuthorList);
+
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue();
+  renderRibbon();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

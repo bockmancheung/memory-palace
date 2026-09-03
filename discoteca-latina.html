@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discoteca Latina — Latin American Pop Stars</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap');
+
+:root{
+  --bg-0:#22102b;
+  --bg-1:#2d1638;
+  --bg-2:#3a1d47;
+  --paper:#fff1de;
+  --paper-alt:#ffe6c2;
+  --ink:#2a1533;
+  --ink-soft:#5c4160;
+  --coral:#ff6b5b;
+  --coral-bright:#ff8a73;
+  --teal:#1fa9a3;
+  --teal-bright:#3fd0c9;
+  --gold:#ffc93c;
+  --gold-bright:#ffe08a;
+  --pink:#ff5d8f;
+  --purple:#8a5cf6;
+  --cream:#fff3e0;
+  --cream-dim:#d8c3d9;
+  --shadow:rgba(10,0,15,.5);
+  --rule:rgba(42,21,51,.25);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, #45204f 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 90% 100%, #1a3a3d 0%, transparent 60%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Space Grotesk', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:760px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header / marquee ---------- */
+.header{display:flex;justify-content:center;padding:10px 0 6px;}
+.marquee{
+  position:relative;
+  background:linear-gradient(180deg,#3a1d47,#2a1533);
+  border:2px solid var(--gold);
+  border-radius:10px;
+  padding:16px 30px 14px;
+  text-align:center;
+  box-shadow:0 8px 24px var(--shadow), inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.marquee .bulbs{position:absolute;inset:-3px;border-radius:12px;pointer-events:none;}
+.marquee .bulbs span{
+  position:absolute;width:5px;height:5px;border-radius:50%;
+  background:var(--gold-bright);box-shadow:0 0 6px 1px var(--gold-bright);
+  animation:twinkle 2.4s ease-in-out infinite;
+}
+.marquee h1{
+  margin:0;font-family:'Bungee',cursive;font-weight:400;
+  font-size:1.5rem;letter-spacing:.02em;color:var(--gold-bright);
+  text-shadow:0 0 14px rgba(255,201,60,.5);
+}
+.marquee .subtitle{
+  margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-size:.72rem;
+  letter-spacing:.08em;color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+@keyframes twinkle{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+/* ---------- Cassette progress ---------- */
+.tape-wrap{margin:16px auto 6px;max-width:520px;padding:0 4px;display:flex;align-items:center;gap:10px;}
+.reel{
+  width:28px;height:28px;border-radius:50%;flex:none;
+  background:
+    radial-gradient(circle at 50% 50%, #0c0810 0 5px, transparent 5px),
+    repeating-conic-gradient(#0c0810 0deg 8deg, #241430 8deg 45deg);
+  border:2px solid #0c0810;
+  animation:spin 5s linear infinite;
+}
+.tape-track{
+  position:relative;flex:1;height:16px;border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,#140a19,#241430);
+  border:1px solid rgba(0,0,0,.5);box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.tape-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--coral),var(--pink));
+  transition:width .5s ease;
+}
+.tape-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:4px;margin:18px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:110px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(255,201,60,.25);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 10px 8px;cursor:pointer;
+  font-family:'Bungee',cursive;font-weight:400;font-size:.8rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Space Grotesk',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--paper);color:var(--ink);top:0;
+  border-color:var(--gold);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#432052;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(255,201,60,.2);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--gold-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Vinyl flash card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:340px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  border-radius:10px;display:flex;flex-direction:column;
+}
+.card-face.front{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 60%, rgba(0,0,0,.25), transparent 70%);
+}
+.disc{
+  --disc-tint:#ff6b5b;
+  width:250px;height:250px;border-radius:50%;position:relative;
+  background:
+    repeating-radial-gradient(circle at 50% 50%, #17121c 0px, #17121c 2px, #1f1926 2px, #1f1926 4px),
+    radial-gradient(circle at 50% 50%, transparent 58%, var(--disc-tint) 58% 62%, transparent 62%);
+  box-shadow:0 16px 34px var(--shadow), inset 0 0 30px rgba(0,0,0,.5);
+  animation:spin 16s linear infinite;
+}
+.disc::after{
+  content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:12px;height:12px;border-radius:50%;background:#0a0710;box-shadow:inset 0 0 3px rgba(0,0,0,.9);
+  z-index:2;
+}
+.disc-label-wrap{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44%;height:44%;
+}
+.disc-label{
+  width:100%;height:100%;border-radius:50%;
+  background:var(--gold);color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8px;animation:spin 16s linear infinite reverse;
+}
+.disc-label .flag{font-size:1.3rem;line-height:1;margin-bottom:3px;}
+.disc-label .name{font-family:'Bungee',cursive;font-size:.72rem;line-height:1.15;}
+.card-id{
+  position:absolute;top:10px;right:14px;font-size:.62rem;color:var(--cream-dim);
+  opacity:.55;letter-spacing:.05em;font-weight:600;
+}
+.card-hint{margin-top:16px;text-align:center;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.6;font-weight:600;}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+.disc{animation-name:spin-plain;}
+@keyframes spin-plain{to{transform:rotate(360deg);}}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:
+    linear-gradient(90deg, transparent 0 30px, rgba(255,107,91,.3) 30px 31px, transparent 31px 100%),
+    linear-gradient(160deg,var(--paper-alt),var(--paper) 70%);
+  border:1px solid #d9b878;
+  box-shadow:0 14px 30px var(--shadow), inset 0 0 0 6px rgba(255,255,255,.1);
+  padding:18px 18px 14px 40px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Bungee',cursive;font-weight:400;font-size:1.05rem;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:700;display:block;margin-bottom:2px;}
+.back-value{font-size:.92rem;font-weight:500;}
+.back-profile{font-size:.9rem;line-height:1.42;margin:2px 0 10px;}
+.back-tracklist{margin:0;padding-left:18px;font-size:.85rem;color:var(--ink-soft);}
+.back-tracklist li{margin-bottom:2px;}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:20px;cursor:pointer;
+  font-family:'Bungee',cursive;font-weight:400;font-size:.68rem;letter-spacing:.02em;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Space Grotesk',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Space Grotesk',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--coral-bright);color:var(--coral-bright);}
+.stamp.hard{border-color:var(--gold);color:var(--gold-bright);}
+.stamp.good{border-color:var(--teal-bright);color:var(--teal-bright);}
+.stamp.easy{border-color:var(--pink);background:rgba(255,93,143,.12);color:var(--pink);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(255,201,60,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Bungee',cursive;font-weight:400;font-size:1.05rem;color:var(--gold-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,201,60,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Space Grotesk',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(255,201,60,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--gold);border-color:var(--gold);color:#2a1533;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(255,201,60,.18);border-radius:8px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Bungee',cursive;font-weight:400;font-size:.9rem;color:var(--cream);}
+.row-years{font-size:.66rem;color:var(--cream-dim);white-space:nowrap;font-weight:600;}
+.row-meta{font-size:.76rem;color:var(--gold-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,201,60,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.row-works{margin:6px 0 0;padding-left:18px;color:var(--gold-bright);font-size:.8rem;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--paper);color:var(--ink);border-radius:8px;padding:14px 12px;text-align:center;
+  border:1px solid #d9b878;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Bungee',cursive;font-weight:400;font-size:1.6rem;color:var(--coral);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:100px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,201,60,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Space Grotesk',sans-serif;
+}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:420px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:8px;border:1px solid var(--coral-bright);background:transparent;
+  color:var(--coral-bright);font-family:'Bungee',cursive;font-weight:400;cursor:pointer;font-size:.78rem;
+}
+.btn:hover{background:rgba(255,107,91,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--coral-bright);border-radius:8px;
+  background:rgba(255,107,91,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--coral-bright);color:#fff;background:var(--coral);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:520px;margin:22px auto 0;line-height:1.5;
+}
+
+@media (max-width:480px){
+  .marquee h1{font-size:1.15rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.68rem;padding:8px 6px 7px;}
+  .card-face.back{padding:14px 14px 12px 34px;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.6rem;padding:9px 2px 7px;}
+  .disc{width:200px;height:200px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.tape-fill,.disc,.disc-label,.reel,.marquee .bulbs span{animation:none !important;transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="marquee">
+      <div class="bulbs" id="bulbs"></div>
+      <h1>Discoteca Latina</h1>
+      <p class="subtitle">Pop stars &amp; sus estilos musicales · América Latina</p>
+    </div>
+  </div>
+
+  <div class="tape-wrap">
+    <div class="reel"></div>
+    <div class="tape-track">
+      <div class="tape-fill" id="tapeFill"></div>
+    </div>
+    <div class="reel"></div>
+  </div>
+  <div class="tape-label" id="tapeLabel">0 / 20 nuevos hoy</div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Escuchar<small>study</small></button>
+    <button class="tab" data-tab="browse">Explorar<small>browse</small></button>
+    <button class="tab" data-tab="stats">Estadísticas<small>stats</small></button>
+    <button class="tab" data-tab="settings">Ajustes<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="session-bar">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="disc" id="disc">
+                <div class="disc-label-wrap">
+                  <div class="disc-label">
+                    <span class="flag" id="frontFlag">—</span>
+                    <span class="name" id="frontName">—</span>
+                  </div>
+                </div>
+              </div>
+              <p class="card-hint">Tap to reveal · appuyez pour révéler</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <div class="card-id" id="cardIdBack"></div>
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Country</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Active</span>
+                <span class="back-value" id="backYears">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Music style</span>
+                <span class="back-value" id="backGenre">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+              <span class="back-label">Tracklist</span>
+              <ol class="back-tracklist" id="backWorks"></ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Otra vez<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Difícil<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Bien<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Fácil<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Se acabó la rocola por hoy</h3>
+        <p>Nothing left to study right now. Come back tomorrow for new cards, or visit <strong>Explorar</strong> to browse the full catalogue at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, country, or style…">
+        <div class="chip-row" id="genreChips"></div>
+        <div class="chip-row" id="regionChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Artists learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in catalogue</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit</label>
+        <input type="number" id="dailyLimitInput" min="1" max="200">
+        <p class="settings-hint">How many brand-new artists are introduced per day, before you're reviewing already-seen ones. Raise or lower it to match how fast you want to work through the catalogue.</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total artists currently in the catalogue: <strong id="catalogSize">0</strong> — spanning reggaetón, salsa, bachata, cumbia, ranchera, rock en español, bossa nova, and more, from Puerto Rico to Argentina to Brazil.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Artist profiles are AI-generated summaries meant as a study aid — names, dates, and song titles may occasionally be imprecise, so double-check anything you plan to cite. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Latin American pop stars & their music styles
+   r = country key, gk = genre bucket key (for filtering), g = descriptive style label
+   ========================================================= */
+const REGIONS = {
+  pr:"Puerto Rico", co:"Colombia", mx:"México", ar:"Argentina", cu:"Cuba",
+  do:"Rep. Dominicana", br:"Brasil", ve:"Venezuela", pa:"Panamá",
+  cl:"Chile", us:"EE. UU. (herencia latina)", pe:"Perú", ec:"Ecuador"
+};
+const FLAGS = {
+  pr:"🇵🇷", co:"🇨🇴", mx:"🇲🇽", ar:"🇦🇷", cu:"🇨🇺", do:"🇩🇴",
+  br:"🇧🇷", ve:"🇻🇪", pa:"🇵🇦", cl:"🇨🇱", us:"🇺🇸", pe:"🇵🇪", ec:"🇪🇨"
+};
+const GENRES = {
+  reg:"Reggaetón", trap:"Trap Latino", salsa:"Salsa", bachata:"Bachata",
+  merengue:"Merengue", cumbia:"Cumbia / Vallenato", ranchera:"Ranchera / Mariachi",
+  regional:"Regional Mexicano", pop:"Latin Pop", rock:"Rock en Español",
+  nueva:"Nueva Canción", trova:"Nueva Trova", tango:"Tango",
+  bossa:"Bossa Nova / MPB", axe:"Axé", son:"Son Cubano", bolero:"Bolero"
+};
+const TINTS = {
+  reg:"#ff6b5b", trap:"#b3467c", salsa:"#1fa9a3", bachata:"#ff8a73",
+  merengue:"#ffc93c", cumbia:"#6fcf97", ranchera:"#e0a458", regional:"#c96a4e",
+  pop:"#ff5d8f", rock:"#8a5cf6", nueva:"#5b8c85", trova:"#4a7a8c",
+  tango:"#a63d40", bossa:"#4fb0a5", axe:"#f2994a", son:"#d4a017", bolero:"#c97b63"
+};
+
+const ARTISTS = [
+{id:'p001',n:`Daddy Yankee`,y:`b. 1977`,c:`Puerto Rico`,r:'pr',g:`Reggaetón`,gk:'reg',p:`"El Cangri" who took reggaetón worldwide with a genre-defining anthem about a gas station.`,w:[`Gasolina`,`Con Calma`]},
+{id:'p002',n:`Don Omar`,y:`b. 1978`,c:`Puerto Rico`,r:'pr',g:`Reggaetón`,gk:'reg',p:`One of reggaetón's biggest global voices, blending romantic melody with street swagger.`,w:[`Danza Kuduro`,`Dale Don Dale`]},
+{id:'p003',n:`Wisin & Yandel`,y:`active since 1998`,c:`Puerto Rico`,r:'pr',g:`Reggaetón`,gk:'reg',p:`The genre's most successful duo, credited with pushing reggaetón firmly into the pop mainstream.`,w:[`Rakata`,`Follow the Leader`]},
+{id:'p004',n:`Tego Calderón`,y:`b. 1972`,c:`Puerto Rico`,r:'pr',g:`Reggaetón / Dembow`,gk:'reg',p:`Brought Afro-Caribbean rhythm and sharp social commentary to reggaetón's foundational years.`,w:[`Guasa Guasa`]},
+{id:'p005',n:`Ivy Queen`,y:`b. 1972`,c:`Puerto Rico`,r:'pr',g:`Reggaetón`,gk:'reg',p:`"La Caballota," the first woman to break through in a male-dominated reggaetón scene.`,w:[`Quiero Bailar`]},
+{id:'p006',n:`Bad Bunny`,y:`b. 1994`,c:`Puerto Rico`,r:'pr',g:`Trap Latino / Reggaetón`,gk:'trap',p:`Puerto Rico's biggest musical export of the 2020s, blending trap, reggaetón, and genre-defying experimentation.`,w:[`Tití Me Preguntó`,`Un Verano Sin Ti`]},
+{id:'p007',n:`J Balvin`,y:`b. 1985`,c:`Colombia`,r:'co',g:`Reggaetón / Urbano`,gk:'reg',p:`Medellín-born hitmaker who helped push reggaetón onto global pop radio.`,w:[`Mi Gente`,`Ginza`]},
+{id:'p008',n:`Karol G`,y:`b. 1991`,c:`Colombia`,r:'co',g:`Urbano / Reggaetón`,gk:'reg',p:`One of the genre's leading women, known for candid, empowerment-driven urbano hits.`,w:[`Tusa`,`Provenza`]},
+{id:'p009',n:`Maluma`,y:`b. 1994`,c:`Colombia`,r:'co',g:`Reggaetón / Pop Urbano`,gk:'reg',p:`Medellín singer known for sleek, radio-friendly reggaetón-pop.`,w:[`Felices los 4`,`Hawái`]},
+{id:'p010',n:`Nicky Jam`,y:`b. 1981`,c:`Puerto Rico / USA`,r:'pr',g:`Reggaetón`,gk:'reg',p:`Early reggaetón pioneer who found a second global wave of fame after a mid-career reinvention.`,w:[`El Amante`,`X (Equis)`]},
+{id:'p011',n:`Ozuna`,y:`b. 1992`,c:`Puerto Rico`,r:'pr',g:`Urbano / Trap`,gk:'trap',p:`One of the most-streamed urbano artists of the late 2010s.`,w:[`Te Boté`,`Baila Baila Baila`]},
+{id:'p012',n:`Rauw Alejandro`,y:`b. 1993`,c:`Puerto Rico`,r:'pr',g:`Urbano / RKT`,gk:'reg',p:`Known for slick production blending reggaetón with Argentine RKT and 80s pop textures.`,w:[`Todo de Ti`]},
+{id:'p013',n:`Anuel AA`,y:`b. 1992`,c:`Puerto Rico`,r:'pr',g:`Trap Latino`,gk:'trap',p:`Central figure in bringing trap's dark, autotuned sound into Latin urban music.`,w:[`Ella Quiere Beber`]},
+{id:'p014',n:`El General`,y:`b. 1962`,c:`Panamá`,r:'pa',g:`Reggae en Español`,gk:'reg',p:`Panamanian pioneer whose Spanish-language reggae laid the groundwork for reggaetón itself.`,w:[`Pu Tun Tun`]},
+{id:'p015',n:`Vico C`,y:`b. 1971`,c:`Puerto Rico`,r:'pr',g:`Rap en Español`,gk:'reg',p:`Often called the "father of reggaetón" for fusing hip-hop with Puerto Rican rhythms in the 1980s.`,w:[`La Recta Final`]},
+{id:'p016',n:`Celia Cruz`,y:`1925–2003`,c:`Cuba`,r:'cu',g:`Salsa`,gk:'salsa',p:`The undisputed "Queen of Salsa," whose booming voice and cry of "¡Azúcar!" made her a global Cuban icon.`,w:[`La Vida Es Un Carnaval`]},
+{id:'p017',n:`Héctor Lavoe`,y:`1946–1993`,c:`Puerto Rico`,r:'pr',g:`Salsa`,gk:'salsa',p:`Puerto Rican icon whose emotive voice defined the golden age of New York salsa.`,w:[`El Cantante`]},
+{id:'p018',n:`Willie Colón`,y:`b. 1950`,c:`Puerto Rico (USA)`,r:'us',g:`Salsa`,gk:'salsa',p:`Nuyorican bandleader and trombonist central to the Fania Records salsa explosion of the 1970s.`,w:[`Che Ché Colé`]},
+{id:'p019',n:`Rubén Blades`,y:`b. 1948`,c:`Panamá`,r:'pa',g:`Salsa`,gk:'salsa',p:`Panamanian singer-lawyer whose socially conscious salsa lyrics elevated the genre's storytelling.`,w:[`Pedro Navaja`]},
+{id:'p020',n:`Marc Anthony`,y:`b. 1968`,c:`Puerto Rico (USA)`,r:'us',g:`Salsa / Pop`,gk:'salsa',p:`Nuyorican singer behind one of the best-selling salsa albums of all time, plus multiple pop crossovers.`,w:[`Vivir Mi Vida`]},
+{id:'p021',n:`Gilberto Santa Rosa`,y:`b. 1962`,c:`Puerto Rico`,r:'pr',g:`Salsa Romántica`,gk:'salsa',p:`"El Caballero de la Salsa," a leading voice of romantic salsa since the 1980s.`,w:[`Conteo Regresivo`]},
+{id:'p022',n:`Víctor Manuelle`,y:`b. 1972`,c:`Puerto Rico`,r:'pr',g:`Salsa Romántica`,gk:'salsa',p:`A top-selling salsa romántica vocalist known for smooth, radio-ready ballads.`,w:[`Se Me Rompe el Alma`]},
+{id:'p023',n:`Oscar D'León`,y:`b. 1943`,c:`Venezuela`,r:'ve',g:`Salsa`,gk:'salsa',p:`Venezuela's "Faraón de la Salsa," famed for his bass playing and charisma onstage.`,w:[`Llorarás`]},
+{id:'p024',n:`La India`,y:`b. 1969`,c:`Puerto Rico (USA)`,r:'us',g:`Salsa`,gk:'salsa',p:`Nuyorican vocalist who crossed from freestyle into salsa, becoming one of its leading women.`,w:[`Vivir Lo Nuestro`]},
+{id:'p025',n:`Juan Luis Guerra`,y:`b. 1957`,c:`Rep. Dominicana`,r:'do',g:`Bachata / Merengue`,gk:'bachata',p:`Dominican songwriter who elevated bachata and merengue with jazz-trained sophistication.`,w:[`Bachata Rosa`]},
+{id:'p026',n:`Romeo Santos`,y:`b. 1981`,c:`Rep. Dominicana (USA)`,r:'us',g:`Bachata`,gk:'bachata',p:`Bronx-born frontman of Aventura who took bachata to arenas worldwide as a solo star.`,w:[`Propuesta Indecente`]},
+{id:'p027',n:`Aventura`,y:`active 1994–2011`,c:`Rep. Dominicana (USA)`,r:'us',g:`Bachata`,gk:'bachata',p:`The group that modernized bachata for a new generation with R&B-inflected production.`,w:[`Obsesión`]},
+{id:'p028',n:`Antony Santos`,y:`b. 1967`,c:`Rep. Dominicana`,r:'do',g:`Bachata`,gk:'bachata',p:`A defining voice of 1990s bachata's tanda style.`,w:[`Voy Pa'llá`]},
+{id:'p029',n:`Prince Royce`,y:`b. 1989`,c:`Rep. Dominicana (USA)`,r:'us',g:`Bachata Pop`,gk:'bachata',p:`Bronx-born Dominican-American who brought bachata to English-language pop audiences.`,w:[`Stand By Me (bachata version)`]},
+{id:'p030',n:`Wilfrido Vargas`,y:`b. 1949`,c:`Rep. Dominicana`,r:'do',g:`Merengue`,gk:'merengue',p:`Bandleader whose fast, brassy merengue arrangements shaped the genre's golden era.`,w:[`El Baile del Perrito`]},
+{id:'p031',n:`Elvis Crespo`,y:`b. 1971`,c:`Rep. Dominicana`,r:'do',g:`Merengue`,gk:'merengue',p:`Scored one of merengue's biggest international crossover hits of the 1990s.`,w:[`Suavemente`]},
+{id:'p032',n:`Johnny Ventura`,y:`1940–2021`,c:`Rep. Dominicana`,r:'do',g:`Merengue`,gk:'merengue',p:`"El Caballo Mayor," credited with modernizing merengue for the pop era.`,w:[`El Trato`]},
+{id:'p033',n:`Milly Quezada`,y:`b. 1961`,c:`Rep. Dominicana (USA)`,r:'us',g:`Merengue`,gk:'merengue',p:`"La Reina del Merengue," a trailblazing woman fronting merengue's biggest bands since the 1980s.`,w:[`Cadillac`]},
+{id:'p034',n:`Carlos Vives`,y:`b. 1961`,c:`Colombia`,r:'co',g:`Vallenato / Pop`,gk:'cumbia',p:`Colombian actor-turned-singer who fused vallenato accordion music with rock and pop production.`,w:[`La Gota Fría`]},
+{id:'p035',n:`Diomedes Díaz`,y:`1957–2013`,c:`Colombia`,r:'co',g:`Vallenato`,gk:'cumbia',p:`One of vallenato's most beloved and prolific traditional voices.`,w:[`Tu Ausencia`]},
+{id:'p036',n:`Rafael Escalona`,y:`1927–2009`,c:`Colombia`,r:'co',g:`Vallenato`,gk:'cumbia',p:`One of vallenato's founding composers, mythologized in Gabriel García Márquez's writing.`,w:[`La Casa en el Aire`]},
+{id:'p037',n:`Celso Piña`,y:`1953–2019`,c:`México`,r:'mx',g:`Cumbia`,gk:'cumbia',p:`"El Rebelde del Acordeón," who fused Colombian cumbia with hip-hop and Mexican street sound.`,w:[`Cumbia Sobre el Río`]},
+{id:'p038',n:`Selena`,y:`1971–1995`,c:`USA (herencia mexicana)`,r:'us',g:`Tejano / Cumbia Pop`,gk:'cumbia',p:`"The Queen of Tejano Music," whose crossover stardom was cut short by her murder at 23.`,w:[`Como La Flor`,`Amor Prohibido`]},
+{id:'p039',n:`Los Ángeles Azules`,y:`active since 1976`,c:`México`,r:'mx',g:`Cumbia`,gk:'cumbia',p:`Family cumbia band that became an unlikely festival-headlining phenomenon decades into their career.`,w:[`Cómo Te Voy a Olvidar`]},
+{id:'p040',n:`Fonseca`,y:`b. 1976`,c:`Colombia`,r:'co',g:`Pop / Vallenato Fusion`,gk:'cumbia',p:`Colombian singer-songwriter blending vallenato roots with acoustic pop.`,w:[`Te Mando Flores`]},
+{id:'p041',n:`Vicente Fernández`,y:`1940–2021`,c:`México`,r:'mx',g:`Ranchera`,gk:'ranchera',p:`"El Rey" of ranchera, the definitive voice of mariachi-backed balladry for half a century.`,w:[`Volver, Volver`]},
+{id:'p042',n:`Juan Gabriel`,y:`1950–2016`,c:`México`,r:'mx',g:`Ranchera / Pop`,gk:'ranchera',p:`Beloved singer-songwriter whose enormous catalog spans ranchera, pop, and mariachi ballads.`,w:[`Querida`]},
+{id:'p043',n:`Pedro Infante`,y:`1917–1957`,c:`México`,r:'mx',g:`Ranchera`,gk:'ranchera',p:`Golden-age film and ranchera icon whose warm baritone remains a Mexican cultural touchstone.`,w:[`Amorcito Corazón`]},
+{id:'p044',n:`Alejandro Fernández`,y:`b. 1971`,c:`México`,r:'mx',g:`Ranchera / Pop`,gk:'ranchera',p:`Son of Vicente Fernández who bridged ranchera tradition with contemporary pop balladry.`,w:[`Se Me Olvidó Otra Vez`]},
+{id:'p045',n:`Lola Beltrán`,y:`1932–1996`,c:`México`,r:'mx',g:`Ranchera`,gk:'ranchera',p:`"Lola la Grande," one of ranchera's most powerful and celebrated female voices.`,w:[`Cucurrucucú Paloma`]},
+{id:'p046',n:`Chavela Vargas`,y:`1919–2012`,c:`México (nacida en Costa Rica)`,r:'mx',g:`Ranchera`,gk:'ranchera',p:`Costa Rican-born, Mexican by adoption; her stripped-down, defiant ranchera style influenced generations.`,w:[`Macorina`]},
+{id:'p047',n:`Ana Gabriel`,y:`b. 1955`,c:`México`,r:'mx',g:`Ranchera / Pop`,gk:'ranchera',p:`Powerful-voiced Mexican singer blending ranchera tradition with pop balladry.`,w:[`Simplemente Amigos`]},
+{id:'p048',n:`Los Tigres del Norte`,y:`active since 1968`,c:`México`,r:'mx',g:`Norteño / Corridos`,gk:'regional',p:`Norteño legends whose corridos chronicle immigration, injustice, and border life.`,w:[`Contrabando y Traición`]},
+{id:'p049',n:`Banda El Recodo`,y:`active since 1938`,c:`México`,r:'mx',g:`Banda Sinaloense`,gk:'regional',p:`The most enduring banda ensemble, central to Sinaloa's brass-driven regional sound.`,w:[`Personalidad`]},
+{id:'p050',n:`Jenni Rivera`,y:`1969–2012`,c:`USA (herencia mexicana)`,r:'us',g:`Banda / Regional Mexicano`,gk:'regional',p:`"La Diva de la Banda," a trailblazing woman in the male-dominated banda scene.`,w:[`Basta Ya`]},
+{id:'p051',n:`Christian Nodal`,y:`b. 1999`,c:`México`,r:'mx',g:`Regional Mexicano / Mariachi Pop`,gk:'regional',p:`Young star who brought mariachi-pop balladry back to the top of the charts.`,w:[`Adiós Amor`]},
+{id:'p052',n:`Peso Pluma`,y:`b. 1999`,c:`México`,r:'mx',g:`Corridos Tumbados`,gk:'regional',p:`Leading voice of the corridos tumbados wave, blending traditional corridos with trap.`,w:[`Ella Baila Sola`]},
+{id:'p053',n:`Grupo Firme`,y:`active since 2014`,c:`México`,r:'mx',g:`Regional Mexicano / Banda`,gk:'regional',p:`Breakout contemporary banda act blending traditional brass with a modern, viral social-media following.`,w:[`En Tu Perfume`]},
+{id:'p054',n:`Gloria Estefan`,y:`b. 1957`,c:`Cuba (USA)`,r:'us',g:`Latin Pop`,gk:'pop',p:`Miami Sound Machine's frontwoman, one of the first Latin artists to conquer English-language pop radio.`,w:[`Conga`,`Rhythm Is Gonna Get You`]},
+{id:'p055',n:`Ricky Martin`,y:`b. 1971`,c:`Puerto Rico`,r:'pr',g:`Latin Pop`,gk:'pop',p:`Former Menudo member whose 1999 crossover single triggered the "Latin explosion" in US pop.`,w:[`Livin' la Vida Loca`]},
+{id:'p056',n:`Shakira`,y:`b. 1977`,c:`Colombia`,r:'co',g:`Latin Pop / Rock`,gk:'pop',p:`Colombian singer-songwriter who fused rock, Middle Eastern, and Latin influences into global pop stardom.`,w:[`Waka Waka`,`Hips Don't Lie`]},
+{id:'p057',n:`Thalía`,y:`b. 1971`,c:`México`,r:'mx',g:`Latin Pop`,gk:'pop',p:`Telenovela star turned pop singer, one of the best-selling Latin pop artists of her generation.`,w:[`Amor a la Mexicana`]},
+{id:'p058',n:`Paulina Rubio`,y:`b. 1971`,c:`México`,r:'mx',g:`Latin Pop`,gk:'pop',p:`Former child star turned "La Chica Dorada" of 2000s Latin pop.`,w:[`Ni Una Sola Palabra`]},
+{id:'p059',n:`Luis Miguel`,y:`b. 1970`,c:`México`,r:'mx',g:`Latin Pop / Bolero`,gk:'pop',p:`"El Sol de México," equally famous for pop hits and definitive bolero standards albums.`,w:[`La Incondicional`]},
+{id:'p060',n:`Chayanne`,y:`b. 1968`,c:`Puerto Rico`,r:'pr',g:`Latin Pop`,gk:'pop',p:`Long-running Latin pop heartthrob known for danceable, romantic hits.`,w:[`Torero`]},
+{id:'p061',n:`CNCO`,y:`formed 2015`,c:`Multi-país`,r:'pr',g:`Latin Pop`,gk:'pop',p:`Boy band assembled on a televised competition, blending pop with light urbano touches.`,w:[`Reggaetón Lento`]},
+{id:'p062',n:`Camila`,y:`active since 2005`,c:`México`,r:'mx',g:`Latin Pop`,gk:'pop',p:`Acoustic-driven pop trio known for tender romantic ballads.`,w:[`Mientes`]},
+{id:'p063',n:`Reik`,y:`active since 2003`,c:`México`,r:'mx',g:`Latin Pop`,gk:'pop',p:`Long-running pop trio blending acoustic pop with occasional urbano collaborations.`,w:[`Ya Me Enteré`]},
+{id:'p064',n:`Gloria Trevi`,y:`b. 1968`,c:`México`,r:'mx',g:`Latin Pop`,gk:'pop',p:`Provocative, rebellious pop star who became one of Mexico's most influential and controversial 1990s icons.`,w:[`Pelo Suelto`]},
+{id:'p065',n:`Menudo`,y:`active since 1977`,c:`Puerto Rico`,r:'pr',g:`Latin Pop`,gk:'pop',p:`Revolving-lineup boy band that served as a launching pad for numerous Latin pop stars, including Ricky Martin.`,w:[`Súbete a Mi Moto`]},
+{id:'p066',n:`Sebastián Yatra`,y:`b. 1994`,c:`Colombia`,r:'co',g:`Pop / Urbano`,gk:'pop',p:`Colombian pop singer known for romantic crossover ballads and urbano collaborations.`,w:[`Traicionera`]},
+{id:'p067',n:`Kali Uchis`,y:`b. 1994`,c:`USA (herencia colombiana)`,r:'us',g:`R&B / Pop Fusion`,gk:'pop',p:`Colombian-American artist blending R&B, soul, and Spanish-language pop into a dreamy signature sound.`,w:[`Telepatía`]},
+{id:'p068',n:`Nathy Peluso`,y:`b. 1995`,c:`Argentina`,r:'ar',g:`Urbano / Pop Fusion`,gk:'pop',p:`Argentine-born artist known for genre-blending vocal theatrics across salsa, rap, and pop.`,w:[`Corashe`]},
+{id:'p069',n:`Gian Marco`,y:`b. 1970`,c:`Perú`,r:'pe',g:`Latin Pop / Balada`,gk:'pop',p:`Peru's leading singer-songwriter export, known for romantic pop ballads across Latin America.`,w:[`multiple romantic ballads`]},
+{id:'p070',n:`Myriam Hernández`,y:`b. 1965`,c:`Chile`,r:'cl',g:`Latin Pop / Balada`,gk:'pop',p:`Chile's leading romantic pop balladeer since the late 1980s.`,w:[`El Hombre Que Yo Amo`]},
+{id:'p071',n:`Franco De Vita`,y:`b. 1954`,c:`Venezuela`,r:'ve',g:`Latin Pop / Balada`,gk:'pop',p:`Venezuelan singer-songwriter behind some of the era's most enduring romantic ballads.`,w:[`Tu Cárcel`]},
+{id:'p072',n:`Soda Stereo`,y:`active 1982–1997`,c:`Argentina`,r:'ar',g:`Rock en Español`,gk:'rock',p:`Argentine trio led by Gustavo Cerati, the most influential rock band in Spanish-language history.`,w:[`De Música Ligera`]},
+{id:'p073',n:`Café Tacvba`,y:`active since 1989`,c:`México`,r:'mx',g:`Alt Rock / Fusion`,gk:'rock',p:`Genre-hopping Mexican band blending rock with ranchera, son, and electronica.`,w:[`Eres`]},
+{id:'p074',n:`Maná`,y:`active since 1986`,c:`México`,r:'mx',g:`Pop Rock`,gk:'rock',p:`Best-selling Latin rock band in history, known for reggae-tinged pop-rock anthems.`,w:[`Rayando el Sol`]},
+{id:'p075',n:`Los Fabulosos Cadillacs`,y:`active since 1984`,c:`Argentina`,r:'ar',g:`Ska / Rock`,gk:'rock',p:`Buenos Aires ska-rock band that fused Latin rhythms with punk and reggae energy.`,w:[`Matador`]},
+{id:'p076',n:`Molotov`,y:`active since 1995`,c:`México`,r:'mx',g:`Rap Rock`,gk:'rock',p:`Provocative rap-rock band known for bilingual lyrics mixing hip-hop with rock.`,w:[`Frijolero`]},
+{id:'p077',n:`Aterciopelados`,y:`active since 1990`,c:`Colombia`,r:'co',g:`Alt Rock`,gk:'rock',p:`Bogotá duo central to Colombia's 1990s alternative rock scene.`,w:[`Bolero Falaz`]},
+{id:'p078',n:`Fito Páez`,y:`b. 1963`,c:`Argentina`,r:'ar',g:`Rock / Singer-Songwriter`,gk:'rock',p:`Poetic Argentine rock songwriter whose landmark album is considered a genre classic.`,w:[`Mariposas Tecnicolor`]},
+{id:'p079',n:`Charly García`,y:`b. 1951`,c:`Argentina`,r:'ar',g:`Rock Argentino`,gk:'rock',p:`Founding father of Argentine rock, known for restless experimentation across decades.`,w:[`Los Dinosaurios`]},
+{id:'p080',n:`Julieta Venegas`,y:`b. 1970`,c:`México`,r:'mx',g:`Pop Rock`,gk:'rock',p:`Accordion-playing singer-songwriter central to 2000s Latin alternative pop.`,w:[`Me Voy`]},
+{id:'p081',n:`Mercedes Sosa`,y:`1935–2009`,c:`Argentina`,r:'ar',g:`Nueva Canción`,gk:'nueva',p:`"La Negra," the towering voice of Latin America's socially engaged nueva canción movement.`,w:[`Gracias a la Vida`]},
+{id:'p082',n:`Víctor Jara`,y:`1932–1973`,c:`Chile`,r:'cl',g:`Nueva Canción`,gk:'nueva',p:`Chilean singer-activist murdered during the 1973 coup, now a symbol of protest song.`,w:[`Te Recuerdo Amanda`]},
+{id:'p083',n:`Violeta Parra`,y:`1917–1967`,c:`Chile`,r:'cl',g:`Folk / Nueva Canción`,gk:'nueva',p:`Folklorist and songwriter who founded the nueva canción movement by collecting and reviving Chilean folk song.`,w:[`Gracias a la Vida`]},
+{id:'p084',n:`Silvio Rodríguez`,y:`b. 1946`,c:`Cuba`,r:'cu',g:`Nueva Trova`,gk:'trova',p:`Central figure of Cuba's nueva trova, blending poetic lyrics with gentle guitar melody.`,w:[`Ojalá`]},
+{id:'p085',n:`Pablo Milanés`,y:`1943–2022`,c:`Cuba`,r:'cu',g:`Nueva Trova`,gk:'trova',p:`Co-founder of nueva trova alongside Silvio Rodríguez, known for lyrical romanticism.`,w:[`Yolanda`]},
+{id:'p086',n:`Carlos Gardel`,y:`1890–1935`,c:`Argentina (nacido en Francia)`,r:'ar',g:`Tango`,gk:'tango',p:`The definitive voice of tango's golden age, mythologized across Latin America after his early death.`,w:[`Volver`]},
+{id:'p087',n:`Astor Piazzolla`,y:`1921–1992`,c:`Argentina`,r:'ar',g:`Nuevo Tango`,gk:'tango',p:`Revolutionized tango by fusing it with jazz and classical composition into "nuevo tango."`,w:[`Libertango`]},
+{id:'p088',n:`João Gilberto`,y:`1931–2019`,c:`Brasil`,r:'br',g:`Bossa Nova`,gk:'bossa',p:`Widely credited with inventing bossa nova's soft, syncopated guitar style.`,w:[`Chega de Saudade`]},
+{id:'p089',n:`Antônio Carlos Jobim`,y:`1927–1994`,c:`Brasil`,r:'br',g:`Bossa Nova`,gk:'bossa',p:`Composer of bossa nova's most enduring standards, often with lyricist Vinícius de Moraes.`,w:[`Garota de Ipanema`]},
+{id:'p090',n:`Caetano Veloso`,y:`b. 1942`,c:`Brasil`,r:'br',g:`MPB / Tropicália`,gk:'bossa',p:`Co-founder of the Tropicália movement, blending Brazilian tradition with 1960s pop experimentation.`,w:[`Alegria, Alegria`]},
+{id:'p091',n:`Gilberto Gil`,y:`b. 1942`,c:`Brasil`,r:'br',g:`MPB / Tropicália`,gk:'bossa',p:`Tropicália co-founder and former Brazilian Minister of Culture.`,w:[`Aquele Abraço`]},
+{id:'p092',n:`Gal Costa`,y:`1945–2022`,c:`Brasil`,r:'br',g:`MPB`,gk:'bossa',p:`Tropicália-era vocalist celebrated for her expressive, genre-crossing voice.`,w:[`Baby`]},
+{id:'p093',n:`Chico Buarque`,y:`b. 1944`,c:`Brasil`,r:'br',g:`MPB`,gk:'bossa',p:`Poetic Brazilian songwriter and novelist known for socially attuned lyrics under military censorship.`,w:[`Construção`]},
+{id:'p094',n:`Elis Regina`,y:`1945–1982`,c:`Brasil`,r:'br',g:`MPB`,gk:'bossa',p:`One of Brazil's most revered vocal interpreters, defining the MPB sound of the 1970s.`,w:[`Águas de Março`]},
+{id:'p095',n:`Anitta`,y:`b. 1993`,c:`Brasil`,r:'br',g:`Pop / Funk Carioca`,gk:'pop',p:`Brazil's biggest global pop export, blending funk carioca with reggaetón and English-language pop.`,w:[`Envolver`]},
+{id:'p096',n:`Ivete Sangalo`,y:`b. 1972`,c:`Brasil`,r:'br',g:`Axé`,gk:'axe',p:`One of axé music's most popular ambassadors from Bahia's Carnival scene.`,w:[`Festa`]},
+{id:'p097',n:`Daniela Mercury`,y:`b. 1965`,c:`Brasil`,r:'br',g:`Axé`,gk:'axe',p:`Pioneering axé star who helped bring Bahian Carnival music to national Brazilian fame.`,w:[`O Canto da Cidade`]},
+{id:'p098',n:`Los Van Van`,y:`active since 1969`,c:`Cuba`,r:'cu',g:`Timba`,gk:'son',p:`Cuba's most influential dance band, credited with founding the modern timba sound.`,w:[`Marilú`]},
+{id:'p099',n:`Buena Vista Social Club`,y:`formed 1996`,c:`Cuba`,r:'cu',g:`Son Cubano`,gk:'son',p:`Ensemble of veteran musicians whose 1997 album sparked a worldwide revival of traditional son cubano.`,w:[`Chan Chan`]},
+{id:'p100',n:`Compay Segundo`,y:`1907–2003`,c:`Cuba`,r:'cu',g:`Son Cubano`,gk:'son',p:`Buena Vista Social Club elder statesman whose deep voice and tres guitar defined classic son.`,w:[`Chan Chan`]},
+{id:'p101',n:`Gente de Zona`,y:`active since 1999`,c:`Cuba`,r:'cu',g:`Cubatón`,gk:'reg',p:`Cuban duo who fused reggaetón with Cuban rhythms into "cubatón," scoring a global hit alongside Marc Anthony.`,w:[`Bailando`]},
+{id:'p102',n:`Feid`,y:`b. 1991`,c:`Colombia`,r:'co',g:`Reggaetón / Urbano`,gk:'reg',p:`Medellín artist known for moody, melodic reggaetón beloved within the genre's inner circle.`,w:[`Feliz Cumpleaños Ferxxo`]},
+{id:'p103',n:`Manuel Turizo`,y:`b. 1999`,c:`Colombia`,r:'co',g:`Urbano`,gk:'reg',p:`Young Colombian star known for melodic reggaetón and cross-genre collaborations.`,w:[`La Bachata`]},
+{id:'p104',n:`Plan B`,y:`active since 2004`,c:`Puerto Rico`,r:'pr',g:`Reggaetón Romántico`,gk:'reg',p:`Puerto Rican duo known for blending reggaetón with R&B-flavored "reggaetón romántico."`,w:[`Es un Secreto`]},
+{id:'p105',n:`Zion & Lennox`,y:`active since 1998`,c:`Puerto Rico`,r:'pr',g:`Reggaetón Romántico`,gk:'reg',p:`Long-running duo credited with popularizing melodic "reggaetón romántico."`,w:[`Otra Vez`]},
+{id:'p106',n:`Duki`,y:`b. 1995`,c:`Argentina`,r:'ar',g:`Trap Argentino`,gk:'trap',p:`Central figure of the Argentine trap explosion of the late 2010s.`,w:[`Hello Cotto`]},
+{id:'p107',n:`Bizarrap`,y:`b. 1998`,c:`Argentina`,r:'ar',g:`Producer / Trap`,gk:'trap',p:`Producer whose viral "BZRP Music Sessions" freestyle format reshaped how Latin urban hits get released.`,w:[`Quevedo: Bzrp Music Sessions #52`]},
+{id:'p108',n:`María Becerra`,y:`b. 1999`,c:`Argentina`,r:'ar',g:`Pop Urbano`,gk:'reg',p:`One of the leading women in Argentina's pop-urbano wave.`,w:[`Además de Mí`]},
+{id:'p109',n:`Grupo Niche`,y:`active since 1978`,c:`Colombia`,r:'co',g:`Salsa`,gk:'salsa',p:`Cali-based orchestra central to establishing Colombia's own salsa tradition.`,w:[`Cali Pachanguero`]},
+{id:'p110',n:`José José`,y:`1948–2019`,c:`México`,r:'mx',g:`Bolero / Pop`,gk:'bolero',p:`"El Príncipe de la Canción," celebrated for his powerful, emotionally raw balladry.`,w:[`El Triste`]},
+{id:'p111',n:`Julio Jaramillo`,y:`1935–1978`,c:`Ecuador`,r:'ec',g:`Pasillo / Bolero`,gk:'bolero',p:`"El Ruiseñor de América," Ecuador's most beloved voice in pasillo and bolero balladry.`,w:[`Nuestro Juramento`]},
+{id:'p112',n:`José Feliciano`,y:`b. 1945`,c:`Puerto Rico`,r:'pr',g:`Pop / Bolero`,gk:'pop',p:`Blind virtuoso guitarist whose holiday classic became one of the most-played Christmas songs worldwide.`,w:[`Feliz Navidad`]}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'latinpop-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{date:null,newDone:0},
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{dailyLimit:20}
+  };
+}
+
+function mergeDefaults(parsed){
+  return Object.assign(defaultState(), parsed, {
+    srs: parsed.srs || {},
+    daily: Object.assign({date:null,newDone:0}, parsed.daily||{}),
+    streak: Object.assign({lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0}, parsed.streak||{}),
+    settings: Object.assign({dailyLimit:20}, parsed.settings||{})
+  });
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){
+  return addDays(dateStr,-1);
+}
+
+/* =========================================================
+   SESSION / SRS ENGINE
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+
+function ensureDailyReset(){
+  const t = todayStr();
+  if(state.daily.date !== t){
+    state.daily.date = t;
+    state.daily.newDone = 0;
+  }
+}
+
+function buildQueue(){
+  ensureDailyReset();
+  const today = todayStr();
+  const dueReviews = ARTISTS.filter(a=>{
+    const s = state.srs[a.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit - state.daily.newDone);
+  const newCandidates = ARTISTS.filter(a=>!state.srs[a.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(a=>combined.push({authorId:a.id,isNew:false}));
+  newToAdd.forEach(a=>combined.push({authorId:a.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)){
+      state.streak.current += 1;
+    } else {
+      state.streak.current = 1;
+    }
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(authorId){
+  const s = state.srs[authorId] || {ease:2.5, interval:0, reps:0};
+  const previews = {};
+  previews.again = 'soon';
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1;
+  else if(s.reps===1) goodInt = 6;
+  else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const authorId = currentItem.authorId;
+  const wasNew = currentItem.isNew && !state.srs[authorId];
+  let s = state.srs[authorId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0;
+    s.interval = 0;
+    s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1;
+      else if(s.reps===1) s.interval = 6;
+      else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1;
+    s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[authorId] = s;
+  if(wasNew) state.daily.newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderTape();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+const artistsById = {};
+ARTISTS.forEach(a=>artistsById[a.id]=a);
+
+function renderTape(){
+  ensureDailyReset();
+  const limit = state.settings.dailyLimit;
+  const done = Math.min(state.daily.newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('tapeFill').style.width = pct+'%';
+  document.getElementById('tapeLabel').textContent = done+' / '+limit+' nuevos hoy';
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const a = artistsById[currentItem.authorId];
+
+  document.getElementById('frontName').textContent = a.n;
+  document.getElementById('frontFlag').textContent = FLAGS[a.r] || '🎵';
+  document.getElementById('disc').style.setProperty('--disc-tint', TINTS[a.gk] || '#ff6b5b');
+  document.getElementById('cardIdFront').textContent = a.id.replace('p','N.º ');
+  document.getElementById('cardIdBack').textContent = a.id.replace('p','N.º ');
+
+  document.getElementById('backName').textContent = a.n;
+  document.getElementById('backOrigin').textContent = a.c;
+  document.getElementById('backYears').textContent = a.y;
+  document.getElementById('backGenre').textContent = a.g;
+  document.getElementById('backProfile').textContent = a.p;
+
+  const worksList = document.getElementById('backWorks');
+  worksList.innerHTML = '';
+  a.w.forEach(track=>{
+    const li = document.createElement('li');
+    li.textContent = track;
+    worksList.appendChild(li);
+  });
+
+  const previews = previewIntervals(a.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const today = todayStr();
+  const dueCount = ARTISTS.filter(a=>{
+    const s = state.srs[a.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).length;
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+Math.min(state.settings.dailyLimit,state.daily.newDone+newLeftInQueue)+'/'+state.settings.dailyLimit+' today)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+queue.filter(q=>!q.isNew).length;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseGenre = 'all';
+let browseRegion = 'all';
+
+function initBrowseChips(){
+  const genreWrap = document.getElementById('genreChips');
+  const genreOptions = [['all','All styles']].concat(Object.entries(GENRES));
+  genreOptions.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.dataset.genre = key;
+    btn.addEventListener('click', ()=>{
+      browseGenre = key;
+      document.querySelectorAll('#genreChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderAuthorList();
+    });
+    genreWrap.appendChild(btn);
+  });
+
+  const regionWrap = document.getElementById('regionChips');
+  const regionOptions = [['all','All countries']].concat(Object.entries(REGIONS));
+  regionOptions.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.dataset.region = key;
+    btn.addEventListener('click', ()=>{
+      browseRegion = key;
+      document.querySelectorAll('#regionChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderAuthorList();
+    });
+    regionWrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderAuthorList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = ARTISTS.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseGenre!=='all') list = list.filter(a=>a.gk===browseGenre);
+  if(browseRegion!=='all') list = list.filter(a=>a.r===browseRegion);
+  if(query){
+    list = list.filter(a=> normalize(a.n).includes(query) || normalize(a.c).includes(query) || normalize(a.g).includes(query));
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No artists match that search.</div>';
+    return;
+  }
+  list.forEach(a=>{
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    const worksHtml = a.w.map(t=>'<li>'+t+'</li>').join('');
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+FLAGS[a.r]+' '+a.n+'</span>'+
+        '<span class="row-years">'+a.y+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+a.c+' · '+a.g+'</div>'+
+      '<div class="row-detail">'+a.p+'<ol class="row-works">'+worksHtml+'</ol></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = ARTISTS.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = ARTISTS.length;
+  const input = document.getElementById('dailyLimitInput');
+  input.max = ARTISTS.length;
+  input.value = state.settings.dailyLimit;
+  input.addEventListener('change', ()=>{
+    let v = parseInt(input.value,10);
+    if(isNaN(v) || v<1) v = 1;
+    if(v>ARTISTS.length) v = ARTISTS.length;
+    input.value = v;
+    state.settings.dailyLimit = v;
+    saveState();
+    queue = buildQueue();
+    renderTape();
+    renderCurrentCard();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue();
+    renderTape();
+    renderCurrentCard();
+    renderStats();
+    document.getElementById('dailyLimitInput').value = state.settings.dailyLimit;
+  });
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderAuthorList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){
+      e.preventDefault();
+      flipCard();
+      return;
+    }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   MARQUEE BULBS
+   ========================================================= */
+function initBulbs(){
+  const wrap = document.getElementById('bulbs');
+  const count = 24;
+  for(let i=0;i<count;i++){
+    const span = document.createElement('span');
+    const angle = (i/count)*2*Math.PI;
+    const rx = 50, ry = 50;
+    const x = 50 + rx*Math.cos(angle);
+    const y = 50 + ry*Math.sin(angle);
+    span.style.left = x+'%';
+    span.style.top = y+'%';
+    span.style.animationDelay = (i*0.1)+'s';
+    wrap.appendChild(span);
+  }
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset();
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderAuthorList);
+
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+  initBulbs();
+
+  queue = buildQueue();
+  renderTape();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

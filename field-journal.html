@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Field Journal — Common Flowers of the World</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Karla:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap');
+
+:root{
+  --bg-0:#eef0e3;
+  --bg-1:#f7f7ee;
+  --bg-2:#e3e6d2;
+  --ink:#2d3b26;
+  --ink-soft:#55624a;
+  --cream:#faf9f0;
+  --rose:#c85a7c;
+  --rose-bright:#d97b98;
+  --lavender:#8b7ab8;
+  --lavender-bright:#a596cc;
+  --sunflower:#d99a2b;
+  --sunflower-bright:#e8b559;
+  --sage:#5c7d50;
+  --sage-bright:#78a067;
+  --sky:#5f95b8;
+  --sky-bright:#82b3d1;
+  --shadow:rgba(45,59,38,.2);
+  --rule:rgba(45,59,38,.15);
+  --tint-roses:#c85a7c;
+  --tint-bulbs:#8b7ab8;
+  --tint-garden:#d99a2b;
+  --tint-tropical:#d9636f;
+  --tint-trees:#5c7d50;
+  --tint-wild:#5f95b8;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #f5f6ec 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--ink);
+  font-family:'Karla', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.plate{
+  position:relative;width:100%;max-width:460px;
+  background:var(--cream);
+  border:2px dashed var(--sage);border-radius:8px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 20px var(--shadow);
+}
+.plate h1{
+  margin:0;font-family:'Cormorant Garamond',serif;font-weight:700;font-style:italic;
+  font-size:2rem;letter-spacing:.01em;color:var(--sage);
+}
+.plate .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--ink-soft);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Growth progress ---------- */
+.grow-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.grow-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:var(--cream);
+  border:1px solid var(--rule);
+  box-shadow:inset 0 2px 4px rgba(45,59,38,.15);
+}
+.grow-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--sage),var(--sage-bright));
+  transition:width .5s ease;position:relative;
+}
+.grow-fill::after{
+  content:"";position:absolute;top:0;bottom:0;right:-1px;width:2px;
+  background:rgba(255,255,255,.4);
+}
+.grow-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--ink-soft);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:105px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--ink-soft);
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.95rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Karla',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--sage));box-shadow:0 4px 12px var(--shadow);}
+.section-tab:not(.active):hover{background:#d5d9c2;}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--ink-soft);
+  border:1px solid var(--rule);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Karla',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--ink-soft);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--sage);box-shadow:0 -3px 8px rgba(45,59,38,.12);
+}
+.tab:not(.active):hover{background:#d5d9c2;}
+
+main{background:var(--bg-1);border:1px solid var(--rule);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 20px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:700;
+  color:var(--sage);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Specimen card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden;}
+.card-face.front{
+  background:var(--cream);
+  border:2px dashed var(--tint,var(--sage));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 12px 26px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.8rem;margin-bottom:8px;}
+.front-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.7rem;line-height:1.15;color:var(--ink);}
+.front-sci{margin-top:6px;font-family:'Caveat',cursive;font-size:1.15rem;color:var(--ink-soft);}
+.front-cat{margin-top:14px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--ink-soft);opacity:.5;font-weight:600;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);opacity:.6;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, var(--rule) 27px 28px),
+    var(--cream);
+  border:1px solid var(--rule);
+  box-shadow:0 12px 26px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.3rem;margin:0 0 2px;}
+.back-sci{font-family:'Caveat',cursive;font-size:1.05rem;color:var(--ink-soft);margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rose);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.95rem;
+  border:2px solid;background:var(--cream);color:var(--ink);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Karla',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Karla',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--rose);color:var(--rose);}
+.stamp.hard{border-color:var(--sunflower);color:var(--sunflower);}
+.stamp.good{border-color:var(--sky);color:var(--sky);}
+.stamp.easy{border-color:var(--sage);background:#e9efe3;color:var(--sage);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(92,125,80,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.3rem;color:var(--sage);margin-bottom:8px;}
+.empty-state p{color:var(--ink-soft);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid var(--rule);
+  background:var(--cream);color:var(--ink);font-family:'Karla',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--ink-soft);opacity:.6;}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid var(--rule);
+  background:var(--cream);color:var(--ink-soft);font-size:.72rem;cursor:pointer;
+  font-family:'Karla',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--sage);border-color:var(--sage);color:#fff;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--cream);border:1px solid var(--rule);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.05rem;color:var(--ink);}
+.row-sci{font-family:'Caveat',cursive;font-size:.85rem;color:var(--ink-soft);white-space:nowrap;}
+.row-meta{font-size:.76rem;color:var(--sage);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--rule);font-size:.86rem;line-height:1.45;color:var(--ink-soft);}
+.author-row.open .row-detail{display:block;}
+.no-results{text-align:center;color:var(--ink-soft);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid var(--rule);box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.8rem;color:var(--rose);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.02em;color:var(--sage);font-size:1.1rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--cream);border-radius:6px;margin-bottom:6px;font-size:.85rem;border:1px solid var(--rule);}
+.section-stat-row span.label{color:var(--ink-soft);}
+.section-stat-row span.value{color:var(--sage);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid var(--rule);
+  background:var(--cream);color:var(--ink);font-size:1rem;font-family:'Karla',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--ink-soft);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid var(--rose);background:var(--cream);
+  color:var(--rose);font-family:'Cormorant Garamond',serif;font-weight:700;cursor:pointer;font-size:1rem;
+}
+.btn:hover{background:#f6e9ee;}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--rose);border-radius:6px;
+  background:#f6e9ee;
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--ink);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--rose);color:#fff;background:var(--rose);}
+
+footer.footnote{
+  text-align:center;color:var(--ink-soft);font-size:.72rem;opacity:.75;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .plate h1{font-size:1.6rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.85rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.8rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.78rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.grow-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="plate">
+      <h1>The Field Journal</h1>
+      <p class="subtitle">Common flowers of the world</p>
+    </div>
+  </div>
+
+  <div class="grow-wrap">
+    <div class="grow-track">
+      <div class="grow-fill" id="growFill"></div>
+    </div>
+    <div class="grow-label" id="growLabel">0 / 10 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Grow<small>study</small></button>
+    <button class="tab" data-tab="browse">Garden<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🌸</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-sci" id="frontSci">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <p class="back-sci" id="backSci">—</p>
+              <div class="back-row">
+                <span class="back-label">Native origin</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Bloom season</span>
+                <span class="back-value" id="backSeason">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Traditional meaning</span>
+                <span class="back-value" id="backMeaning">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Nothing left to tend today</h3>
+        <p>Nothing left to study in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Garden</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, origin, or meaning…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Flowers learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in the garden</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through Wildflowers won't eat into your Roses allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all six sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total flowers currently in the garden: <strong id="catalogSize">0</strong>, across Roses & Romantic Blooms, Bulb & Tuber Flowers, Garden Classics, Tropical & Exotic, Flowering Trees & Shrubs, and Wildflowers & Meadow.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Origins, bloom seasons, and especially traditional "flower language" meanings vary by source, era, and culture — these are commonly-cited associations meant as a study aid, not a single authoritative reference. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Common flowers of the world, six categories
+   ========================================================= */
+const CATEGORIES = {
+  roses:    {name:"Roses & Romantic Blooms", short:"Roses", icon:"🌹", tint:"var(--tint-roses)"},
+  bulbs:    {name:"Bulb & Tuber Flowers", short:"Bulbs", icon:"🌷", tint:"var(--tint-bulbs)"},
+  garden:   {name:"Garden Classics", short:"Garden", icon:"🌻", tint:"var(--tint-garden)"},
+  tropical: {name:"Tropical & Exotic", short:"Tropical", icon:"🌺", tint:"var(--tint-tropical)"},
+  trees:    {name:"Flowering Trees & Shrubs", short:"Trees", icon:"🌸", tint:"var(--tint-trees)"},
+  wild:     {name:"Wildflowers & Meadow", short:"Wild", icon:"🌼", tint:"var(--tint-wild)"}
+};
+
+const FLOWERS = [
+/* ---------- ROSES & ROMANTIC BLOOMS (16) ---------- */
+{id:'ro01',cat:'roses',n:`Rose`,sci:`Rosa spp.`,origin:`Asia (multiple regions)`,season:`Spring–fall`,meaning:`Love and passion (red); friendship (yellow)`,p:`The world's most cultivated ornamental flower, with thousands of varieties bred over centuries.`},
+{id:'ro02',cat:'roses',n:`Peony`,sci:`Paeonia spp.`,origin:`Asia, Southern Europe`,season:`Late spring`,meaning:`Honor, prosperity, romance`,p:`A lush, full-petaled favorite for weddings, prized in China as a symbol of wealth.`},
+{id:'ro03',cat:'roses',n:`Ranunculus`,sci:`Ranunculus asiaticus`,origin:`Asia Minor, Mediterranean`,season:`Spring`,meaning:`Radiant charm`,p:`Its tightly layered, tissue-paper-like petals make it a florist favorite resembling a miniature rose.`},
+{id:'ro04',cat:'roses',n:`Carnation`,sci:`Dianthus caryophyllus`,origin:`Mediterranean`,season:`Spring–summer`,meaning:`Fascination, distinction; devotion (pink)`,p:`A long-lasting cut flower with ruffled petals, the official Mother's Day flower in the US.`},
+{id:'ro05',cat:'roses',n:`Sweet Pea`,sci:`Lathyrus odoratus`,origin:`Sicily, Italy`,season:`Spring–summer`,meaning:`Blissful pleasure, goodbye`,p:`A fragrant, delicate climbing flower once wildly fashionable in Edwardian bouquets.`},
+{id:'ro06',cat:'roses',n:`Anemone`,sci:`Anemone coronaria`,origin:`Mediterranean`,season:`Spring`,meaning:`Anticipation, protection against evil`,p:`A striking poppy-like bloom with a dark center; its name derives from the Greek word for wind.`},
+{id:'ro07',cat:'roses',n:`Lisianthus`,sci:`Eustoma grandiflorum`,origin:`Southern US, Mexico, Caribbean`,season:`Summer`,meaning:`Outgoing nature, charisma`,p:`A rose-like bloom with ruffled, papery petals, increasingly popular in modern wedding florals.`},
+{id:'ro08',cat:'roses',n:`Dahlia`,sci:`Dahlia spp.`,origin:`Mexico, Central America`,season:`Summer–fall`,meaning:`Elegance, inner strength`,p:`Mexico's national flower, bred into thousands of forms from dinner-plate-sized blooms to tiny pompons.`},
+{id:'ro09',cat:'roses',n:`Gardenia`,sci:`Gardenia jasminoides`,origin:`China, Japan, Southeast Asia`,season:`Summer`,meaning:`Purity, secret love`,p:`An intensely fragrant white bloom often worn as a corsage.`},
+{id:'ro10',cat:'roses',n:`Freesia`,sci:`Freesia spp.`,origin:`South Africa`,season:`Spring`,meaning:`Trust, innocence`,p:`A trumpet-shaped, sweetly scented flower popular in perfumery.`},
+{id:'ro11',cat:'roses',n:`Stock`,sci:`Matthiola incana`,origin:`Mediterranean`,season:`Spring`,meaning:`Lasting beauty, happy life`,p:`A clove-scented spike of ruffled blooms long used in cottage gardens.`},
+{id:'ro12',cat:'roses',n:`Alstroemeria`,sci:`Alstroemeria spp.`,origin:`South America (Andes)`,season:`Summer`,meaning:`Friendship, devotion`,p:`Also called the Peruvian lily, prized for its long vase life and speckled petals.`},
+{id:'ro13',cat:'roses',n:`Chrysanthemum`,sci:`Chrysanthemum spp.`,origin:`East Asia`,season:`Fall`,meaning:`Joy, longevity; mourning (parts of Europe)`,p:`Japan's imperial flower, associated with autumn and, in parts of Europe, with funerals.`},
+{id:'ro14',cat:'roses',n:`Sweet William`,sci:`Dianthus barbatus`,origin:`Southern Europe`,season:`Late spring–summer`,meaning:`Gallantry, admiration`,p:`A clustered cottage-garden favorite in the carnation family.`},
+{id:'ro15',cat:'roses',n:`Scabiosa`,sci:`Scabiosa spp.`,origin:`Europe, Africa, Asia`,season:`Summer`,meaning:`Unfortunate love (Victorian)`,p:`Nicknamed the "pincushion flower" for its domed, pin-studded seed heads.`},
+{id:'ro16',cat:'roses',n:`Gerbera Daisy`,sci:`Gerbera jamesonii`,origin:`South Africa`,season:`Summer`,meaning:`Cheerfulness, innocence`,p:`A bold, oversized daisy relative and one of the world's most popular cut flowers.`},
+
+/* ---------- BULB & TUBER FLOWERS (15) ---------- */
+{id:'bu01',cat:'bulbs',n:`Tulip`,sci:`Tulipa spp.`,origin:`Central Asia, Turkey`,season:`Spring`,meaning:`Perfect love`,p:`Sparked 17th-century "Tulip Mania" in the Netherlands, one of history's first speculative bubbles.`},
+{id:'bu02',cat:'bulbs',n:`Daffodil`,sci:`Narcissus spp.`,origin:`Mediterranean, Western Europe`,season:`Early spring`,meaning:`New beginnings, rebirth`,p:`One of the first flowers to bloom after winter, named after the Greek myth of Narcissus.`},
+{id:'bu03',cat:'bulbs',n:`Hyacinth`,sci:`Hyacinthus orientalis`,origin:`Eastern Mediterranean`,season:`Spring`,meaning:`Sincerity, sport`,p:`Intensely fragrant spring spikes named for a youth in Greek mythology.`},
+{id:'bu04',cat:'bulbs',n:`Crocus`,sci:`Crocus spp.`,origin:`Mediterranean, Central Asia`,season:`Late winter–early spring`,meaning:`Cheerfulness, youthful gladness`,p:`Often the very first flower to push through late-winter snow.`},
+{id:'bu05',cat:'bulbs',n:`Iris`,sci:`Iris spp.`,origin:`Northern Hemisphere, widespread`,season:`Spring–early summer`,meaning:`Faith, wisdom, hope`,p:`Named for the Greek goddess of the rainbow, for its wide range of colors.`},
+{id:'bu06',cat:'bulbs',n:`Allium`,sci:`Allium spp.`,origin:`Central Asia`,season:`Late spring–summer`,meaning:`Prosperity, unity`,p:`A relative of the onion, prized for its perfectly spherical flower heads.`},
+{id:'bu07',cat:'bulbs',n:`Lily`,sci:`Lilium spp.`,origin:`Northern Hemisphere temperate zones`,season:`Summer`,meaning:`Purity, refined beauty; funerals (white)`,p:`A fragrant, trumpet-shaped classic long associated with both weddings and funerals.`},
+{id:'bu08',cat:'bulbs',n:`Gladiolus`,sci:`Gladiolus spp.`,origin:`Southern Africa, Mediterranean`,season:`Summer`,meaning:`Strength of character, remembrance`,p:`Named for the Latin word for sword, after its spiky leaves.`},
+{id:'bu09',cat:'bulbs',n:`Snowdrop`,sci:`Galanthus nivalis`,origin:`Europe`,season:`Late winter`,meaning:`Hope, consolation`,p:`A tiny white bloom that often pushes up through actual snow.`},
+{id:'bu10',cat:'bulbs',n:`Amaryllis`,sci:`Hippeastrum spp.`,origin:`South America`,season:`Winter (indoors)`,meaning:`Pride, determination, radiant beauty`,p:`A dramatic, oversized winter bloomer popular as a holiday houseplant.`},
+{id:'bu11',cat:'bulbs',n:`Fritillaria`,sci:`Fritillaria meleagris`,origin:`Europe`,season:`Spring`,meaning:`Persecution, majesty`,p:`Known for its unusual checkerboard-patterned petals.`},
+{id:'bu12',cat:'bulbs',n:`Grape Hyacinth`,sci:`Muscari spp.`,origin:`Mediterranean, Southwest Asia`,season:`Spring`,meaning:`Trust, forgiveness`,p:`A small spring bulb whose clustered blue buds resemble tiny bunches of grapes.`},
+{id:'bu13',cat:'bulbs',n:`Calla Lily`,sci:`Zantedeschia aethiopica`,origin:`Southern Africa`,season:`Spring–summer`,meaning:`Magnificent beauty`,p:`A sculptural, single-petaled bloom despite the name — not a true lily.`},
+{id:'bu14',cat:'bulbs',n:`Canna Lily`,sci:`Canna spp.`,origin:`Tropical Americas`,season:`Summer`,meaning:`Confidence, sincerity`,p:`A bold, broad-leaved bloom despite the name, unrelated to true lilies.`},
+{id:'bu15',cat:'bulbs',n:`Bluebell`,sci:`Hyacinthoides non-scripta`,origin:`Western Europe`,season:`Spring`,meaning:`Humility, gratitude`,p:`Carpets ancient British woodlands in violet-blue each spring.`},
+
+/* ---------- GARDEN CLASSICS (20) ---------- */
+{id:'ga01',cat:'garden',n:`Sunflower`,sci:`Helianthus annuus`,origin:`North America`,season:`Summer`,meaning:`Adoration, loyalty, longevity`,p:`Famously tracks the sun across the sky as a young bud, a behavior called heliotropism.`},
+{id:'ga02',cat:'garden',n:`Shasta Daisy`,sci:`Leucanthemum × superbum`,origin:`Bred in the US (Luther Burbank)`,season:`Summer`,meaning:`Innocence, purity, loyal love`,p:`A hybrid daisy bred to be larger and hardier than the wild oxeye daisy.`},
+{id:'ga03',cat:'garden',n:`Marigold`,sci:`Tagetes spp.`,origin:`Mexico, Central America`,season:`Summer–fall`,meaning:`Passion, creativity; grief (Mexico)`,p:`Central to Day of the Dead altars in Mexico, believed to guide spirits home.`},
+{id:'ga04',cat:'garden',n:`Zinnia`,sci:`Zinnia elegans`,origin:`Mexico`,season:`Summer`,meaning:`Thoughts of absent friends`,p:`An easy-to-grow, long-blooming cutting-garden staple in nearly every color.`},
+{id:'ga05',cat:'garden',n:`Cosmos`,sci:`Cosmos bipinnatus`,origin:`Mexico`,season:`Summer–fall`,meaning:`Order, harmony`,p:`Named for the Greek word for order, for its perfectly symmetrical petals.`},
+{id:'ga06',cat:'garden',n:`Petunia`,sci:`Petunia spp.`,origin:`South America`,season:`Spring–fall`,meaning:`Resentment, anger (Victorian); comfort (modern)`,p:`One of the most common bedding and hanging-basket flowers worldwide.`},
+{id:'ga07',cat:'garden',n:`Pansy`,sci:`Viola × wittrockiana`,origin:`Bred in Europe from wild violas`,season:`Cool season`,meaning:`Thoughtful remembrance`,p:`Its name comes from the French "pensée," meaning thought.`},
+{id:'ga08',cat:'garden',n:`Snapdragon`,sci:`Antirrhinum majus`,origin:`Mediterranean`,season:`Spring–fall`,meaning:`Deception, graciousness`,p:`Squeezing the bloom's sides makes it "snap" open like a dragon's mouth.`},
+{id:'ga09',cat:'garden',n:`Aster`,sci:`Symphyotrichum spp.`,origin:`North America, Eurasia`,season:`Fall`,meaning:`Patience, daintiness`,p:`Named for the Greek word for star, after its radiating petals.`},
+{id:'ga10',cat:'garden',n:`Coneflower`,sci:`Echinacea purpurea`,origin:`Eastern North America`,season:`Summer`,meaning:`Strength, health`,p:`A prairie native whose spiky central cone gave it its Greek-rooted name, meaning hedgehog.`},
+{id:'ga11',cat:'garden',n:`Larkspur`,sci:`Delphinium ajacis`,origin:`Europe, Asia`,season:`Summer`,meaning:`Positivity, an open heart`,p:`A tall cottage-garden spike closely related to delphinium.`},
+{id:'ga12',cat:'garden',n:`Hollyhock`,sci:`Alcea rosea`,origin:`Southwest Asia`,season:`Summer`,meaning:`Ambition, fruitfulness`,p:`A towering cottage-garden classic that can reach eight feet tall.`},
+{id:'ga13',cat:'garden',n:`Nasturtium`,sci:`Tropaeolum majus`,origin:`South America (Andes)`,season:`Summer–fall`,meaning:`Patriotism, conquest`,p:`An edible flower with a peppery, watercress-like bite popular in salads.`},
+{id:'ga14',cat:'garden',n:`Morning Glory`,sci:`Ipomoea purpurea`,origin:`Tropical Americas`,season:`Summer`,meaning:`Unrequited love, affection`,p:`A fast climbing vine whose trumpet blooms open at dawn and close by afternoon.`},
+{id:'ga15',cat:'garden',n:`Sweet Alyssum`,sci:`Lobularia maritima`,origin:`Mediterranean`,season:`Spring–fall`,meaning:`Worth beyond beauty`,p:`A low, honey-scented groundcover popular for edging garden beds.`},
+{id:'ga16',cat:'garden',n:`Verbena`,sci:`Verbena spp.`,origin:`Americas`,season:`Summer–fall`,meaning:`Sensitivity, enchantment`,p:`Clustered small blooms long used in traditional herbal medicine.`},
+{id:'ga17',cat:'garden',n:`Salvia`,sci:`Salvia spp.`,origin:`Central and South America, Mediterranean`,season:`Summer–fall`,meaning:`Domestic virtue, wisdom`,p:`A pollinator favorite in the mint family, from garden sage to ornamental flower spikes.`},
+{id:'ga18',cat:'garden',n:`Celosia`,sci:`Celosia argentea`,origin:`Africa, Asia, Americas`,season:`Summer–fall`,meaning:`Affection, immortality`,p:`Its wavy "cockscomb" varieties resemble a rooster's comb or a flame.`},
+{id:'ga19',cat:'garden',n:`Statice`,sci:`Limonium sinuatum`,origin:`Mediterranean`,season:`Summer`,meaning:`Remembrance, sympathy`,p:`A papery-textured bloom that retains its color exceptionally well when dried.`},
+{id:'ga20',cat:'garden',n:`Lavender`,sci:`Lavandula angustifolia`,origin:`Mediterranean`,season:`Summer`,meaning:`Calm, devotion, purity`,p:`Prized for its fragrance and calming essential oil, cultivated for millennia in Provence.`},
+
+/* ---------- TROPICAL & EXOTIC (15) ---------- */
+{id:'tr01',cat:'tropical',n:`Orchid`,sci:`Orchidaceae (family)`,origin:`Worldwide, especially tropics`,season:`Varies (year-round indoors)`,meaning:`Luxury, refined beauty, fertility`,p:`One of the largest flowering plant families on Earth, with over 25,000 wild species.`},
+{id:'tr02',cat:'tropical',n:`Hibiscus`,sci:`Hibiscus rosa-sinensis`,origin:`East Asia`,season:`Year-round (tropical)`,meaning:`Delicate beauty, fleeting fame`,p:`Each large bloom typically lasts only a single day.`},
+{id:'tr03',cat:'tropical',n:`Bird of Paradise`,sci:`Strelitzia reginae`,origin:`South Africa`,season:`Year-round (tropical)`,meaning:`Freedom, joy, paradise`,p:`Its beak-like orange and blue bloom resembles a tropical bird in flight.`},
+{id:'tr04',cat:'tropical',n:`Plumeria`,sci:`Plumeria spp.`,origin:`Central America, Caribbean`,season:`Summer–fall`,meaning:`New beginnings, positivity`,p:`Also called frangipani, traditionally used in Hawaiian leis.`},
+{id:'tr05',cat:'tropical',n:`Anthurium`,sci:`Anthurium andraeanum`,origin:`Colombia, Ecuador`,season:`Year-round (tropical)`,meaning:`Hospitality, happiness`,p:`Its glossy, heart-shaped "flower" is actually a modified leaf called a spathe.`},
+{id:'tr06',cat:'tropical',n:`Protea`,sci:`Protea cynaroides`,origin:`South Africa`,season:`Winter–spring`,meaning:`Diversity, courage, transformation`,p:`South Africa's national flower, named for the shape-shifting Greek god Proteus.`},
+{id:'tr07',cat:'tropical',n:`Bougainvillea`,sci:`Bougainvillea spp.`,origin:`South America`,season:`Year-round (tropical)`,meaning:`Passion, appreciation for beauty`,p:`Its vivid color comes from papery bracts, not true petals.`},
+{id:'tr08',cat:'tropical',n:`Passionflower`,sci:`Passiflora spp.`,origin:`Americas`,season:`Summer`,meaning:`Faith, spiritual passion`,p:`Its intricate structure was seen by Spanish missionaries as a symbol of Christ's crucifixion.`},
+{id:'tr09',cat:'tropical',n:`Lotus`,sci:`Nelumbo nucifera`,origin:`Asia, Australia`,season:`Summer`,meaning:`Purity, enlightenment, rebirth`,p:`Sacred in both Hinduism and Buddhism, its seeds can remain viable for centuries.`},
+{id:'tr10',cat:'tropical',n:`Water Lily`,sci:`Nymphaea spp.`,origin:`Worldwide, freshwater`,season:`Summer`,meaning:`Purity, enlightenment`,p:`The subject of Claude Monet's famous late-life series of paintings.`},
+{id:'tr11',cat:'tropical',n:`Heliconia`,sci:`Heliconia spp.`,origin:`Tropical Americas, South Pacific`,season:`Year-round (tropical)`,meaning:`Exotic beauty`,p:`Nicknamed "lobster claw" for its curved, boat-shaped bracts.`},
+{id:'tr12',cat:'tropical',n:`Bromeliad`,sci:`Bromeliaceae (family)`,origin:`Tropical Americas`,season:`Year-round (tropical)`,meaning:`Protection, individuality`,p:`Relatives of the pineapple; many species grow perched on trees rather than in soil.`},
+{id:'tr13',cat:'tropical',n:`Angel's Trumpet`,sci:`Brugmansia spp.`,origin:`South America (Andes)`,season:`Summer–fall`,meaning:`Caution`,p:`A striking, intensely fragrant hanging bloom that is highly toxic if ingested.`},
+{id:'tr14',cat:'tropical',n:`Ixora`,sci:`Ixora coccinea`,origin:`South Asia`,season:`Year-round (tropical)`,meaning:`Passion, sincerity`,p:`A dense cluster of small tubular flowers popular in tropical hedging.`},
+{id:'tr15',cat:'tropical',n:`Jasmine`,sci:`Jasminum spp.`,origin:`South and Southeast Asia`,season:`Summer`,meaning:`Attachment, sensuality, grace`,p:`Its intoxicating night-blooming scent is used in perfumery and jasmine tea.`},
+
+/* ---------- FLOWERING TREES & SHRUBS (15) ---------- */
+{id:'tre01',cat:'trees',n:`Cherry Blossom`,sci:`Prunus serrulata`,origin:`East Asia`,season:`Early spring`,meaning:`Mortality, beauty of impermanence`,p:`Central to Japan's hanami tradition of flower-viewing under blooming sakura trees.`},
+{id:'tre02',cat:'trees',n:`Magnolia`,sci:`Magnolia spp.`,origin:`East Asia, Americas`,season:`Spring`,meaning:`Dignity, nobility, endurance`,p:`One of the most ancient flowering plant genera, predating bees in the fossil record.`},
+{id:'tre03',cat:'trees',n:`Azalea`,sci:`Rhododendron spp. (subgenus)`,origin:`East Asia`,season:`Spring`,meaning:`Temperance, passion, fragility`,p:`A rhododendron relative whose profuse spring blooms can blanket entire hillsides.`},
+{id:'tre04',cat:'trees',n:`Rhododendron`,sci:`Rhododendron spp.`,origin:`Asia, especially the Himalayas`,season:`Spring`,meaning:`Caution, beware`,p:`The national flower of Nepal, thriving on Himalayan mountain slopes.`},
+{id:'tre05',cat:'trees',n:`Lilac`,sci:`Syringa vulgaris`,origin:`Balkans`,season:`Late spring`,meaning:`First love, youthful innocence`,p:`Prized for its intensely sweet fragrance more than its modest purple blooms.`},
+{id:'tre06',cat:'trees',n:`Hydrangea`,sci:`Hydrangea macrophylla`,origin:`East Asia`,season:`Summer`,meaning:`Gratitude, heartfelt emotion`,p:`Famous for changing color based on the soil's acidity, from pink to blue.`},
+{id:'tre07',cat:'trees',n:`Dogwood`,sci:`Cornus florida`,origin:`Eastern North America`,season:`Spring`,meaning:`Durability, rebirth`,p:`Its showy white "petals" are actually modified leaf bracts around a tiny true flower.`},
+{id:'tre08',cat:'trees',n:`Wisteria`,sci:`Wisteria sinensis`,origin:`East Asia`,season:`Spring`,meaning:`Devotion, long life`,p:`A vigorous flowering vine whose cascading purple clusters can cover entire arbors.`},
+{id:'tre09',cat:'trees',n:`Forsythia`,sci:`Forsythia × intermedia`,origin:`East Asia`,season:`Early spring`,meaning:`Anticipation, new beginnings`,p:`One of the earliest and brightest signs of spring, blooming before its leaves emerge.`},
+{id:'tre10',cat:'trees',n:`Rose of Sharon`,sci:`Hibiscus syriacus`,origin:`East Asia`,season:`Summer–fall`,meaning:`Consumed by love`,p:`South Korea's national flower, despite its biblical-sounding common name.`},
+{id:'tre11',cat:'trees',n:`Crape Myrtle`,sci:`Lagerstroemia indica`,origin:`East Asia`,season:`Summer`,meaning:`Eloquence, wealth`,p:`A long-blooming Southern US landscaping staple with distinctive peeling bark.`},
+{id:'tre12',cat:'trees',n:`Jacaranda`,sci:`Jacaranda mimosifolia`,origin:`South America`,season:`Spring`,meaning:`Wisdom, rebirth`,p:`Famous for carpeting streets in purple in cities like Pretoria and Buenos Aires.`},
+{id:'tre13',cat:'trees',n:`Witch Hazel`,sci:`Hamamelis virginiana`,origin:`Eastern North America`,season:`Late fall–winter`,meaning:`A spell, magic`,p:`Unusual for blooming in the dead of winter, its stringy petals resist frost.`},
+{id:'tre14',cat:'trees',n:`Camellia`,sci:`Camellia japonica`,origin:`East Asia`,season:`Winter–spring`,meaning:`Admiration, perfection, longevity`,p:`A relative of the tea plant, prized for its glossy leaves and waxy blooms.`},
+{id:'tre15',cat:'trees',n:`Viburnum`,sci:`Viburnum spp.`,origin:`Northern Hemisphere, widespread`,season:`Spring`,meaning:`Thoughts of heaven, unity`,p:`A widely planted shrub valued for its fragrant, snowball-like flower clusters.`},
+
+/* ---------- WILDFLOWERS & MEADOW (22) ---------- */
+{id:'wi01',cat:'wild',n:`Poppy`,sci:`Papaver spp.`,origin:`Eurasia`,season:`Late spring–summer`,meaning:`Remembrance, sleep, imagination`,p:`Worn each November to honor war dead, inspired by fields blooming over WWI battlefields.`},
+{id:'wi02',cat:'wild',n:`Cornflower`,sci:`Centaurea cyanus`,origin:`Europe`,season:`Summer`,meaning:`Delicacy, hope`,p:`Also called bachelor's button, once common as a weed among European wheat fields.`},
+{id:'wi03',cat:'wild',n:`Queen Anne's Lace`,sci:`Daucus carota`,origin:`Europe, Southwest Asia`,season:`Summer`,meaning:`Sanctuary, fantasy`,p:`A wild carrot relative whose lacy white flower cluster often hides a single dark floret at its center.`},
+{id:'wi04',cat:'wild',n:`Black-eyed Susan`,sci:`Rudbeckia hirta`,origin:`North America`,season:`Summer–fall`,meaning:`Encouragement, justice`,p:`A cheerful prairie native and the state flower of Maryland.`},
+{id:'wi05',cat:'wild',n:`Buttercup`,sci:`Ranunculus acris`,origin:`Europe, Asia`,season:`Spring–summer`,meaning:`Childishness, neatness`,p:`Held under the chin in a childhood game said to reveal a love of butter.`},
+{id:'wi06',cat:'wild',n:`Clover`,sci:`Trifolium spp.`,origin:`Europe, temperate regions`,season:`Spring–fall`,meaning:`Luck (four-leaf), good fortune`,p:`A rare four-leafed variant has been treasured as a good-luck charm for centuries.`},
+{id:'wi07',cat:'wild',n:`Chicory`,sci:`Cichorium intybus`,origin:`Europe, Mediterranean`,season:`Summer`,meaning:`Frugality, patience`,p:`Its roasted root has long served as a coffee substitute or additive.`},
+{id:'wi08',cat:'wild',n:`Foxglove`,sci:`Digitalis purpurea`,origin:`Europe`,season:`Summer`,meaning:`Insincerity, caution`,p:`The source of digitalis, a heart medication, despite being highly toxic if eaten.`},
+{id:'wi09',cat:'wild',n:`Forget-me-not`,sci:`Myosotis scorpioides`,origin:`Europe`,season:`Spring`,meaning:`True love, remembrance`,p:`Its name comes from a medieval legend of a knight who drowned reaching for the flower.`},
+{id:'wi10',cat:'wild',n:`Oxeye Daisy`,sci:`Leucanthemum vulgare`,origin:`Europe, Asia`,season:`Summer`,meaning:`Innocence, loyal love`,p:`The classic "he loves me, he loves me not" petal-plucking daisy.`},
+{id:'wi11',cat:'wild',n:`Yarrow`,sci:`Achillea millefolium`,origin:`Europe, Asia, North America`,season:`Summer`,meaning:`Healing, everlasting love`,p:`Named for Achilles, said to have used it to treat his soldiers' wounds.`},
+{id:'wi12',cat:'wild',n:`Goldenrod`,sci:`Solidago spp.`,origin:`North America`,season:`Late summer–fall`,meaning:`Encouragement, good fortune`,p:`Often wrongly blamed for hay fever, which is usually caused by ragweed blooming nearby.`},
+{id:'wi13',cat:'wild',n:`Wild Violet`,sci:`Viola sororia`,origin:`North America`,season:`Spring`,meaning:`Modesty, faithfulness`,p:`A low, shade-tolerant bloom whose flowers and leaves are both edible.`},
+{id:'wi14',cat:'wild',n:`Primrose`,sci:`Primula vulgaris`,origin:`Europe`,season:`Early spring`,meaning:`Young love, first stirrings`,p:`One of the earliest blooms of the British countryside; its name means "first rose."`},
+{id:'wi15',cat:'wild',n:`Bellflower`,sci:`Campanula spp.`,origin:`Europe, Mediterranean, Asia`,season:`Summer`,meaning:`Gratitude, constancy`,p:`Named for its nodding, bell-shaped blossoms.`},
+{id:'wi16',cat:'wild',n:`Columbine`,sci:`Aquilegia spp.`,origin:`Northern Hemisphere`,season:`Spring–summer`,meaning:`Folly, resolve to win`,p:`Its spurred petals resemble a cluster of doves, giving it a Latin name meaning "dove-like."`},
+{id:'wi17',cat:'wild',n:`Lupine`,sci:`Lupinus spp.`,origin:`Americas, Mediterranean`,season:`Late spring–summer`,meaning:`Imagination, admiration`,p:`Its tall spikes of pea-like flowers can blanket entire hillsides in blue and purple.`},
+{id:'wi18',cat:'wild',n:`Dandelion`,sci:`Taraxacum officinale`,origin:`Eurasia`,season:`Spring–fall`,meaning:`Faithfulness, wishes granted`,p:`Its puffball seed head is famously blown apart to make a wish.`},
+{id:'wi19',cat:'wild',n:`Edelweiss`,sci:`Leontopodium nivale`,origin:`European mountains (Alps)`,season:`Summer`,meaning:`Courage, devotion`,p:`A star-shaped alpine bloom found at high altitude, a national symbol of Switzerland and Austria.`},
+{id:'wi20',cat:'wild',n:`Delphinium`,sci:`Delphinium spp.`,origin:`Northern Hemisphere`,season:`Summer`,meaning:`Levity, an open heart`,p:`Named for its buds, said to resemble a dolphin's shape.`},
+{id:'wi21',cat:'wild',n:`Baby's Breath`,sci:`Gypsophila paniculata`,origin:`Eastern Europe, Asia`,season:`Summer`,meaning:`Everlasting love, purity`,p:`A cloud-like filler flower nearly ubiquitous in bouquets and floral arrangements.`},
+{id:'wi22',cat:'wild',n:`Sea Holly`,sci:`Eryngium spp.`,origin:`Europe, Mediterranean`,season:`Summer`,meaning:`Independence, admiration`,p:`A spiky, thistle-like bloom with an unusual metallic blue-silver color.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'field-journal-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ roses:{date:null,newDone:0}, bulbs:{date:null,newDone:0}, garden:{date:null,newDone:0}, tropical:{date:null,newDone:0}, trees:{date:null,newDone:0}, wild:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ roses:10, bulbs:10, garden:10, tropical:10, trees:10, wild:10 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'roses';
+
+const flowersById = {};
+FLOWERS.forEach(f=>flowersById[f.id]=f);
+const flowersByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ flowersByCategory[k] = FLOWERS.filter(f=>f.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = flowersByCategory[catKey];
+  const dueReviews = pool.filter(f=>{
+    const s = state.srs[f.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(f=>!state.srs[f.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(f=>combined.push({flowerId:f.id,isNew:false}));
+  newToAdd.forEach(f=>combined.push({flowerId:f.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(flowerId){
+  const s = state.srs[flowerId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const flowerId = currentItem.flowerId;
+  const wasNew = currentItem.isNew && !state.srs[flowerId];
+  let s = state.srs[flowerId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[flowerId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderGrow();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+flowersByCategory[key].length+' flowers</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderGrow();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderGrow(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('growFill').style.width = pct+'%';
+  document.getElementById('growLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const f = flowersById[currentItem.flowerId];
+  const meta = CATEGORIES[f.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = f.n;
+  document.getElementById('frontSci').textContent = f.sci;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = f.id.toUpperCase();
+
+  document.getElementById('backName').textContent = f.n;
+  document.getElementById('backSci').textContent = f.sci;
+  document.getElementById('backOrigin').textContent = f.origin;
+  document.getElementById('backSeason').textContent = f.season;
+  document.getElementById('backMeaning').textContent = f.meaning;
+  document.getElementById('backProfile').textContent = f.p;
+
+  const previews = previewIntervals(f.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderFlowerList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderFlowerList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = FLOWERS.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(f=>f.cat===browseCategory);
+  if(query){
+    list = list.filter(f=>
+      normalize(f.n).includes(query) ||
+      normalize(f.origin).includes(query) ||
+      normalize(f.meaning).includes(query) ||
+      normalize(f.sci).includes(query)
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No flowers match that search.</div>';
+    return;
+  }
+  list.forEach(f=>{
+    const meta = CATEGORIES[f.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+f.n+'</span>'+
+        '<span class="row-sci">'+f.sci+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+f.origin+' · '+f.season+'</div>'+
+      '<div class="row-detail">'+f.p+'<br><em>Meaning: '+f.meaning+'</em></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = FLOWERS.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = flowersByCategory[key].length;
+    const learnedInCat = flowersByCategory[key].filter(f=>state.srs[f.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = FLOWERS.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(flowersByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>flowersByCategory[key].length) v = flowersByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderGrow();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderGrow();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderFlowerList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderFlowerList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderGrow();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Blue Table — Cuisines of the Caribbean</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg-0:#0d3b3e;
+  --bg-1:#144a4d;
+  --bg-2:#1b595d;
+  --coral:#ff6f4d;
+  --coral-bright:#ff8f6f;
+  --lime:#a8d94a;
+  --mango:#f2a53c;
+  --mango-bright:#f5bd66;
+  --cream:#fdf6e8;
+  --cream-alt:#f7ecd4;
+  --ink:#12302f;
+  --ink-soft:#4a6663;
+  --cream-dim:#bcd9d6;
+  --shadow:rgba(2,15,15,.5);
+  --rule:rgba(18,48,47,.2);
+  --tint-spanish:#ff6f4d;
+  --tint-french:#8fc93f;
+  --tint-english:#f2a53c;
+  --tint-dutch:#3fb8b0;
+  --tint-indo:#e0857a;
+  --tint-pan:#5fb6cf;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #1b595d 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Nunito', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.plate{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#1b595d,#0f3336);
+  border:2px solid var(--mango);border-radius:14px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.plate h1{
+  margin:0;font-family:'Baloo 2',cursive;font-weight:800;
+  font-size:1.75rem;letter-spacing:.01em;color:var(--mango-bright);
+}
+.plate .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:700;
+}
+
+/* ---------- Progress ---------- */
+.progress-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.progress-track{
+  position:relative;height:20px;border-radius:12px;overflow:hidden;
+  background:linear-gradient(180deg,#0a2426,#0f3336);
+  border:1px solid rgba(0,0,0,.4);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.5);
+}
+.progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--coral),var(--mango));
+  transition:width .5s ease;position:relative;
+}
+.progress-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.35);
+}
+.progress-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:700;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:100px;padding:9px 6px 8px;border-radius:12px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.85rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Nunito',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--mango));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#246468;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(242,165,60,.25);border-bottom:none;
+  border-radius:12px 12px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.95rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Nunito',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:700;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--mango);box-shadow:0 -3px 8px rgba(0,0,0,.25);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#246468;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(242,165,60,.2);border-radius:0 14px 14px 14px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:700;
+  color:var(--mango-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Dish card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 35%, #1b595d, #0a2426 75%);
+  border:3px solid var(--tint,var(--mango));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.6rem;margin-bottom:10px;}
+.front-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.45rem;line-height:1.2;color:var(--mango-bright);}
+.front-cat{margin-top:14px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:700;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:700;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #e0b978;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.2rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:600;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:12px;cursor:pointer;
+  font-family:'Baloo 2',cursive;font-weight:700;font-size:.85rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Nunito',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:700;}
+.stamp em{font-style:normal;font-family:'Nunito',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--coral-bright);color:var(--coral-bright);}
+.stamp.hard{border-color:var(--mango);color:var(--mango-bright);}
+.stamp.good{border-color:var(--tint-dutch);color:#6fd6ce;}
+.stamp.easy{border-color:var(--lime);background:rgba(168,217,74,.14);color:var(--lime);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(242,165,60,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.25rem;color:var(--mango-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:12px;border:1px solid rgba(242,165,60,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Nunito',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(242,165,60,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Nunito',sans-serif;letter-spacing:.02em;font-weight:700;
+}
+.chip.active{background:var(--mango);border-color:var(--mango);color:#12302f;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(242,165,60,.18);border-radius:12px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Baloo 2',cursive;font-weight:700;font-size:.98rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--mango-bright);margin-top:3px;font-weight:700;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(242,165,60,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:12px;padding:14px 12px;text-align:center;
+  border:1px solid #e0b978;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.7rem;color:var(--coral);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Baloo 2',cursive;font-weight:800;letter-spacing:.02em;color:var(--mango-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:10px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--mango-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mango-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:10px;border:1px solid rgba(242,165,60,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Nunito',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:10px;border:1px solid var(--coral-bright);background:transparent;
+  color:var(--coral-bright);font-family:'Baloo 2',cursive;font-weight:700;cursor:pointer;font-size:.9rem;
+}
+.btn:hover{background:rgba(255,111,77,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--coral-bright);border-radius:10px;
+  background:rgba(255,111,77,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--coral-bright);color:#fff;background:var(--coral);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.7;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .plate h1{font-size:1.4rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.82rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.74rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.72rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.progress-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="plate">
+      <h1>The Blue Table</h1>
+      <p class="subtitle">Cuisines of the Caribbean</p>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 10 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Taste<small>study</small></button>
+    <button class="tab" data-tab="browse">Islands<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🍲</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Origin</span>
+                <span class="back-value" id="backCountry">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">What it is</span>
+                <span class="back-value" id="backDesc">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Table's cleared for today</h3>
+        <p>Nothing left to study in this section right now. Switch islands above, come back tomorrow for new cards, or visit <strong>Islands</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by dish, country, or description…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Dishes learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total on the table</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By region</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per region</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each region tracks its own daily quota, so working through Indo-Caribbean won't eat into your Spanish Caribbean allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all six regions. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total dishes currently on the table: <strong id="catalogSize">0</strong>, across the Spanish, French & Creole, English-speaking, and Dutch Caribbean, plus Indo-Caribbean fusion and pan-Caribbean staples.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Descriptions are general culinary summaries meant as a study aid, not an exhaustive or definitive reference — the Caribbean's food traditions blend African, Indigenous, European, and Asian influences in ways that vary widely even within a single island. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Cuisines of the Caribbean, six categories
+   ========================================================= */
+const CATEGORIES = {
+  spanish: {name:"Spanish Caribbean", short:"Spanish", icon:"🍚", tint:"var(--tint-spanish)"},
+  french:  {name:"French & Creole Caribbean", short:"Creole", icon:"🍲", tint:"var(--tint-french)"},
+  english: {name:"English-Speaking Caribbean", short:"English", icon:"🌶️", tint:"var(--tint-english)"},
+  dutch:   {name:"Dutch Caribbean", short:"Dutch", icon:"🧀", tint:"var(--tint-dutch)"},
+  indo:    {name:"Indo-Caribbean Fusion", short:"Indo", icon:"🫓", tint:"var(--tint-indo)"},
+  pan:     {name:"Pan-Caribbean Staples", short:"Pan-Carib", icon:"🌴", tint:"var(--tint-pan)"}
+};
+
+const DISHES = [
+/* ---------- SPANISH CARIBBEAN (15) ---------- */
+{id:'sp01',cat:'spanish',n:`Ropa Vieja`,country:`Cuba`,desc:`Shredded beef stewed in a tomato-pepper sauce`,p:`Cuba's national dish; its name means "old clothes," describing the dish's shredded, ragged appearance.`},
+{id:'sp02',cat:'spanish',n:`Moros y Cristianos`,country:`Cuba`,desc:`Black beans and white rice cooked together`,p:`Its name means "Moors and Christians," referencing the contrasting black beans and white rice.`},
+{id:'sp03',cat:'spanish',n:`Lechón Asado`,country:`Cuba / Puerto Rico`,desc:`Whole roasted pig, slow-cooked over charcoal`,p:`A centerpiece of Cuban and Puerto Rican holiday feasts, traditionally slow-roasted over charcoal.`},
+{id:'sp04',cat:'spanish',n:`Picadillo`,country:`Cuba`,desc:`Ground beef stewed with olives, raisins, and tomato`,p:`A homestyle staple often served with rice, reflecting subtle Spanish and Moorish influences.`},
+{id:'sp05',cat:'spanish',n:`Mofongo`,country:`Puerto Rico`,desc:`Mashed fried plantains with garlic and pork cracklings`,p:`Traditionally made in a wooden mortar called a pilón, its roots trace back to West African fufu.`},
+{id:'sp06',cat:'spanish',n:`Arroz con Gandules`,country:`Puerto Rico`,desc:`Rice cooked with pigeon peas and sofrito`,p:`Puerto Rico's essential holiday rice dish, built on the aromatic base called sofrito.`},
+{id:'sp07',cat:'spanish',n:`Pastelón`,country:`Puerto Rico`,desc:`Layered casserole of sweet plantains and seasoned meat`,p:`Often called Puerto Rico's answer to lasagna, layering sweet plantains instead of pasta.`},
+{id:'sp08',cat:'spanish',n:`Alcapurria`,country:`Puerto Rico`,desc:`Fried fritters of grated green banana and taro, filled with meat`,p:`A beloved Puerto Rican beachside snack, deep-fried to a crisp golden shell.`},
+{id:'sp09',cat:'spanish',n:`Sancocho`,country:`Dominican Republic`,desc:`Hearty stew of multiple meats, tubers, and vegetables`,p:`A rich, multi-meat stew considered essential to Dominican celebrations, especially Sunday family meals.`},
+{id:'sp10',cat:'spanish',n:`La Bandera Dominicana`,country:`Dominican Republic`,desc:`Combination plate of rice, beans, and stewed meat`,p:`Literally "the Dominican flag," the everyday combination that anchors a typical Dominican lunch.`},
+{id:'sp11',cat:'spanish',n:`Mangú`,country:`Dominican Republic`,desc:`Mashed boiled green plantains`,p:`A breakfast staple often topped with fried onions and served alongside eggs, salami, and cheese.`},
+{id:'sp12',cat:'spanish',n:`Tostones`,country:`Cuba / Puerto Rico / Dominican Republic`,desc:`Twice-fried green plantain slices`,p:`Fried, flattened, then fried again, giving these plantain slices their signature crunch.`},
+{id:'sp13',cat:'spanish',n:`Caribbean Ceviche`,country:`Puerto Rico / Dominican Republic (coastal)`,desc:`Citrus-marinated raw seafood`,p:`A coastal preparation reflecting Spanish culinary techniques adapted to Caribbean seafood.`},
+{id:'sp14',cat:'spanish',n:`Habichuelas Guisadas`,country:`Dominican Republic`,desc:`Stewed beans in a seasoned tomato sauce`,p:`A daily staple bean stew, usually served spooned over white rice.`},
+{id:'sp15',cat:'spanish',n:`Chicharrón`,country:`Cuba / Puerto Rico / Dominican Republic`,desc:`Fried pork belly or crackling-crisp pork skin`,p:`A crispy fried pork dish enjoyed across the Spanish-speaking Caribbean as a snack or side.`},
+
+/* ---------- FRENCH & CREOLE CARIBBEAN (15) ---------- */
+{id:'fr01',cat:'french',n:`Griot`,country:`Haiti`,desc:`Fried, citrus-and-spice-marinated chunks of pork`,p:`Haiti's most iconic dish, pork marinated in citrus and spices before frying to a crisp exterior.`},
+{id:'fr02',cat:'french',n:`Soup Joumou`,country:`Haiti`,desc:`Squash-based soup with beef and vegetables`,p:`Traditionally eaten every January 1st to celebrate Haiti's 1804 independence from France.`},
+{id:'fr03',cat:'french',n:`Diri ak Djon Djon`,country:`Haiti`,desc:`Rice cooked with rare, dark native Haitian mushrooms`,p:`Gets its distinctive dark color and earthy flavor from a rare native mushroom.`},
+{id:'fr04',cat:'french',n:`Pikliz`,country:`Haiti`,desc:`Spicy pickled cabbage and carrot relish`,p:`A fiery, vinegar-based condiment served alongside almost every Haitian meal.`},
+{id:'fr05',cat:'french',n:`Tassot`,country:`Haiti`,desc:`Fried, dried strips of seasoned beef or goat`,p:`A dried-and-fried meat preparation similar in spirit to griot but made with beef or goat.`},
+{id:'fr06',cat:'french',n:`Colombo`,country:`Martinique / Guadeloupe`,desc:`Curry-spiced meat or seafood stew`,p:`A French Antillean curry blend brought by Indian indentured laborers after the abolition of slavery.`},
+{id:'fr07',cat:'french',n:`Accras de Morue`,country:`Martinique / Guadeloupe`,desc:`Deep-fried saltfish fritters`,p:`A beloved Creole appetizer, saltfish whipped into a light, spiced batter and fried.`},
+{id:'fr08',cat:'french',n:`Boudin Créole`,country:`Martinique / Guadeloupe`,desc:`Spiced blood sausage`,p:`A Creole take on blood sausage, heavily spiced compared to its French counterpart.`},
+{id:'fr09',cat:'french',n:`Matété de Crabe`,country:`Guadeloupe`,desc:`Crab and rice dish seasoned with warm spices`,p:`A festive Guadeloupean rice dish traditionally prepared around Easter.`},
+{id:'fr10',cat:'french',n:`Court Bouillon (Creole style)`,country:`Martinique / Guadeloupe`,desc:`Fish poached in a spiced tomato broth`,p:`A Creole seafood dish sharing its name, but little else, with the French poaching liquid.`},
+{id:'fr11',cat:'french',n:`Bokit`,country:`Guadeloupe`,desc:`Fried dough sandwich filled with meat or fish`,p:`A popular Guadeloupean street food, essentially a fried bread pocket stuffed to order.`},
+{id:'fr12',cat:'french',n:`Callaloo (Creole style)`,country:`Martinique / Guadeloupe`,desc:`Leafy greens stewed with crab or saltfish`,p:`A dish with roots across the Caribbean, each island's version reflecting its own culinary blend.`},
+{id:'fr13',cat:'french',n:`Ti Punch`,country:`Martinique / Guadeloupe`,desc:`Rum, lime, and cane sugar syrup, mixed to taste`,p:`The essential French Antillean cocktail, meant to be mixed to each drinker's own preference.`},
+{id:'fr14',cat:'french',n:`Blaff`,country:`Martinique / Guadeloupe`,desc:`Fish poached in a spiced, peppery broth`,p:`Named for the sound the fish supposedly makes when dropped into the boiling broth.`},
+{id:'fr15',cat:'french',n:`Dombre`,country:`Guadeloupe / Martinique`,desc:`Small flour dumplings added to soups and stews`,p:`Simple flour dumplings that add heartiness to Creole soups and stews.`},
+
+/* ---------- ENGLISH-SPEAKING CARIBBEAN (15) ---------- */
+{id:'en01',cat:'english',n:`Jerk Chicken`,country:`Jamaica`,desc:`Chicken marinated in Scotch bonnet, allspice, and thyme, then smoked or grilled`,p:`Rooted in the cooking of the Jamaican Maroons, who adapted Indigenous Taíno smoking techniques.`},
+{id:'en02',cat:'english',n:`Ackee and Saltfish`,country:`Jamaica`,desc:`Ackee fruit sautéed with salted cod, onions, and peppers`,p:`Jamaica's national dish, pairing a fruit that's toxic if eaten unripe with preserved salt cod.`},
+{id:'en03',cat:'english',n:`Curry Goat`,country:`Jamaica`,desc:`Goat meat stewed in curry spices`,p:`Reflects the significant Indian indentured labor influence on Jamaican cuisine.`},
+{id:'en04',cat:'english',n:`Rice and Peas`,country:`Jamaica`,desc:`Rice cooked with kidney beans and coconut milk`,p:`A Sunday dinner staple across Jamaica, distinct from the "peas and rice" found on other islands.`},
+{id:'en05',cat:'english',n:`Escovitch Fish`,country:`Jamaica`,desc:`Fried fish topped with pickled, spiced vegetables`,p:`Derived from a Spanish and Portuguese technique for preserving fish with vinegar and spice.`},
+{id:'en06',cat:'english',n:`Jamaican Beef Patty`,country:`Jamaica`,desc:`Flaky, turmeric-colored pastry filled with spiced meat`,p:`A handheld pastry so beloved it's become a fixture well beyond Jamaica, especially in diaspora communities.`},
+{id:'en07',cat:'english',n:`Pelau`,country:`Trinidad & Tobago`,desc:`Rice, pigeon peas, and meat cooked in caramelized sugar`,p:`Gets its distinctive dark color from browning sugar directly in the pot before adding the meat.`},
+{id:'en08',cat:'english',n:`Doubles`,country:`Trinidad & Tobago`,desc:`Curried chickpeas sandwiched between two pieces of fried flatbread`,p:`One of Trinidad's most beloved street foods, invented to make curried channa easier to eat on the go.`},
+{id:'en09',cat:'english',n:`Roti (Trinidadian)`,country:`Trinidad & Tobago`,desc:`Flatbread wrapped around curried meat, potato, and channa`,p:`Reflects Trinidad's large Indo-Caribbean population, adapting South Asian bread to island fillings.`},
+{id:'en10',cat:'english',n:`Callaloo (Trinidadian)`,country:`Trinidad & Tobago`,desc:`Dasheen leaves stewed with okra, coconut milk, and crab`,p:`Trinidad's version of a pan-Caribbean greens stew, thickened with okra and coconut milk.`},
+{id:'en11',cat:'english',n:`Cou-Cou and Flying Fish`,country:`Barbados`,desc:`Cornmeal-and-okra staple served with steamed flying fish`,p:`Barbados's national dish, pairing a fish uniquely associated with Barbadian waters.`},
+{id:'en12',cat:'english',n:`Conch Fritters`,country:`Bahamas`,desc:`Deep-fried fritters of chopped conch meat`,p:`A signature Bahamian appetizer built on the large sea snail found throughout Bahamian waters.`},
+{id:'en13',cat:'english',n:`Souse`,country:`Barbados / Bahamas`,desc:`Pickled pork dish served cold with lime and cucumber`,p:`A tangy, pickled pork dish traditionally eaten on Saturdays across Barbados and the Bahamas.`},
+{id:'en14',cat:'english',n:`Johnny Cakes`,country:`Pan-English Caribbean`,desc:`Fried or baked cornmeal or flour bread`,p:`A simple fried bread found under similar names across the English-speaking Caribbean and beyond.`},
+{id:'en15',cat:'english',n:`Run Down`,country:`Jamaica`,desc:`Fish or mackerel simmered in reduced, seasoned coconut milk`,p:`Named for the coconut milk being "run down" by slow cooking until it thickens into a rich sauce.`},
+
+/* ---------- DUTCH CARIBBEAN (10) ---------- */
+{id:'du01',cat:'dutch',n:`Keshi Yena`,country:`Curaçao / Aruba`,desc:`Whole Edam or Gouda cheese shell, stuffed and baked`,p:`Said to have originated among enslaved cooks repurposing the wax cheese rinds discarded by Dutch plantation owners.`},
+{id:'du02',cat:'dutch',n:`Stoba`,country:`Aruba / Curaçao`,desc:`Slow-cooked meat or seafood stew`,p:`A Dutch Caribbean stew reflecting Spanish, African, and Indigenous Caribbean influences together.`},
+{id:'du03',cat:'dutch',n:`Pastechi`,country:`Curaçao / Aruba`,desc:`Fried, stuffed savory pastry turnover`,p:`The Dutch Caribbean's answer to the empanada, filled with cheese, meat, or fish.`},
+{id:'du04',cat:'dutch',n:`Funchi`,country:`Curaçao / Aruba`,desc:`Cornmeal porridge similar to polenta`,p:`The Dutch Caribbean's version of the cornmeal staple found across the wider Caribbean and Africa.`},
+{id:'du05',cat:'dutch',n:`Sopi di Pisca`,country:`Curaçao / Aruba`,desc:`Hearty fish soup`,p:`A comforting fish soup reflecting the islands' deep ties to the surrounding sea.`},
+{id:'du06',cat:'dutch',n:`Pom`,country:`Curaçao / Aruba`,desc:`Baked casserole of grated taro root, chicken, and spices`,p:`A festive Curaçaoan casserole traditionally served at Christmas and other celebrations.`},
+{id:'du07',cat:'dutch',n:`Bara`,country:`Suriname`,desc:`Fried lentil doughnut, similar to Trinidad's doubles`,p:`Reflects Suriname's large Indian-descended population, brought over as indentured laborers.`},
+{id:'du08',cat:'dutch',n:`Roti (Surinamese)`,country:`Suriname`,desc:`Flatbread served with curried potato, meat, and vegetables`,p:`Suriname's own take on the Indo-Caribbean roti tradition, often considered among the most elaborate.`},
+{id:'du09',cat:'dutch',n:`Pepperwater`,country:`Suriname / Guyana`,desc:`Spicy, peppery clear soup`,p:`A simple, fiery broth reflecting the shared Indo-Caribbean cooking traditions of Suriname and Guyana.`},
+{id:'du10',cat:'dutch',n:`Nasi Goreng (Surinamese)`,country:`Suriname`,desc:`Fried rice dish reflecting Javanese-Indonesian heritage`,p:`A legacy of Javanese contract laborers brought to Suriname under Dutch colonial rule.`},
+
+/* ---------- INDO-CARIBBEAN FUSION (10) ---------- */
+{id:'in01',cat:'indo',n:`Curry Channa`,country:`Trinidad & Tobago / Guyana`,desc:`Chickpeas stewed in curry spices`,p:`The curried filling at the heart of Trinidad's beloved doubles street food.`},
+{id:'in02',cat:'indo',n:`Dhalpuri Roti`,country:`Trinidad & Tobago / Guyana`,desc:`Flatbread stuffed with seasoned ground split peas`,p:`A labor-intensive stuffed flatbread considered the gold standard of Indo-Caribbean roti.`},
+{id:'in03',cat:'indo',n:`Seven Curry`,country:`Trinidad & Tobago`,desc:`A ceremonial meal of seven distinct curried vegetable dishes`,p:`Traditionally served on banana leaves at Hindu prayer ceremonies across Trinidad.`},
+{id:'in04',cat:'indo',n:`Bhaji`,country:`Trinidad & Tobago / Guyana`,desc:`Curried leafy greens, often spinach or dasheen bush`,p:`A simple curried greens dish forming part of the classic Indo-Caribbean curry spread.`},
+{id:'in05',cat:'indo',n:`Pholourie`,country:`Trinidad & Tobago / Guyana`,desc:`Small, deep-fried, spiced split-pea flour balls`,p:`A popular snack served with tangy tamarind or mango chutney dipping sauces.`},
+{id:'in06',cat:'indo',n:`Metemgee`,country:`Guyana`,desc:`Coconut-milk stew of ground provisions and dumplings`,p:`A hearty Guyanese one-pot stew built on root vegetables simmered in coconut milk.`},
+{id:'in07',cat:'indo',n:`Cook-up Rice`,country:`Guyana`,desc:`Rice, beans, and meat cooked together in coconut milk`,p:`Guyana's version of the one-pot rice dish found in various forms across the Caribbean.`},
+{id:'in08',cat:'indo',n:`Caribbean Chow Mein`,country:`Guyana / Trinidad & Tobago`,desc:`Stir-fried noodles reflecting Chinese-Caribbean influence`,p:`Reflects a wave of Chinese indentured laborers who also shaped Caribbean cuisine.`},
+{id:'in09',cat:'indo',n:`Curry Duck`,country:`Guyana / Trinidad & Tobago`,desc:`Duck meat stewed in curry spices`,p:`A festive Indo-Caribbean curry dish often reserved for special celebrations.`},
+{id:'in10',cat:'indo',n:`Anchar`,country:`Trinidad & Tobago / Guyana`,desc:`Spiced, pickled green mango condiment`,p:`A tart, spicy pickle served alongside roti and rice dishes across the Indo-Caribbean table.`},
+
+/* ---------- PAN-CARIBBEAN STAPLES (10) ---------- */
+{id:'pa01',cat:'pan',n:`Cassava Bread`,country:`Pan-Caribbean (Indigenous Taíno / Carib origin)`,desc:`Flatbread made from grated, pressed cassava`,p:`One of the oldest foods in the Caribbean, predating European contact by centuries.`},
+{id:'pa02',cat:'pan',n:`Callaloo (Island to Island)`,country:`Pan-Caribbean`,desc:`Leafy green stew, varying widely by island`,p:`A dish whose name and recipe shift from island to island, reflecting the Caribbean's layered culinary history.`},
+{id:'pa03',cat:'pan',n:`Saltfish`,country:`Pan-Caribbean`,desc:`Salt-cured, dried cod`,p:`Introduced by European traders as a preserved protein, it became a foundational Caribbean pantry staple.`},
+{id:'pa04',cat:'pan',n:`Fried Plantain`,country:`Pan-Caribbean`,desc:`Starchy banana relative, fried, boiled, or mashed`,p:`A fundamental starch across nearly every Caribbean cuisine, prepared dozens of different ways.`},
+{id:'pa05',cat:'pan',n:`Rum`,country:`Pan-Caribbean`,desc:`Distilled spirit made from sugarcane byproducts`,p:`Born from the Caribbean's sugarcane plantation economy, now central to the region's culture and cuisine.`},
+{id:'pa06',cat:'pan',n:`Caribbean Black Cake`,country:`Pan-English Caribbean`,desc:`Dense fruitcake soaked in rum and browning`,p:`A rum-soaked holiday cake found across the English-speaking Caribbean, with fruit soaked weeks or months in advance.`},
+{id:'pa07',cat:'pan',n:`Festival`,country:`Jamaica / Pan-Caribbean`,desc:`Sweet, fried cornmeal dumpling`,p:`A slightly sweet fried dough often served alongside fried fish across several islands.`},
+{id:'pa08',cat:'pan',n:`Sofrito`,country:`Pan-Spanish Caribbean`,desc:`Aromatic base of onion, pepper, garlic, and herbs`,p:`The foundational flavor base underlying countless Spanish Caribbean dishes.`},
+{id:'pa09',cat:'pan',n:`Coconut Bake`,country:`Pan-English Caribbean`,desc:`Dense, slightly sweet coconut-flavored bread`,p:`A breakfast bread found across the English-speaking Caribbean, often paired with saltfish.`},
+{id:'pa10',cat:'pan',n:`Guava Duff`,country:`Pan-Caribbean`,desc:`Steamed or boiled guava-filled pudding roll`,p:`Reflects the Caribbean's abundance of tropical fruit worked into rolled, steamed desserts.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'blue-table-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ spanish:{date:null,newDone:0}, french:{date:null,newDone:0}, english:{date:null,newDone:0}, dutch:{date:null,newDone:0}, indo:{date:null,newDone:0}, pan:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ spanish:10, french:10, english:10, dutch:10, indo:10, pan:10 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active region section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'spanish';
+
+const dishesById = {};
+DISHES.forEach(d=>dishesById[d.id]=d);
+const dishesByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ dishesByCategory[k] = DISHES.filter(d=>d.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = dishesByCategory[catKey];
+  const dueReviews = pool.filter(d=>{
+    const s = state.srs[d.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(d=>!state.srs[d.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(d=>combined.push({dishId:d.id,isNew:false}));
+  newToAdd.forEach(d=>combined.push({dishId:d.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(dishId){
+  const s = state.srs[dishId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const dishId = currentItem.dishId;
+  const wasNew = currentItem.isNew && !state.srs[dishId];
+  let s = state.srs[dishId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[dishId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderProgress();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+dishesByCategory[key].length+' dishes</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderProgress();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderProgress(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const d = dishesById[currentItem.dishId];
+  const meta = CATEGORIES[d.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = d.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = d.id.toUpperCase();
+
+  document.getElementById('backName').textContent = d.n;
+  document.getElementById('backCountry').textContent = d.country;
+  document.getElementById('backDesc').textContent = d.desc;
+  document.getElementById('backProfile').textContent = d.p;
+
+  const previews = previewIntervals(d.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All regions']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderDishList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderDishList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = DISHES.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(d=>d.cat===browseCategory);
+  if(query){
+    list = list.filter(d=>
+      normalize(d.n).includes(query) ||
+      normalize(d.country).includes(query) ||
+      normalize(d.desc).includes(query)
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No dishes match that search.</div>';
+    return;
+  }
+  list.forEach(d=>{
+    const meta = CATEGORIES[d.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+d.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+d.country+'</div>'+
+      '<div class="row-detail">'+d.desc+'<br><em>'+d.p+'</em></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = DISHES.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By region</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = dishesByCategory[key].length;
+    const learnedInCat = dishesByCategory[key].filter(d=>state.srs[d.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = DISHES.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(dishesByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>dishesByCategory[key].length) v = dishesByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderProgress();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderProgress();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderDishList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderDishList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderProgress();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

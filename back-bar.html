@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Back Bar — Classic Cocktails</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=Courier+Prime&display=swap');
+
+:root{
+  --bg-0:#12161f;
+  --bg-1:#1b212e;
+  --bg-2:#252c3c;
+  --copper:#b8733a;
+  --copper-bright:#d9925a;
+  --amber:#d98829;
+  --amber-bright:#f0ad57;
+  --cream:#f4ecd8;
+  --cream-alt:#efe4c8;
+  --ink:#241d12;
+  --ink-soft:#5c4d34;
+  --cream-dim:#b8c0cf;
+  --shadow:rgba(2,4,10,.55);
+  --rule:rgba(36,29,18,.25);
+  --tint-gin:#4a7c59;
+  --tint-whiskey:#b5651d;
+  --tint-rum:#a9713a;
+  --tint-tequila:#2e8b74;
+  --tint-vodka:#5b9bd5;
+  --tint-other:#8a3d4f;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #1e2536 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Inter', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.board{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#252c3c,#171c28);
+  border:2px solid var(--copper);border-radius:8px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.board h1{
+  margin:0;font-family:'Fraunces',serif;font-weight:700;font-style:italic;
+  font-size:1.9rem;letter-spacing:.01em;color:var(--amber-bright);
+}
+.board .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Pour progress ---------- */
+.pour-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.pour-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#0c0f16,#171c28);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.pour-fill{
+  height:100%;width:0%;
+  background:linear-gradient(180deg,var(--amber-bright),var(--copper));
+  transition:width .5s ease;position:relative;
+}
+.pour-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.35);
+}
+.pour-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:105px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Inter',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--amber));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#2f374a;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(184,115,58,.25);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.92rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Inter',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--amber);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#2f374a;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(184,115,58,.2);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--amber-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Coaster card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 40%, #2a3244, #12161f 75%);
+  border:3px solid var(--tint,var(--copper));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.6rem;margin-bottom:10px;}
+.front-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.55rem;line-height:1.15;color:var(--amber-bright);}
+.front-cat{margin-top:12px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:600;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:
+    linear-gradient(90deg, transparent 0 0, transparent 100%),
+    repeating-linear-gradient(180deg, transparent 0 6px, rgba(0,0,0,.03) 6px 7px),
+    linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.2rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-ingredients{
+  margin:8px 0;padding:10px 12px;background:rgba(184,115,58,.08);border-radius:6px;
+  font-family:'Courier Prime',monospace;font-size:.82rem;line-height:1.6;
+}
+.back-ingredients div{border-bottom:1px dotted rgba(36,29,18,.15);padding-bottom:2px;margin-bottom:2px;}
+.back-ingredients div:last-child{border-bottom:none;margin-bottom:0;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Inter',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Inter',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:#c25c5c;color:#e08080;}
+.stamp.hard{border-color:var(--copper);color:var(--copper-bright);}
+.stamp.good{border-color:var(--tint-tequila);color:#5cc4a9;}
+.stamp.easy{border-color:var(--amber-bright);background:rgba(217,136,41,.12);color:var(--amber-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(217,136,41,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.2rem;color:var(--amber-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(184,115,58,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Inter',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(184,115,58,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Inter',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--amber);border-color:var(--amber);color:#1b1206;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(184,115,58,.18);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--amber-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(184,115,58,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.row-ingredients{margin:6px 0 0;font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--amber-bright);}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Fraunces',serif;font-weight:900;font-size:1.7rem;color:var(--copper);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Fraunces',serif;font-weight:700;letter-spacing:.02em;color:var(--amber-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--amber-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid rgba(184,115,58,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Inter',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid #c25c5c;background:transparent;
+  color:#e08080;font-family:'Fraunces',serif;font-weight:700;cursor:pointer;font-size:.9rem;
+}
+.btn:hover{background:rgba(194,92,92,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid #c25c5c;border-radius:6px;
+  background:rgba(194,92,92,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:#c25c5c;color:#fff;background:#8a3d3d;}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .board h1{font-size:1.5rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.8rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.75rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.7rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.pour-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="board">
+      <h1>The Back Bar</h1>
+      <p class="subtitle">Classic cocktails · one pour at a time</p>
+    </div>
+  </div>
+
+  <div class="pour-wrap">
+    <div class="pour-track">
+      <div class="pour-fill" id="pourFill"></div>
+    </div>
+    <div class="pour-label" id="pourLabel">0 / 5 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Mix<small>study</small></button>
+    <button class="tab" data-tab="browse">Menu<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🍸</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Base spirit</span>
+                <span class="back-value" id="backSpirit">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Method</span>
+                <span class="back-value" id="backMethod">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Glass</span>
+                <span class="back-value" id="backGlass">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Garnish</span>
+                <span class="back-value" id="backGarnish">—</span>
+              </div>
+              <span class="back-label">Ingredients</span>
+              <div class="back-ingredients" id="backIngredients"></div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Bar's closed for today</h3>
+        <p>Nothing left to study in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Menu</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, ingredient, or garnish…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Cocktails learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total on the menu</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through Whiskey won't eat into your Gin allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all six sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total cocktails currently on the menu: <strong id="catalogSize">0</strong>, across Gin, Whiskey, Rum, Tequila & Mezcal, Vodka, and Brandy & Other.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Recipes are standard, widely-used ratios meant as a study aid, not a certified bartending reference — exact proportions vary by bar and era, so treat these as a solid starting point rather than gospel. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Classic and modern cocktails, six spirit sections
+   ========================================================= */
+const CATEGORIES = {
+  gin:     {name:"Gin", short:"Gin", icon:"🍸", tint:"var(--tint-gin)"},
+  whiskey: {name:"Whiskey", short:"Whiskey", icon:"🥃", tint:"var(--tint-whiskey)"},
+  rum:     {name:"Rum", short:"Rum", icon:"🍹", tint:"var(--tint-rum)"},
+  tequila: {name:"Tequila & Mezcal", short:"Tequila", icon:"🌵", tint:"var(--tint-tequila)"},
+  vodka:   {name:"Vodka", short:"Vodka", icon:"❄️", tint:"var(--tint-vodka)"},
+  other:   {name:"Brandy & Other", short:"Other", icon:"🍷", tint:"var(--tint-other)"}
+};
+
+const DRINKS = [
+/* ---------- GIN (20) ---------- */
+{id:'g01',cat:'gin',n:`Dry Martini`,ing:[`2½ oz gin`,`½ oz dry vermouth`],method:`Stirred`,glass:`Martini/coupe`,garnish:`Lemon twist or olive`,p:`The definitive classic cocktail, endlessly debated over ratio and garnish.`},
+{id:'g02',cat:'gin',n:`Negroni`,ing:[`1 oz gin`,`1 oz Campari`,`1 oz sweet vermouth`],method:`Stirred`,glass:`Rocks`,garnish:`Orange peel`,p:`An Italian aperitivo classic, equal parts bitter, sweet, and botanical.`},
+{id:'g03',cat:'gin',n:`Tom Collins`,ing:[`2 oz gin`,`¾ oz lemon juice`,`¾ oz simple syrup`,`Soda water to top`],method:`Built, then topped`,glass:`Collins`,garnish:`Lemon wheel, cherry`,p:`A tall, refreshing gin sour lengthened with soda.`},
+{id:'g04',cat:'gin',n:`Gimlet`,ing:[`2 oz gin`,`¾ oz lime cordial or fresh lime + syrup`],method:`Shaken`,glass:`Coupe`,garnish:`Lime wheel`,p:`A crisp, tart naval classic built on gin and lime cordial.`},
+{id:'g05',cat:'gin',n:`Aviation`,ing:[`2 oz gin`,`½ oz maraschino liqueur`,`¼ oz crème de violette`,`¾ oz lemon juice`],method:`Shaken`,glass:`Coupe`,garnish:`Cherry`,p:`A pre-Prohibition classic whose violet liqueur gives it a pale lavender hue.`},
+{id:'g06',cat:'gin',n:`French 75`,ing:[`1 oz gin`,`½ oz lemon juice`,`½ oz simple syrup`,`Champagne to top`],method:`Shaken, then topped`,glass:`Flute/Collins`,garnish:`Lemon twist`,p:`A gin sour topped with Champagne, named for a WWI field gun.`},
+{id:'g07',cat:'gin',n:`Bramble`,ing:[`2 oz gin`,`¾ oz lemon juice`,`½ oz simple syrup`,`½ oz crème de mûre (drizzled)`],method:`Shaken, over crushed ice`,glass:`Rocks`,garnish:`Blackberry, lemon`,p:`A modern British classic invented by Dick Bradsell in 1984.`},
+{id:'g08',cat:'gin',n:`Clover Club`,ing:[`2 oz gin`,`¾ oz lemon juice`,`½ oz raspberry syrup`,`1 egg white`],method:`Shaken`,glass:`Coupe`,garnish:`Raspberry`,p:`A pre-Prohibition gin sour named for a Philadelphia gentlemen's club.`},
+{id:'g09',cat:'gin',n:`Bee's Knees`,ing:[`2 oz gin`,`¾ oz lemon juice`,`¾ oz honey syrup`],method:`Shaken`,glass:`Coupe`,garnish:`Lemon twist`,p:`A Prohibition-era gin sour whose honey masked the taste of bathtub gin.`},
+{id:'g10',cat:'gin',n:`Last Word`,ing:[`¾ oz gin`,`¾ oz green Chartreuse`,`¾ oz maraschino liqueur`,`¾ oz lime juice`],method:`Shaken`,glass:`Coupe`,garnish:`None`,p:`An equal-parts Prohibition-era classic revived by Seattle bartenders decades later.`},
+{id:'g11',cat:'gin',n:`Corpse Reviver No. 2`,ing:[`¾ oz gin`,`¾ oz Lillet Blanc`,`¾ oz Cointreau`,`¾ oz lemon juice`,`Absinthe rinse`],method:`Shaken`,glass:`Coupe`,garnish:`Lemon twist`,p:`A hair-of-the-dog classic; an old bartending guide warns four in succession will "unrevive the corpse."`},
+{id:'g12',cat:'gin',n:`Singapore Sling`,ing:[`1 oz gin`,`½ oz cherry liqueur`,`¼ oz Cointreau`,`¼ oz Bénédictine`,`4 oz pineapple juice`,`½ oz lime juice`,`Dash bitters, grenadine`],method:`Shaken/built`,glass:`Hurricane/Collins`,garnish:`Pineapple, cherry`,p:`A famously elaborate tropical classic invented at Singapore's Raffles Hotel.`},
+{id:'g13',cat:'gin',n:`White Lady`,ing:[`1½ oz gin`,`¾ oz Cointreau`,`¾ oz lemon juice`],method:`Shaken`,glass:`Coupe`,garnish:`Lemon twist`,p:`A crisp, citrus-forward sour from the same family as the Sidecar.`},
+{id:'g14',cat:'gin',n:`Southside`,ing:[`2 oz gin`,`¾ oz lime juice`,`¾ oz simple syrup`,`6-8 mint leaves`],method:`Shaken`,glass:`Coupe/rocks`,garnish:`Mint sprig`,p:`A Prohibition-era mojito cousin long associated with Chicago speakeasies.`},
+{id:'g15',cat:'gin',n:`Ramos Gin Fizz`,ing:[`2 oz gin`,`½ oz lemon juice`,`½ oz lime juice`,`1 oz simple syrup`,`1 oz cream`,`1 egg white`,`3 drops orange flower water`,`Soda to top`],method:`Shaken at length, then topped`,glass:`Collins`,garnish:`None`,p:`A famously labor-intensive New Orleans classic requiring minutes of vigorous shaking.`},
+{id:'g16',cat:'gin',n:`Vesper`,ing:[`3 oz gin`,`1 oz vodka`,`½ oz Lillet Blanc`],method:`Shaken or stirred`,glass:`Coupe`,garnish:`Lemon twist`,p:`Named and ordered by James Bond himself in Casino Royale.`},
+{id:'g17',cat:'gin',n:`Alaska`,ing:[`2 oz gin`,`½ oz yellow Chartreuse`,`Dash orange bitters`],method:`Stirred`,glass:`Coupe`,garnish:`Lemon twist`,p:`A simple, herbal cocktail dating to the early 20th century.`},
+{id:'g18',cat:'gin',n:`Gin Fizz`,ing:[`2 oz gin`,`¾ oz lemon juice`,`¾ oz simple syrup`,`Soda to top`],method:`Shaken, then topped`,glass:`Highball`,garnish:`Lemon`,p:`The straightforward, refreshing ancestor of the more elaborate Ramos Fizz.`},
+{id:'g19',cat:'gin',n:`Pink Lady`,ing:[`1½ oz gin`,`½ oz applejack`,`½ oz grenadine`,`½ oz lemon juice`,`1 egg white`],method:`Shaken`,glass:`Coupe`,garnish:`Cherry`,p:`A pale pink, Jazz Age favorite named for its rosy hue.`},
+{id:'g20',cat:'gin',n:`Martinez`,ing:[`1½ oz gin`,`1½ oz sweet vermouth`,`¼ oz maraschino liqueur`,`Dash bitters`],method:`Stirred`,glass:`Coupe`,garnish:`Lemon twist`,p:`Widely considered the direct ancestor of the modern Martini.`},
+
+/* ---------- WHISKEY (20) ---------- */
+{id:'w01',cat:'whiskey',n:`Old Fashioned`,ing:[`2 oz bourbon or rye`,`1 sugar cube (or ¼ oz syrup)`,`2-3 dashes Angostura bitters`,`Splash water`],method:`Built/stirred`,glass:`Rocks`,garnish:`Orange peel, cherry`,p:`One of the oldest named cocktails, essentially spirit, sugar, water, and bitters.`},
+{id:'w02',cat:'whiskey',n:`Manhattan`,ing:[`2 oz rye whiskey`,`1 oz sweet vermouth`,`2 dashes Angostura bitters`],method:`Stirred`,glass:`Coupe/rocks`,garnish:`Cherry`,p:`A New York classic and the whiskey counterpart to the Martini.`},
+{id:'w03',cat:'whiskey',n:`Whiskey Sour`,ing:[`2 oz bourbon`,`¾ oz lemon juice`,`¾ oz simple syrup`,`Egg white (optional)`],method:`Shaken`,glass:`Rocks/coupe`,garnish:`Cherry, orange`,p:`A simple, endlessly adaptable sour built on whiskey.`},
+{id:'w04',cat:'whiskey',n:`Sazerac`,ing:[`2 oz rye whiskey`,`1 sugar cube`,`3 dashes Peychaud's bitters`,`Absinthe rinse`],method:`Stirred`,glass:`Rocks (no ice)`,garnish:`Lemon twist`,p:`New Orleans's signature cocktail, often called America's oldest cocktail.`},
+{id:'w05',cat:'whiskey',n:`Mint Julep`,ing:[`2½ oz bourbon`,`¼ oz simple syrup`,`8-10 mint leaves`,`Crushed ice`],method:`Built/muddled`,glass:`Julep cup`,garnish:`Mint sprig`,p:`The traditional drink of the Kentucky Derby, served in a frosted metal cup.`},
+{id:'w06',cat:'whiskey',n:`Boulevardier`,ing:[`1 oz bourbon or rye`,`1 oz Campari`,`1 oz sweet vermouth`],method:`Stirred`,glass:`Rocks`,garnish:`Orange peel`,p:`A whiskey riff on the Negroni, said to be named for an American expat's Paris magazine.`},
+{id:'w07',cat:'whiskey',n:`Rob Roy`,ing:[`2 oz Scotch whisky`,`1 oz sweet vermouth`,`2 dashes Angostura bitters`],method:`Stirred`,glass:`Coupe`,garnish:`Cherry`,p:`A Scotch-based Manhattan variant named for a Broadway operetta.`},
+{id:'w08',cat:'whiskey',n:`Whiskey Smash`,ing:[`2 oz bourbon`,`½ oz lemon juice`,`½ oz simple syrup`,`Mint leaves`],method:`Muddled/shaken`,glass:`Rocks`,garnish:`Mint`,p:`A julep-sour hybrid popularized in modern craft bars.`},
+{id:'w09',cat:'whiskey',n:`Paper Plane`,ing:[`¾ oz bourbon`,`¾ oz Aperol`,`¾ oz Amaro Nonino`,`¾ oz lemon juice`],method:`Shaken`,glass:`Coupe`,garnish:`None`,p:`A modern classic invented in 2007, already considered a contemporary standard.`},
+{id:'w10',cat:'whiskey',n:`Gold Rush`,ing:[`2 oz bourbon`,`¾ oz honey syrup`,`¾ oz lemon juice`],method:`Shaken`,glass:`Rocks`,garnish:`Lemon`,p:`Essentially a Bee's Knees made with whiskey instead of gin.`},
+{id:'w11',cat:'whiskey',n:`Penicillin`,ing:[`2 oz blended Scotch`,`¾ oz honey-ginger syrup`,`¾ oz lemon juice`,`¼ oz Islay Scotch float`],method:`Shaken`,glass:`Rocks`,garnish:`Candied ginger`,p:`A modern classic from the mid-2000s, smoky and spiced.`},
+{id:'w12',cat:'whiskey',n:`Vieux Carré`,ing:[`¾ oz rye whiskey`,`¾ oz Cognac`,`¾ oz sweet vermouth`,`¼ oz Bénédictine`,`Dash each Peychaud's and Angostura bitters`],method:`Stirred`,glass:`Rocks`,garnish:`Lemon twist`,p:`A layered New Orleans classic named for the French Quarter.`},
+{id:'w13',cat:'whiskey',n:`Blood and Sand`,ing:[`¾ oz Scotch`,`¾ oz Cherry Heering`,`¾ oz sweet vermouth`,`¾ oz orange juice`],method:`Shaken`,glass:`Coupe`,garnish:`Orange twist`,p:`One of the few classic cocktails built on Scotch whisky, named after a 1922 film.`},
+{id:'w14',cat:'whiskey',n:`Irish Coffee`,ing:[`1½ oz Irish whiskey`,`4 oz hot coffee`,`1 tsp sugar`,`Cream float`],method:`Built`,glass:`Irish coffee glass`,garnish:`Cream`,p:`A warming coffee cocktail said to have been invented at an Irish airport in the 1940s.`},
+{id:'w15',cat:'whiskey',n:`Hot Toddy`,ing:[`2 oz whiskey`,`1 tbsp honey`,`½ oz lemon juice`,`Hot water to top`],method:`Built`,glass:`Mug`,garnish:`Lemon, clove`,p:`A soothing hot cocktail long used as a folk cold remedy.`},
+{id:'w16',cat:'whiskey',n:`Rusty Nail`,ing:[`1½ oz Scotch`,`¾ oz Drambuie`],method:`Stirred/built`,glass:`Rocks`,garnish:`None`,p:`A simple, potent two-ingredient Scotch classic from the mid-20th century.`},
+{id:'w17',cat:'whiskey',n:`John Collins`,ing:[`2 oz whiskey`,`¾ oz lemon juice`,`¾ oz simple syrup`,`Soda to top`],method:`Built`,glass:`Collins`,garnish:`Lemon, cherry`,p:`The whiskey ancestor of the more famous gin-based Tom Collins.`},
+{id:'w18',cat:'whiskey',n:`New York Sour`,ing:[`2 oz bourbon`,`¾ oz lemon juice`,`¾ oz simple syrup`,`½ oz red wine float`],method:`Shaken, wine floated`,glass:`Rocks`,garnish:`None`,p:`A whiskey sour finished with a dramatic red wine float.`},
+{id:'w19',cat:'whiskey',n:`Ward Eight`,ing:[`2 oz rye whiskey`,`¾ oz lemon juice`,`¼ oz orange juice`,`¼ oz grenadine`],method:`Shaken`,glass:`Coupe`,garnish:`Cherry`,p:`A Boston classic said to have been created to celebrate a local election win.`},
+{id:'w20',cat:'whiskey',n:`Kentucky Mule`,ing:[`2 oz bourbon`,`½ oz lime juice`,`Ginger beer to top`],method:`Built`,glass:`Copper mug`,garnish:`Lime`,p:`A bourbon riff on the Moscow Mule, popular in the American South.`},
+
+/* ---------- RUM (15) ---------- */
+{id:'r01',cat:'rum',n:`Daiquiri`,ing:[`2 oz white rum`,`1 oz lime juice`,`¾ oz simple syrup`],method:`Shaken`,glass:`Coupe`,garnish:`Lime wheel`,p:`A simple three-ingredient classic said to be named for a Cuban mining town.`},
+{id:'r02',cat:'rum',n:`Mojito`,ing:[`2 oz white rum`,`¾ oz lime juice`,`2 tsp sugar`,`8-10 mint leaves`,`Soda to top`],method:`Muddled/built`,glass:`Highball`,garnish:`Mint sprig`,p:`A refreshing Cuban highball built on rum, lime, mint, and soda.`},
+{id:'r03',cat:'rum',n:`Piña Colada`,ing:[`2 oz white rum`,`1 oz coconut cream`,`1 oz pineapple juice`],method:`Blended/shaken`,glass:`Hurricane`,garnish:`Pineapple, cherry`,p:`Puerto Rico's national drink, a creamy tropical classic.`},
+{id:'r04',cat:'rum',n:`Mai Tai`,ing:[`2 oz aged rum`,`½ oz orange curaçao`,`½ oz orgeat`,`¾ oz lime juice`],method:`Shaken`,glass:`Rocks`,garnish:`Mint, lime`,p:`A tiki classic invented by Trader Vic in the 1940s, contested with rival Don the Beachcomber.`},
+{id:'r05',cat:'rum',n:`Dark 'n' Stormy`,ing:[`2 oz dark rum`,`Ginger beer to top`,`½ oz lime juice`],method:`Built`,glass:`Highball`,garnish:`Lime wheel`,p:`Bermuda's signature drink, traditionally made with Gosling's Black Seal rum.`},
+{id:'r06',cat:'rum',n:`Hurricane`,ing:[`2 oz dark rum`,`1 oz passion fruit syrup`,`½ oz lime juice`],method:`Shaken`,glass:`Hurricane glass`,garnish:`Orange, cherry`,p:`A New Orleans tiki classic said to have originated at Pat O'Brien's bar.`},
+{id:'r07',cat:'rum',n:`Cuba Libre`,ing:[`2 oz rum`,`Cola to top`,`Lime wedge`],method:`Built`,glass:`Highball`,garnish:`Lime wedge`,p:`Essentially a rum and Coke with lime, tied to Cuban independence-era history.`},
+{id:'r08',cat:'rum',n:`Zombie`,ing:[`1 oz light rum`,`1 oz gold rum`,`1 oz dark rum`,`½ oz falernum`,`¾ oz lime juice`,`½ oz grapefruit juice`,`Dash absinthe, grenadine`],method:`Shaken`,glass:`Tiki mug`,garnish:`Mint`,p:`An infamously potent 1930s tiki classic from Don the Beachcomber.`},
+{id:'r09',cat:'rum',n:`Hemingway Daiquiri`,ing:[`2 oz white rum`,`¾ oz grapefruit juice`,`½ oz maraschino liqueur`,`½ oz lime juice`],method:`Shaken`,glass:`Coupe`,garnish:`Lime`,p:`Said to be Ernest Hemingway's preferred, sugar-free variation on the classic Daiquiri.`},
+{id:'r10',cat:'rum',n:`Painkiller`,ing:[`2 oz dark rum`,`4 oz pineapple juice`,`1 oz orange juice`,`1 oz cream of coconut`],method:`Shaken`,glass:`Rocks/tiki mug`,garnish:`Nutmeg`,p:`A British Virgin Islands classic and trademarked drink of the Soggy Dollar Bar.`},
+{id:'r11',cat:'rum',n:`Planter's Punch`,ing:[`2 oz dark rum`,`1 oz lime juice`,`1 tsp sugar`,`Dash bitters`,`Soda to top`],method:`Built`,glass:`Highball`,garnish:`Fruit garnish`,p:`An old Caribbean punch built on the rhyme "one of sour, two of sweet."`},
+{id:'r12',cat:'rum',n:`El Presidente`,ing:[`1½ oz white rum`,`½ oz dry vermouth or orange curaçao`,`Dash grenadine`],method:`Stirred`,glass:`Coupe`,garnish:`Orange twist`,p:`A pre-Revolution Cuban classic named for a Cuban president.`},
+{id:'r13',cat:'rum',n:`Corn 'n' Oil`,ing:[`2 oz blackstrap rum`,`½ oz falernum`,`½ oz lime juice`,`Dash bitters`],method:`Built`,glass:`Rocks`,garnish:`Lime`,p:`A dark, molasses-rich Barbadian classic.`},
+{id:'r14',cat:'rum',n:`Jungle Bird`,ing:[`1½ oz dark rum`,`¾ oz Campari`,`1½ oz pineapple juice`,`½ oz lime juice`,`½ oz simple syrup`],method:`Shaken`,glass:`Rocks/tiki mug`,garnish:`Pineapple`,p:`Invented at a Kuala Lumpur hotel in the 1970s, now a modern tiki-bitter staple.`},
+{id:'r15',cat:'rum',n:`Rum Punch`,ing:[`2 oz rum`,`1 oz lime juice`,`½ oz sugar syrup`,`Dash grenadine`,`Nutmeg`],method:`Shaken/built`,glass:`Highball`,garnish:`Nutmeg, fruit`,p:`A general Caribbean punch template found across the islands.`},
+
+/* ---------- TEQUILA & MEZCAL (10) ---------- */
+{id:'t01',cat:'tequila',n:`Margarita`,ing:[`2 oz tequila`,`1 oz lime juice`,`1 oz orange liqueur`],method:`Shaken`,glass:`Rocks (salt rim)`,garnish:`Lime wheel`,p:`Mexico's most famous export cocktail, with disputed origin stories.`},
+{id:'t02',cat:'tequila',n:`Tommy's Margarita`,ing:[`2 oz tequila`,`1 oz lime juice`,`½ oz agave syrup`],method:`Shaken`,glass:`Rocks`,garnish:`Lime`,p:`A simplified, orange-liqueur-free margarita popularized at San Francisco's Tommy's.`},
+{id:'t03',cat:'tequila',n:`Paloma`,ing:[`2 oz tequila`,`Grapefruit soda to top`,`Lime wedge`],method:`Built`,glass:`Highball`,garnish:`Lime, salt rim`,p:`Arguably more popular in Mexico itself than the Margarita.`},
+{id:'t04',cat:'tequila',n:`Tequila Sunrise`,ing:[`2 oz tequila`,`4 oz orange juice`,`½ oz grenadine`],method:`Built (layered)`,glass:`Highball`,garnish:`Orange, cherry`,p:`Known for its layered sunrise effect as grenadine settles to the bottom.`},
+{id:'t05',cat:'tequila',n:`El Diablo`,ing:[`1½ oz tequila`,`½ oz crème de cassis`,`½ oz lime juice`,`Ginger beer to top`],method:`Built`,glass:`Highball`,garnish:`Lime`,p:`A tequila highball with blackcurrant liqueur and ginger spice.`},
+{id:'t06',cat:'tequila',n:`Matador`,ing:[`2 oz tequila`,`1½ oz pineapple juice`,`½ oz lime juice`],method:`Shaken`,glass:`Coupe/rocks`,garnish:`Pineapple`,p:`A simple tropical tequila sour.`},
+{id:'t07',cat:'tequila',n:`Oaxaca Old Fashioned`,ing:[`1½ oz reposado tequila`,`½ oz mezcal`,`¼ oz agave syrup`,`Dash bitters`],method:`Stirred`,glass:`Rocks`,garnish:`Orange peel`,p:`A modern classic layering smoky mezcal over an Old Fashioned template.`},
+{id:'t08',cat:'tequila',n:`Mexican Mule`,ing:[`2 oz tequila`,`½ oz lime juice`,`Ginger beer to top`],method:`Built`,glass:`Copper mug`,garnish:`Lime`,p:`A tequila-based riff on the Moscow Mule.`},
+{id:'t09',cat:'tequila',n:`Ranch Water`,ing:[`2 oz tequila blanco`,`½ oz lime juice`,`Sparkling mineral water to top`],method:`Built`,glass:`Highball`,garnish:`Lime`,p:`A minimalist, low-calorie West Texas favorite.`},
+{id:'t10',cat:'tequila',n:`Naked and Famous`,ing:[`¾ oz mezcal`,`¾ oz yellow Chartreuse`,`¾ oz Aperol`,`¾ oz lime juice`],method:`Shaken`,glass:`Coupe`,garnish:`None`,p:`A modern equal-parts classic modeled on the Last Word, swapping in mezcal.`},
+
+/* ---------- VODKA (12) ---------- */
+{id:'v01',cat:'vodka',n:`Cosmopolitan`,ing:[`1½ oz vodka`,`½ oz triple sec`,`½ oz cranberry juice`,`½ oz lime juice`],method:`Shaken`,glass:`Coupe/martini`,garnish:`Lime/orange twist`,p:`A pink 1990s icon forever associated with Sex and the City.`},
+{id:'v02',cat:'vodka',n:`Moscow Mule`,ing:[`2 oz vodka`,`½ oz lime juice`,`Ginger beer to top`],method:`Built`,glass:`Copper mug`,garnish:`Lime, mint`,p:`Credited with popularizing both vodka and the copper mug in America.`},
+{id:'v03',cat:'vodka',n:`Vodka Martini`,ing:[`2½ oz vodka`,`½ oz dry vermouth`],method:`Stirred or shaken`,glass:`Martini glass`,garnish:`Olive/lemon twist`,p:`The vodka variation James Bond famously ordered "shaken, not stirred."`},
+{id:'v04',cat:'vodka',n:`White Russian`,ing:[`2 oz vodka`,`1 oz coffee liqueur`,`1 oz cream`],method:`Built`,glass:`Rocks`,garnish:`None`,p:`A creamy dessert-like cocktail immortalized by The Big Lebowski.`},
+{id:'v05',cat:'vodka',n:`Black Russian`,ing:[`2 oz vodka`,`1 oz coffee liqueur`],method:`Built`,glass:`Rocks`,garnish:`None`,p:`The simpler, cream-free ancestor of the White Russian.`},
+{id:'v06',cat:'vodka',n:`Bloody Mary`,ing:[`2 oz vodka`,`4 oz tomato juice`,`½ oz lemon juice`,`Hot sauce, Worcestershire, spices`],method:`Built/rolled`,glass:`Highball`,garnish:`Celery, lime`,p:`A savory brunch classic loaded with spice and garnish.`},
+{id:'v07',cat:'vodka',n:`Espresso Martini`,ing:[`1½ oz vodka`,`1 oz coffee liqueur`,`1 oz fresh espresso`,`¼ oz simple syrup`],method:`Shaken`,glass:`Coupe/martini`,garnish:`Coffee beans`,p:`Invented in 1980s London reportedly to "wake me up, then mess me up."`},
+{id:'v08',cat:'vodka',n:`Sea Breeze`,ing:[`1½ oz vodka`,`3 oz cranberry juice`,`1 oz grapefruit juice`],method:`Built`,glass:`Highball`,garnish:`Lime`,p:`A fruity, beach-friendly 1980s vodka highball.`},
+{id:'v09',cat:'vodka',n:`Cape Codder`,ing:[`2 oz vodka`,`Cranberry juice to top`,`Lime wedge`],method:`Built`,glass:`Highball`,garnish:`Lime`,p:`A simple two-ingredient vodka-cranberry classic named for Cape Cod.`},
+{id:'v10',cat:'vodka',n:`Screwdriver`,ing:[`2 oz vodka`,`Orange juice to top`],method:`Built`,glass:`Highball`,garnish:`Orange slice`,p:`One of the simplest cocktails in the canon, just vodka and orange juice.`},
+{id:'v11',cat:'vodka',n:`Salty Dog`,ing:[`2 oz vodka`,`Grapefruit juice to top`],method:`Built`,glass:`Rocks (salt rim)`,garnish:`None`,p:`A salt-rimmed grapefruit highball, simple and bittersweet.`},
+{id:'v12',cat:'vodka',n:`Kamikaze`,ing:[`1 oz vodka`,`1 oz triple sec`,`1 oz lime juice`],method:`Shaken`,glass:`Rocks/shot`,garnish:`Lime`,p:`A sharp, citrusy shot-style cocktail popular since the 1970s.`},
+
+/* ---------- BRANDY & OTHER (13) ---------- */
+{id:'o01',cat:'other',n:`Sidecar`,ing:[`2 oz Cognac`,`¾ oz Cointreau`,`¾ oz lemon juice`],method:`Shaken`,glass:`Coupe (sugar rim)`,garnish:`Orange twist`,p:`A classic sour named, per legend, for a WWI officer's motorcycle sidecar.`},
+{id:'o02',cat:'other',n:`Brandy Alexander`,ing:[`1½ oz Cognac`,`1 oz crème de cacao`,`1 oz cream`],method:`Shaken`,glass:`Coupe`,garnish:`Nutmeg`,p:`A dessert-like classic in the same family as the Grasshopper.`},
+{id:'o03',cat:'other',n:`Between the Sheets`,ing:[`¾ oz Cognac`,`¾ oz white rum`,`¾ oz Cointreau`,`¾ oz lemon juice`],method:`Shaken`,glass:`Coupe`,garnish:`Lemon twist`,p:`A boozy Prohibition-era cousin of the Sidecar.`},
+{id:'o04',cat:'other',n:`Pisco Sour`,ing:[`2 oz pisco`,`1 oz lime juice`,`¾ oz simple syrup`,`1 egg white`,`Dash bitters`],method:`Shaken`,glass:`Coupe`,garnish:`Bitters dash`,p:`The national cocktail of both Peru and Chile, each claiming its invention.`},
+{id:'o05',cat:'other',n:`Sherry Cobbler`,ing:[`3 oz sherry`,`½ oz simple syrup`,`Orange slices`,`Crushed ice`],method:`Built/shaken`,glass:`Goblet`,garnish:`Fruit, mint, straws`,p:`An enormously popular 19th-century American classic that helped popularize the drinking straw.`},
+{id:'o06',cat:'other',n:`Jack Rose`,ing:[`2 oz applejack`,`¾ oz grenadine`,`¾ oz lemon or lime juice`],method:`Shaken`,glass:`Coupe`,garnish:`None`,p:`An American classic built on apple brandy, said to be Hemingway's favorite in The Sun Also Rises.`},
+{id:'o07',cat:'other',n:`Metropolitan`,ing:[`2 oz brandy`,`1 oz sweet vermouth`,`Dash bitters`,`Dash sugar syrup`],method:`Stirred`,glass:`Coupe`,garnish:`Cherry`,p:`An old brandy-based Manhattan variation.`},
+{id:'o08',cat:'other',n:`Champagne Cocktail`,ing:[`1 sugar cube`,`2-3 dashes Angostura bitters`,`Champagne to top`],method:`Built`,glass:`Flute`,garnish:`Lemon twist`,p:`One of the oldest Champagne cocktails, simple and celebratory.`},
+{id:'o09',cat:'other',n:`Kir Royale`,ing:[`Champagne`,`½ oz crème de cassis`],method:`Built`,glass:`Flute`,garnish:`None`,p:`A festive French aperitif of Champagne and blackcurrant liqueur.`},
+{id:'o10',cat:'other',n:`Aperol Spritz`,ing:[`3 oz Prosecco`,`2 oz Aperol`,`Splash soda water`],method:`Built`,glass:`Wine glass`,garnish:`Orange slice`,p:`Italy's ubiquitous low-ABV aperitivo, especially popular in summer.`},
+{id:'o11',cat:'other',n:`Americano`,ing:[`1 oz Campari`,`1 oz sweet vermouth`,`Soda water to top`],method:`Built`,glass:`Rocks`,garnish:`Orange slice`,p:`A bittersweet aperitivo said to predate its descendant, the Negroni.`},
+{id:'o12',cat:'other',n:`Negroni Sbagliato`,ing:[`1 oz Campari`,`1 oz sweet vermouth`,`1 oz Prosecco`],method:`Built`,glass:`Rocks`,garnish:`Orange slice`,p:`A "mistaken" Negroni made with sparkling wine instead of gin.`},
+{id:'o13',cat:'other',n:`Bellini`,ing:[`2 oz white peach purée`,`3 oz Prosecco`],method:`Built`,glass:`Flute`,garnish:`None`,p:`Invented at Harry's Bar in Venice, named for a painter whose colors it recalled.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'back-bar-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ gin:{date:null,newDone:0}, whiskey:{date:null,newDone:0}, rum:{date:null,newDone:0}, tequila:{date:null,newDone:0}, vodka:{date:null,newDone:0}, other:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ gin:5, whiskey:5, rum:5, tequila:5, vodka:5, other:5 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'gin';
+
+const drinksById = {};
+DRINKS.forEach(d=>drinksById[d.id]=d);
+const drinksByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ drinksByCategory[k] = DRINKS.filter(d=>d.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = drinksByCategory[catKey];
+  const dueReviews = pool.filter(d=>{
+    const s = state.srs[d.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(d=>!state.srs[d.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(d=>combined.push({drinkId:d.id,isNew:false}));
+  newToAdd.forEach(d=>combined.push({drinkId:d.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(drinkId){
+  const s = state.srs[drinkId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const drinkId = currentItem.drinkId;
+  const wasNew = currentItem.isNew && !state.srs[drinkId];
+  let s = state.srs[drinkId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[drinkId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderPour();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+drinksByCategory[key].length+' drinks</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderPour();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderPour(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('pourFill').style.width = pct+'%';
+  document.getElementById('pourLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const d = drinksById[currentItem.drinkId];
+  const meta = CATEGORIES[d.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = d.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = d.id.toUpperCase();
+
+  document.getElementById('backName').textContent = d.n;
+  document.getElementById('backSpirit').textContent = meta.name;
+  document.getElementById('backMethod').textContent = d.method;
+  document.getElementById('backGlass').textContent = d.glass;
+  document.getElementById('backGarnish').textContent = d.garnish;
+
+  const ingWrap = document.getElementById('backIngredients');
+  ingWrap.innerHTML = '';
+  d.ing.forEach(line=>{
+    const div = document.createElement('div');
+    div.textContent = line;
+    ingWrap.appendChild(div);
+  });
+  document.getElementById('backProfile').textContent = d.p;
+
+  const previews = previewIntervals(d.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderDrinkList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderDrinkList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = DRINKS.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(d=>d.cat===browseCategory);
+  if(query){
+    list = list.filter(d=>
+      normalize(d.n).includes(query) ||
+      normalize(d.garnish).includes(query) ||
+      d.ing.some(i=>normalize(i).includes(query))
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No cocktails match that search.</div>';
+    return;
+  }
+  list.forEach(d=>{
+    const meta = CATEGORIES[d.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+d.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+d.method+' · '+d.glass+'</div>'+
+      '<div class="row-detail">'+d.p+'<div class="row-ingredients">'+d.ing.join(' · ')+'</div></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = DRINKS.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = drinksByCategory[key].length;
+    const learnedInCat = drinksByCategory[key].filter(d=>state.srs[d.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = DRINKS.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(drinksByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>drinksByCategory[key].length) v = drinksByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderPour();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderPour();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderDrinkList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderDrinkList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderPour();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

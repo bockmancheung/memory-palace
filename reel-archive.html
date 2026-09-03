@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reel Archive — Oscar-Winning Films</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg-0:#17120d;
+  --bg-1:#241c15;
+  --bg-2:#2f251b;
+  --velvet:#7a1f2b;
+  --velvet-bright:#a5303f;
+  --gold:#d4af37;
+  --gold-bright:#f0cf6b;
+  --cream:#f4ead4;
+  --cream-alt:#efe0bf;
+  --ink:#241a12;
+  --ink-soft:#5c4a34;
+  --cream-dim:#cdbfa0;
+  --shadow:rgba(5,2,0,.55);
+  --rule:rgba(36,26,18,.25);
+  --tint-bp:#d4af37;
+  --tint-wf:#3fa7a0;
+  --tint-af:#c76fae;
+  --tint-df:#8a9a5b;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #2c1f16 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Archivo', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.slate{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#2f251b,#1c150f);
+  border:2px solid var(--gold);border-radius:8px;
+  padding:0 0 14px;overflow:hidden;
+  box-shadow:0 8px 24px var(--shadow);
+  text-align:center;
+}
+.slate-stripes{
+  height:14px;width:100%;
+  background:repeating-linear-gradient(45deg, #0c0906 0 14px, var(--gold) 14px 28px);
+}
+.slate h1{
+  margin:14px 0 0;font-family:'Bebas Neue',cursive;font-weight:400;
+  font-size:2rem;letter-spacing:.06em;color:var(--gold-bright);
+}
+.slate .subtitle{
+  margin:4px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Filmstrip progress ---------- */
+.strip-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.strip-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#0c0906,#1c150f);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.strip-track::before,.strip-track::after{
+  content:"";position:absolute;top:0;bottom:0;width:100%;
+  background-image:repeating-linear-gradient(90deg, rgba(0,0,0,.6) 0 4px, transparent 4px 12px);
+  pointer-events:none;
+}
+.strip-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--gold-bright));
+  transition:width .5s ease;position:relative;
+}
+.strip-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs (category selector) ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:130px;padding:9px 8px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Bebas Neue',cursive;font-size:.95rem;letter-spacing:.03em;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Archivo',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--gold));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#3a2e21;color:var(--cream);}
+
+.doc-warning{
+  margin:10px 0 0;padding:9px 12px;border-radius:6px;font-size:.78rem;line-height:1.4;
+  background:rgba(138,154,91,.12);border:1px solid rgba(138,154,91,.4);color:var(--cream-dim);
+  display:none;
+}
+.doc-warning.show{display:block;}
+
+/* ---------- Tabs (top-level nav) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(212,175,55,.25);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Bebas Neue',cursive;font-weight:400;font-size:.95rem;letter-spacing:.03em;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Archivo',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--gold);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#3a2e21;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(212,175,55,.2);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--gold-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Film frame card ---------- */
+.card-scene{perspective:1600px;max-width:440px;margin:0 auto;}
+.card{
+  position:relative;min-height:330px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;overflow:hidden;}
+.card-face.front{
+  background:linear-gradient(160deg,#241a12,#100c08);
+  border:1px solid rgba(212,175,55,.4);
+  display:flex;flex-direction:column;
+  box-shadow:0 14px 30px var(--shadow);
+}
+.sprocket-col{position:absolute;top:0;bottom:0;width:22px;background:#0a0806;}
+.sprocket-col.left{left:0;}
+.sprocket-col.right{right:0;}
+.sprocket-col span{
+  position:absolute;left:50%;transform:translateX(-50%);width:10px;height:14px;border-radius:2px;
+  background:var(--bg-1);
+}
+.front-tint-bar{height:6px;width:100%;background:var(--tint,var(--gold));}
+.front-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 34px;text-align:center;}
+.front-icon{font-size:1.6rem;margin-bottom:6px;}
+.front-title{font-family:'Bebas Neue',cursive;font-weight:400;font-size:1.5rem;line-height:1.15;color:var(--gold-bright);letter-spacing:.02em;}
+.front-year{margin-top:6px;font-size:.85rem;letter-spacing:.08em;color:var(--cream-dim);font-weight:600;}
+.front-cat{margin-top:14px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.65;font-weight:700;}
+.card-hint{padding-bottom:14px;text-align:center;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-title{font-family:'Bebas Neue',cursive;font-weight:400;font-size:1.25rem;letter-spacing:.02em;margin:0 0 2px;}
+.back-year{font-size:.78rem;color:var(--ink-soft);font-weight:600;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:7px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--velvet);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-profile{font-size:.87rem;line-height:1.4;margin:6px 0 0;}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Bebas Neue',cursive;font-weight:400;font-size:.85rem;letter-spacing:.03em;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Archivo',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Archivo',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--velvet-bright);color:var(--velvet-bright);}
+.stamp.hard{border-color:var(--gold);color:var(--gold-bright);}
+.stamp.good{border-color:var(--tint-wf);color:var(--tint-wf);}
+.stamp.easy{border-color:var(--gold-bright);background:rgba(212,175,55,.12);color:var(--gold-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(212,175,55,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Bebas Neue',cursive;font-weight:400;font-size:1.3rem;color:var(--gold-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(212,175,55,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Archivo',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(212,175,55,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Archivo',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--gold);border-color:var(--gold);color:#1c150f;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(212,175,55,.18);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Bebas Neue',cursive;font-weight:400;font-size:1rem;letter-spacing:.02em;color:var(--cream);}
+.row-years{font-size:.68rem;color:var(--cream-dim);white-space:nowrap;font-weight:600;}
+.row-meta{font-size:.76rem;color:var(--gold-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(212,175,55,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Bebas Neue',cursive;font-weight:400;font-size:1.7rem;color:var(--velvet);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Bebas Neue',cursive;font-weight:400;letter-spacing:.03em;color:var(--gold-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--gold-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:90px;padding:8px 10px;border-radius:6px;border:1px solid rgba(212,175,55,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Archivo',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid var(--velvet-bright);background:transparent;
+  color:var(--velvet-bright);font-family:'Bebas Neue',cursive;font-weight:400;cursor:pointer;font-size:.9rem;letter-spacing:.03em;
+}
+.btn:hover{background:rgba(165,48,63,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--velvet-bright);border-radius:6px;
+  background:rgba(165,48,63,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--velvet-bright);color:#fff;background:var(--velvet);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .slate h1{font-size:1.6rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.85rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.8rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.7rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.strip-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="slate">
+      <div class="slate-stripes"></div>
+      <h1>The Reel Archive</h1>
+      <p class="subtitle">Oscar-winning films · four categories, one hundred years</p>
+    </div>
+  </div>
+
+  <div class="strip-wrap">
+    <div class="strip-track">
+      <div class="strip-fill" id="stripFill"></div>
+    </div>
+    <div class="strip-label" id="stripLabel">0 / 20 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Watch<small>study</small></button>
+    <button class="tab" data-tab="browse">Browse<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+      <div class="doc-warning" id="docWarning">⚠ Documentary Feature winners before ~1990 are especially obscure and harder to verify from memory — treat those cards as best-effort, and double-check anything you plan to cite.</div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="sprocket-col left" id="sprocketLeft"></div>
+              <div class="sprocket-col right" id="sprocketRight"></div>
+              <div class="front-tint-bar" id="frontTint"></div>
+              <div class="front-body">
+                <div class="front-icon" id="frontIcon">🏆</div>
+                <p class="front-title" id="frontTitle">—</p>
+                <p class="front-year" id="frontYear">—</p>
+                <p class="front-cat" id="frontCat">—</p>
+              </div>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-title" id="backTitle">—</p>
+              <p class="back-year" id="backYear">—</p>
+              <div class="back-row">
+                <span class="back-label">Director</span>
+                <span class="back-value" id="backDirector">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Country</span>
+                <span class="back-value" id="backCountry">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Genre</span>
+                <span class="back-value" id="backGenre">—</span>
+              </div>
+              <div class="back-row" id="backCastRow">
+                <span class="back-label">Featuring</span>
+                <span class="back-value" id="backCast">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>That's a wrap for today</h3>
+        <p>Nothing left to study in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Browse</strong> to explore the full catalogue at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by title, director, or country…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Films learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in archive</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through Documentary Feature won't eat into your Best Picture allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all four sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total films currently in the archive: <strong id="catalogSize">0</strong>, across Best Picture, Best International Feature, Best Animated Feature, and Best Documentary Feature.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Film profiles are AI-generated summaries meant as a study aid — titles, directors, and years may occasionally be imprecise, especially in the Documentary Feature section before roughly 1990, so double-check anything you plan to cite. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Academy Award winners across four film categories
+   ========================================================= */
+const CATEGORIES = {
+  bp:   {name:"Best Picture", short:"Picture", icon:"🏆", tint:"var(--tint-bp)"},
+  wf:   {name:"Best International Feature", short:"International", icon:"🌍", tint:"var(--tint-wf)"},
+  af:   {name:"Best Animated Feature", short:"Animated", icon:"🎨", tint:"var(--tint-af)"},
+  df:   {name:"Best Documentary Feature", short:"Documentary", icon:"🎥", tint:"var(--tint-df)"}
+};
+
+const FILMS = [
+/* ---------- BEST PICTURE (97) ---------- */
+{id:'bp001',cat:'bp',t:`Wings`,y:`1927`,d:`William A. Wellman`,c:`USA`,g:`War / Silent`,cast:[`Clara Bow`,`Charles Rogers`],p:`The first Best Picture winner and the only silent film to win until The Artist (2011); a WWI aerial-combat epic.`},
+{id:'bp002',cat:'bp',t:`The Broadway Melody`,y:`1929`,d:`Harry Beaumont`,c:`USA`,g:`Musical`,cast:[`Bessie Love`],p:`The first sound film and first musical to win Best Picture, capitalizing on Hollywood's new talkie era.`},
+{id:'bp003',cat:'bp',t:`All Quiet on the Western Front`,y:`1930`,d:`Lewis Milestone`,c:`USA`,g:`War`,cast:[`Lew Ayres`],p:`A devastating adaptation of Erich Maria Remarque's anti-war novel, told from the German soldiers' perspective.`},
+{id:'bp004',cat:'bp',t:`Cimarron`,y:`1931`,d:`Wesley Ruggles`,c:`USA`,g:`Western`,cast:[`Richard Dix`,`Irene Dunne`],p:`An Oklahoma land-rush epic; the only Western to win Best Picture until Dances with Wolves nearly 60 years later.`},
+{id:'bp005',cat:'bp',t:`Grand Hotel`,y:`1932`,d:`Edmund Goulding`,c:`USA`,g:`Drama`,cast:[`Greta Garbo`,`John Barrymore`],p:`An all-star ensemble drama unfolding among guests at a luxury Berlin hotel.`},
+{id:'bp006',cat:'bp',t:`Cavalcade`,y:`1933`,d:`Frank Lloyd`,c:`USA`,g:`Drama`,cast:[`Diana Wynyard`],p:`A British family saga spanning three decades, based on Noël Coward's stage play.`},
+{id:'bp007',cat:'bp',t:`It Happened One Night`,y:`1934`,d:`Frank Capra`,c:`USA`,g:`Comedy`,cast:[`Clark Gable`,`Claudette Colbert`],p:`The first film to sweep the "Big Five" Oscars; a runaway-heiress romantic comedy that defined the genre.`},
+{id:'bp008',cat:'bp',t:`Mutiny on the Bounty`,y:`1935`,d:`Frank Lloyd`,c:`USA`,g:`Adventure`,cast:[`Clark Gable`,`Charles Laughton`],p:`A seafaring drama dramatizing the real 1789 mutiny aboard a British Royal Navy ship.`},
+{id:'bp009',cat:'bp',t:`The Great Ziegfeld`,y:`1936`,d:`Robert Z. Leonard`,c:`USA`,g:`Musical / Biopic`,cast:[`William Powell`,`Luise Rainer`],p:`A lavish biopic of Broadway showman Florenz Ziegfeld and his extravagant stage revues.`},
+{id:'bp010',cat:'bp',t:`The Life of Emile Zola`,y:`1937`,d:`William Dieterle`,c:`USA`,g:`Biopic`,cast:[`Paul Muni`],p:`A biopic centered on the French author's defense of Alfred Dreyfus.`},
+{id:'bp011',cat:'bp',t:`You Can't Take It with You`,y:`1938`,d:`Frank Capra`,c:`USA`,g:`Comedy`,cast:[`Jean Arthur`,`James Stewart`],p:`A warm screwball comedy about a delightfully eccentric family and their strait-laced in-laws.`},
+{id:'bp012',cat:'bp',t:`Gone with the Wind`,y:`1939`,d:`Victor Fleming`,c:`USA`,g:`Epic / Romance`,cast:[`Vivien Leigh`,`Clark Gable`],p:`A sweeping Civil War-era epic and, adjusted for inflation, still the highest-grossing film ever made.`},
+{id:'bp013',cat:'bp',t:`Rebecca`,y:`1940`,d:`Alfred Hitchcock`,c:`USA`,g:`Gothic / Thriller`,cast:[`Laurence Olivier`,`Joan Fontaine`],p:`Hitchcock's only Best Picture winner, a gothic thriller about a woman haunted by her husband's late first wife.`},
+{id:'bp014',cat:'bp',t:`How Green Was My Valley`,y:`1941`,d:`John Ford`,c:`USA / UK`,g:`Drama`,cast:[`Walter Pidgeon`,`Maureen O'Hara`],p:`A nostalgic drama of a Welsh mining family, famously beating Citizen Kane that year.`},
+{id:'bp015',cat:'bp',t:`Mrs. Miniver`,y:`1942`,d:`William Wyler`,c:`USA`,g:`Drama`,cast:[`Greer Garson`],p:`A wartime drama of an English family's resilience during the Blitz.`},
+{id:'bp016',cat:'bp',t:`Casablanca`,y:`1943`,d:`Michael Curtiz`,c:`USA`,g:`Romance / Drama`,cast:[`Humphrey Bogart`,`Ingrid Bergman`],p:`One of the most quoted films ever made, a wartime romance set in Vichy-controlled Morocco.`},
+{id:'bp017',cat:'bp',t:`Going My Way`,y:`1944`,d:`Leo McCarey`,c:`USA`,g:`Comedy / Drama`,cast:[`Bing Crosby`],p:`A gentle comedy-drama about a modern priest revitalizing a struggling New York parish.`},
+{id:'bp018',cat:'bp',t:`The Lost Weekend`,y:`1945`,d:`Billy Wilder`,c:`USA`,g:`Drama`,cast:[`Ray Milland`],p:`A stark, unflinching portrait of alcoholism, unusually dark for its era.`},
+{id:'bp019',cat:'bp',t:`The Best Years of Our Lives`,y:`1946`,d:`William Wyler`,c:`USA`,g:`Drama`,cast:[`Myrna Loy`,`Fredric March`],p:`Follows three servicemen readjusting to civilian life after World War II.`},
+{id:'bp020',cat:'bp',t:`Gentleman's Agreement`,y:`1947`,d:`Elia Kazan`,c:`USA`,g:`Drama`,cast:[`Gregory Peck`],p:`A journalist poses as Jewish to expose everyday antisemitism in postwar America.`},
+{id:'bp021',cat:'bp',t:`Hamlet`,y:`1948`,d:`Laurence Olivier`,c:`UK`,g:`Drama`,cast:[`Laurence Olivier`],p:`Olivier's own adaptation of Shakespeare's tragedy; the first non-American film to win Best Picture.`},
+{id:'bp022',cat:'bp',t:`All the King's Men`,y:`1949`,d:`Robert Rossen`,c:`USA`,g:`Drama`,cast:[`Broderick Crawford`],p:`A political drama loosely inspired by a Southern governor's rise and corruption.`},
+{id:'bp023',cat:'bp',t:`All About Eve`,y:`1950`,d:`Joseph L. Mankiewicz`,c:`USA`,g:`Drama`,cast:[`Bette Davis`,`Anne Baxter`],p:`A scathing backstage drama about ambition and aging in the theater world.`},
+{id:'bp024',cat:'bp',t:`An American in Paris`,y:`1951`,d:`Vincente Minnelli`,c:`USA`,g:`Musical`,cast:[`Gene Kelly`],p:`A lavish musical romance built around George Gershwin's music, capped by an extended ballet sequence.`},
+{id:'bp025',cat:'bp',t:`The Greatest Show on Earth`,y:`1952`,d:`Cecil B. DeMille`,c:`USA`,g:`Drama`,cast:[`Betty Hutton`,`Charlton Heston`],p:`A circus-set melodrama produced with DeMille's trademark spectacle.`},
+{id:'bp026',cat:'bp',t:`From Here to Eternity`,y:`1953`,d:`Fred Zinnemann`,c:`USA`,g:`Drama`,cast:[`Burt Lancaster`,`Deborah Kerr`],p:`Set among soldiers stationed at Pearl Harbor just before the Japanese attack.`},
+{id:'bp027',cat:'bp',t:`On the Waterfront`,y:`1954`,d:`Elia Kazan`,c:`USA`,g:`Drama`,cast:[`Marlon Brando`],p:`Brando's "I coulda been a contender" drama about corruption on the New York docks.`},
+{id:'bp028',cat:'bp',t:`Marty`,y:`1955`,d:`Delbert Mann`,c:`USA`,g:`Drama`,cast:[`Ernest Borgnine`],p:`A modest, tender romance about a lonely Bronx butcher; still the shortest Best Picture winner ever.`},
+{id:'bp029',cat:'bp',t:`Around the World in 80 Days`,y:`1956`,d:`Michael Anderson`,c:`USA`,g:`Adventure`,cast:[`David Niven`],p:`A globe-trotting adaptation of Jules Verne's adventure novel with dozens of cameo stars.`},
+{id:'bp030',cat:'bp',t:`The Bridge on the River Kwai`,y:`1957`,d:`David Lean`,c:`UK / USA`,g:`War`,cast:[`Alec Guinness`,`William Holden`],p:`British POWs are forced to build a railway bridge for their Japanese captors in Burma.`},
+{id:'bp031',cat:'bp',t:`Gigi`,y:`1958`,d:`Vincente Minnelli`,c:`USA`,g:`Musical`,cast:[`Leslie Caron`],p:`A Belle Époque Parisian musical romance based on a Colette novella.`},
+{id:'bp032',cat:'bp',t:`Ben-Hur`,y:`1959`,d:`William Wyler`,c:`USA`,g:`Epic`,cast:[`Charlton Heston`],p:`A Roman-era epic famous for its chariot race, and a record-setting 11 Oscar wins.`},
+{id:'bp033',cat:'bp',t:`The Apartment`,y:`1960`,d:`Billy Wilder`,c:`USA`,g:`Comedy / Drama`,cast:[`Jack Lemmon`,`Shirley MacLaine`],p:`A bittersweet comedy about a man who lends his apartment to philandering executives.`},
+{id:'bp034',cat:'bp',t:`West Side Story`,y:`1961`,d:`Robert Wise, Jerome Robbins`,c:`USA`,g:`Musical`,cast:[`Natalie Wood`],p:`Romeo and Juliet reimagined amid rival gangs on New York's Upper West Side.`},
+{id:'bp035',cat:'bp',t:`Lawrence of Arabia`,y:`1962`,d:`David Lean`,c:`UK`,g:`Epic`,cast:[`Peter O'Toole`],p:`A sweeping desert epic dramatizing T. E. Lawrence's role in the Arab Revolt.`},
+{id:'bp036',cat:'bp',t:`Tom Jones`,y:`1963`,d:`Tony Richardson`,c:`UK`,g:`Comedy`,cast:[`Albert Finney`],p:`A bawdy, playful adaptation of Henry Fielding's 18th-century picaresque novel.`},
+{id:'bp037',cat:'bp',t:`My Fair Lady`,y:`1964`,d:`George Cukor`,c:`USA`,g:`Musical`,cast:[`Audrey Hepburn`,`Rex Harrison`],p:`A phonetics professor transforms a Cockney flower girl into high society, based on Pygmalion.`},
+{id:'bp038',cat:'bp',t:`The Sound of Music`,y:`1965`,d:`Robert Wise`,c:`USA`,g:`Musical`,cast:[`Julie Andrews`],p:`A singing governess and the von Trapp family flee Austria as the Nazis rise to power.`},
+{id:'bp039',cat:'bp',t:`A Man for All Seasons`,y:`1966`,d:`Fred Zinnemann`,c:`UK`,g:`Drama`,cast:[`Paul Scofield`],p:`Chronicles Sir Thomas More's fatal refusal to endorse Henry VIII's break from the Catholic Church.`},
+{id:'bp040',cat:'bp',t:`In the Heat of the Night`,y:`1967`,d:`Norman Jewison`,c:`USA`,g:`Drama`,cast:[`Sidney Poitier`,`Rod Steiger`],p:`A Black detective helps investigate a murder in a hostile Mississippi town.`},
+{id:'bp041',cat:'bp',t:`Oliver!`,y:`1968`,d:`Carol Reed`,c:`UK`,g:`Musical`,cast:[`Mark Lester`,`Ron Moody`],p:`A musical adaptation of Dickens's Oliver Twist, following an orphan into London's criminal underworld.`},
+{id:'bp042',cat:'bp',t:`Midnight Cowboy`,y:`1969`,d:`John Schlesinger`,c:`USA`,g:`Drama`,cast:[`Dustin Hoffman`,`Jon Voight`],p:`The only X-rated film to win Best Picture, following a hustler and a con man in New York.`},
+{id:'bp043',cat:'bp',t:`Patton`,y:`1970`,d:`Franklin J. Schaffner`,c:`USA`,g:`War / Biopic`,cast:[`George C. Scott`],p:`A biopic of the brilliant, controversial WWII general, opening with its famous monologue before an American flag.`},
+{id:'bp044',cat:'bp',t:`The French Connection`,y:`1971`,d:`William Friedkin`,c:`USA`,g:`Crime`,cast:[`Gene Hackman`],p:`A gritty New York cop thriller built around one of cinema's most famous car chases.`},
+{id:'bp045',cat:'bp',t:`The Godfather`,y:`1972`,d:`Francis Ford Coppola`,c:`USA`,g:`Crime`,cast:[`Marlon Brando`,`Al Pacino`],p:`The story of the Corleone crime family; widely considered one of the greatest films ever made.`},
+{id:'bp046',cat:'bp',t:`The Sting`,y:`1973`,d:`George Roy Hill`,c:`USA`,g:`Crime / Comedy`,cast:[`Paul Newman`,`Robert Redford`],p:`Two grifters run an elaborate con against a ruthless crime boss in Depression-era Chicago.`},
+{id:'bp047',cat:'bp',t:`The Godfather Part II`,y:`1974`,d:`Francis Ford Coppola`,c:`USA`,g:`Crime`,cast:[`Al Pacino`,`Robert De Niro`],p:`A rare sequel to win Best Picture, interweaving young Vito Corleone's rise with Michael's moral collapse.`},
+{id:'bp048',cat:'bp',t:`One Flew Over the Cuckoo's Nest`,y:`1975`,d:`Milos Forman`,c:`USA`,g:`Drama`,cast:[`Jack Nicholson`,`Louise Fletcher`],p:`A rebellious patient clashes with a tyrannical nurse in a psychiatric ward.`},
+{id:'bp049',cat:'bp',t:`Rocky`,y:`1976`,d:`John G. Avildsen`,c:`USA`,g:`Sports Drama`,cast:[`Sylvester Stallone`],p:`A journeyman boxer gets a shot at the heavyweight title, launching one of film's most enduring franchises.`},
+{id:'bp050',cat:'bp',t:`Annie Hall`,y:`1977`,d:`Woody Allen`,c:`USA`,g:`Comedy`,cast:[`Woody Allen`,`Diane Keaton`],p:`A genre-bending romantic comedy about a neurotic comedian's relationship with an aspiring singer.`},
+{id:'bp051',cat:'bp',t:`The Deer Hunter`,y:`1978`,d:`Michael Cimino`,c:`USA`,g:`War Drama`,cast:[`Robert De Niro`,`Christopher Walken`],p:`Follows steelworker friends before, during, and after the Vietnam War, including its harrowing Russian roulette scenes.`},
+{id:'bp052',cat:'bp',t:`Kramer vs. Kramer`,y:`1979`,d:`Robert Benton`,c:`USA`,g:`Drama`,cast:[`Dustin Hoffman`,`Meryl Streep`],p:`A wrenching custody battle drama that captured the era's shifting gender roles.`},
+{id:'bp053',cat:'bp',t:`Ordinary People`,y:`1980`,d:`Robert Redford`,c:`USA`,g:`Drama`,cast:[`Donald Sutherland`,`Mary Tyler Moore`],p:`A family unravels in the aftermath of a son's death, in Redford's directorial debut.`},
+{id:'bp054',cat:'bp',t:`Chariots of Fire`,y:`1981`,d:`Hugh Hudson`,c:`UK`,g:`Sports Drama`,cast:[`Ben Cross`,`Ian Charleson`],p:`Two British runners chase Olympic glory at the 1924 Paris Games, scored by its iconic Vangelis theme.`},
+{id:'bp055',cat:'bp',t:`Gandhi`,y:`1982`,d:`Richard Attenborough`,c:`UK / India`,g:`Biopic`,cast:[`Ben Kingsley`],p:`An epic biopic of Mahatma Gandhi's nonviolent campaign for Indian independence.`},
+{id:'bp056',cat:'bp',t:`Terms of Endearment`,y:`1983`,d:`James L. Brooks`,c:`USA`,g:`Drama`,cast:[`Shirley MacLaine`,`Debra Winger`],p:`A mother-daughter relationship drama that shifts from comedy to tragedy.`},
+{id:'bp057',cat:'bp',t:`Amadeus`,y:`1984`,d:`Milos Forman`,c:`USA`,g:`Biopic`,cast:[`F. Murray Abraham`,`Tom Hulce`],p:`A fictionalized rivalry between Mozart and court composer Antonio Salieri.`},
+{id:'bp058',cat:'bp',t:`Out of Africa`,y:`1985`,d:`Sydney Pollack`,c:`USA`,g:`Romance`,cast:[`Meryl Streep`,`Robert Redford`],p:`A sweeping romance based on Karen Blixen's memoir of running a coffee farm in colonial Kenya.`},
+{id:'bp059',cat:'bp',t:`Platoon`,y:`1986`,d:`Oliver Stone`,c:`USA`,g:`War`,cast:[`Charlie Sheen`,`Tom Berenger`],p:`A visceral, semi-autobiographical Vietnam War drama drawn from Stone's own combat experience.`},
+{id:'bp060',cat:'bp',t:`The Last Emperor`,y:`1987`,d:`Bernardo Bertolucci`,c:`UK / Italy`,g:`Biopic`,cast:[`John Lone`],p:`A sumptuous biopic of Puyi, China's last emperor, filmed with unprecedented access inside the Forbidden City.`},
+{id:'bp061',cat:'bp',t:`Rain Man`,y:`1988`,d:`Barry Levinson`,c:`USA`,g:`Drama`,cast:[`Dustin Hoffman`,`Tom Cruise`],p:`A self-absorbed hustler bonds with the autistic-savant brother he never knew he had, on a cross-country drive.`},
+{id:'bp062',cat:'bp',t:`Driving Miss Daisy`,y:`1989`,d:`Bruce Beresford`,c:`USA`,g:`Drama`,cast:[`Jessica Tandy`,`Morgan Freeman`],p:`A gentle drama tracing decades of friendship between an elderly Southern woman and her Black chauffeur.`},
+{id:'bp063',cat:'bp',t:`Dances with Wolves`,y:`1990`,d:`Kevin Costner`,c:`USA`,g:`Western`,cast:[`Kevin Costner`],p:`A Civil War soldier is gradually assimilated into a Lakota Sioux community on the frontier.`},
+{id:'bp064',cat:'bp',t:`The Silence of the Lambs`,y:`1991`,d:`Jonathan Demme`,c:`USA`,g:`Thriller`,cast:[`Jodie Foster`,`Anthony Hopkins`],p:`A trainee FBI agent consults an imprisoned cannibalistic psychiatrist to catch another serial killer.`},
+{id:'bp065',cat:'bp',t:`Unforgiven`,y:`1992`,d:`Clint Eastwood`,c:`USA`,g:`Western`,cast:[`Clint Eastwood`,`Gene Hackman`],p:`A retired gunslinger takes one last job, in a Western that dismantles the genre's mythology.`},
+{id:'bp066',cat:'bp',t:`Schindler's List`,y:`1993`,d:`Steven Spielberg`,c:`USA`,g:`Historical Drama`,cast:[`Liam Neeson`,`Ralph Fiennes`],p:`A German industrialist saves over a thousand Jewish refugees from the Holocaust.`},
+{id:'bp067',cat:'bp',t:`Forrest Gump`,y:`1994`,d:`Robert Zemeckis`,c:`USA`,g:`Comedy / Drama`,cast:[`Tom Hanks`,`Robin Wright`],p:`A slow-witted but kind-hearted man drifts through three decades of American history.`},
+{id:'bp068',cat:'bp',t:`Braveheart`,y:`1995`,d:`Mel Gibson`,c:`USA`,g:`Epic`,cast:[`Mel Gibson`],p:`A fictionalized account of Scottish knight William Wallace's rebellion against English rule.`},
+{id:'bp069',cat:'bp',t:`The English Patient`,y:`1996`,d:`Anthony Minghella`,c:`USA / UK`,g:`Romance`,cast:[`Ralph Fiennes`,`Kristin Scott Thomas`],p:`A badly burned man recalls a doomed wartime love affair in North Africa.`},
+{id:'bp070',cat:'bp',t:`Titanic`,y:`1997`,d:`James Cameron`,c:`USA`,g:`Romance / Disaster`,cast:[`Leonardo DiCaprio`,`Kate Winslet`],p:`A fictional romance set aboard the doomed ocean liner; for years the highest-grossing film ever made.`},
+{id:'bp071',cat:'bp',t:`Shakespeare in Love`,y:`1998`,d:`John Madden`,c:`USA / UK`,g:`Comedy`,cast:[`Gwyneth Paltrow`,`Joseph Fiennes`],p:`A fictional romance imagines the muse and circumstances behind the writing of Romeo and Juliet.`},
+{id:'bp072',cat:'bp',t:`American Beauty`,y:`1999`,d:`Sam Mendes`,c:`USA`,g:`Drama`,cast:[`Kevin Spacey`,`Annette Bening`],p:`A suburban father's midlife crisis unravels his family's carefully maintained facade.`},
+{id:'bp073',cat:'bp',t:`Gladiator`,y:`2000`,d:`Ridley Scott`,c:`USA / UK`,g:`Epic`,cast:[`Russell Crowe`,`Joaquin Phoenix`],p:`A betrayed Roman general is enslaved and fights his way back through the gladiatorial arena.`},
+{id:'bp074',cat:'bp',t:`A Beautiful Mind`,y:`2001`,d:`Ron Howard`,c:`USA`,g:`Biopic`,cast:[`Russell Crowe`],p:`A biopic of mathematician John Nash's genius and struggle with schizophrenia.`},
+{id:'bp075',cat:'bp',t:`Chicago`,y:`2002`,d:`Rob Marshall`,c:`USA`,g:`Musical`,cast:[`Renée Zellweger`,`Catherine Zeta-Jones`],p:`A satirical musical about fame, murder, and celebrity in Jazz Age Chicago.`},
+{id:'bp076',cat:'bp',t:`The Lord of the Rings: The Return of the King`,y:`2003`,d:`Peter Jackson`,c:`USA / New Zealand`,g:`Fantasy`,cast:[`Elijah Wood`,`Viggo Mortensen`],p:`The concluding chapter of the Tolkien trilogy; the first fantasy film to win Best Picture.`},
+{id:'bp077',cat:'bp',t:`Million Dollar Baby`,y:`2004`,d:`Clint Eastwood`,c:`USA`,g:`Sports Drama`,cast:[`Hilary Swank`,`Clint Eastwood`],p:`An aging trainer reluctantly takes on a determined female boxer.`},
+{id:'bp078',cat:'bp',t:`Crash`,y:`2005`,d:`Paul Haggis`,c:`USA`,g:`Drama`,cast:[`Sandra Bullock`,`Don Cheadle`],p:`An ensemble drama tracing interconnected stories of race and prejudice across Los Angeles.`},
+{id:'bp079',cat:'bp',t:`The Departed`,y:`2006`,d:`Martin Scorsese`,c:`USA`,g:`Crime`,cast:[`Leonardo DiCaprio`,`Matt Damon`],p:`An undercover cop and a mob mole try to expose each other inside the Boston Irish mafia.`},
+{id:'bp080',cat:'bp',t:`No Country for Old Men`,y:`2007`,d:`Ethan and Joel Coen`,c:`USA`,g:`Thriller`,cast:[`Javier Bardem`,`Josh Brolin`],p:`A hitman with a coin-flip philosophy pursues a man who stumbled on drug money in the Texas desert.`},
+{id:'bp081',cat:'bp',t:`Slumdog Millionaire`,y:`2008`,d:`Danny Boyle`,c:`UK`,g:`Drama`,cast:[`Dev Patel`],p:`A Mumbai slum-raised teenager's improbable run on a game show is explained through flashbacks of his hard life.`},
+{id:'bp082',cat:'bp',t:`The Hurt Locker`,y:`2009`,d:`Kathryn Bigelow`,c:`USA`,g:`War`,cast:[`Jeremy Renner`],p:`Follows a bomb-disposal unit's tense tours in Iraq; Bigelow became the first woman to win Best Director.`},
+{id:'bp083',cat:'bp',t:`The King's Speech`,y:`2010`,d:`Tom Hooper`,c:`UK`,g:`Historical Drama`,cast:[`Colin Firth`,`Geoffrey Rush`],p:`King George VI works with a speech therapist to overcome his stammer ahead of WWII.`},
+{id:'bp084',cat:'bp',t:`The Artist`,y:`2011`,d:`Michel Hazanavicius`,c:`France`,g:`Comedy / Drama`,cast:[`Jean Dujardin`,`Bérénice Bejo`],p:`A mostly-silent, black-and-white love letter to Hollywood's transition from silent film to talkies.`},
+{id:'bp085',cat:'bp',t:`Argo`,y:`2012`,d:`Ben Affleck`,c:`USA`,g:`Thriller`,cast:[`Ben Affleck`],p:`Dramatizes the CIA's real 1980 operation to rescue six Americans hiding in Tehran during the hostage crisis.`},
+{id:'bp086',cat:'bp',t:`12 Years a Slave`,y:`2013`,d:`Steve McQueen`,c:`UK / USA`,g:`Historical Drama`,cast:[`Chiwetel Ejiofor`],p:`Adapts the true memoir of Solomon Northup, a free Black man kidnapped and sold into slavery.`},
+{id:'bp087',cat:'bp',t:`Birdman`,y:`2014`,d:`Alejandro G. Iñárritu`,c:`USA`,g:`Comedy / Drama`,cast:[`Michael Keaton`],p:`A washed-up superhero actor stages a Broadway comeback, shot to resemble one continuous take.`},
+{id:'bp088',cat:'bp',t:`Spotlight`,y:`2015`,d:`Tom McCarthy`,c:`USA`,g:`Drama`,cast:[`Mark Ruffalo`,`Rachel McAdams`],p:`Dramatizes the Boston Globe team that uncovered systemic child abuse cover-ups in the Catholic Church.`},
+{id:'bp089',cat:'bp',t:`Moonlight`,y:`2016`,d:`Barry Jenkins`,c:`USA`,g:`Drama`,cast:[`Trevante Rhodes`,`Mahershala Ali`],p:`Follows a Black gay man's coming-of-age across three chapters of his life in Miami.`},
+{id:'bp090',cat:'bp',t:`The Shape of Water`,y:`2017`,d:`Guillermo del Toro`,c:`USA`,g:`Fantasy / Romance`,cast:[`Sally Hawkins`],p:`A mute cleaning woman falls in love with a captive amphibious creature at a Cold War-era research facility.`},
+{id:'bp091',cat:'bp',t:`Green Book`,y:`2018`,d:`Peter Farrelly`,c:`USA`,g:`Drama`,cast:[`Viggo Mortensen`,`Mahershala Ali`],p:`A Black pianist and his Italian-American driver tour the segregated Deep South in the early 1960s.`},
+{id:'bp092',cat:'bp',t:`Parasite`,y:`2019`,d:`Bong Joon-ho`,c:`South Korea`,g:`Thriller / Drama`,cast:[`Song Kang-ho`],p:`A poor family schemes its way into a wealthy household; the first non-English-language film to win Best Picture.`},
+{id:'bp093',cat:'bp',t:`Nomadland`,y:`2020`,d:`Chloé Zhao`,c:`USA`,g:`Drama`,cast:[`Frances McDormand`],p:`A woman takes to the road living as a modern nomad after losing her livelihood in the Great Recession's wake.`},
+{id:'bp094',cat:'bp',t:`CODA`,y:`2021`,d:`Sian Heder`,c:`USA`,g:`Drama`,cast:[`Emilia Jones`],p:`The only hearing member of a deaf family pursues her own passion for singing.`},
+{id:'bp095',cat:'bp',t:`Everything Everywhere All at Once`,y:`2022`,d:`Daniel Kwan, Daniel Scheinert`,c:`USA`,g:`Sci-Fi / Comedy`,cast:[`Michelle Yeoh`],p:`A laundromat owner discovers she must connect with parallel-universe versions of herself to save existence.`},
+{id:'bp096',cat:'bp',t:`Oppenheimer`,y:`2023`,d:`Christopher Nolan`,c:`USA / UK`,g:`Biopic`,cast:[`Cillian Murphy`],p:`Chronicles physicist J. Robert Oppenheimer's leadership of the Manhattan Project and its moral aftermath.`},
+{id:'bp097',cat:'bp',t:`Anora`,y:`2024`,d:`Sean Baker`,c:`USA`,g:`Comedy / Drama`,cast:[`Mikey Madison`],p:`A Brooklyn sex worker's whirlwind marriage to a Russian oligarch's son spirals into chaos.`},
+
+/* ---------- BEST INTERNATIONAL FEATURE (69) ---------- */
+{id:'wf001',cat:'wf',t:`La Strada`,y:`1956`,d:`Federico Fellini`,c:`Italy`,g:`Drama`,cast:[`Giulietta Masina`],p:`A melancholic traveling strongman drama considered one of Fellini's most personal films.`},
+{id:'wf002',cat:'wf',t:`The Nights of Cabiria`,y:`1957`,d:`Federico Fellini`,c:`Italy`,g:`Drama`,cast:[`Giulietta Masina`],p:`Follows a hopeful, endlessly resilient Roman streetwalker searching for love.`},
+{id:'wf003',cat:'wf',t:`Mon Oncle`,y:`1958`,d:`Jacques Tati`,c:`France`,g:`Comedy`,cast:[`Jacques Tati`],p:`A gentle satire of modern automation and suburban living, starring Tati's beloved Monsieur Hulot.`},
+{id:'wf004',cat:'wf',t:`Black Orpheus`,y:`1959`,d:`Marcel Camus`,c:`France / Brazil`,g:`Drama / Musical`,cast:[],p:`Retells the Orpheus and Eurydice myth against the backdrop of Rio de Janeiro's Carnival.`},
+{id:'wf005',cat:'wf',t:`The Virgin Spring`,y:`1960`,d:`Ingmar Bergman`,c:`Sweden`,g:`Drama`,cast:[`Max von Sydow`],p:`A medieval revenge tale about a father avenging his daughter's murder.`},
+{id:'wf006',cat:'wf',t:`Through a Glass Darkly`,y:`1961`,d:`Ingmar Bergman`,c:`Sweden`,g:`Drama`,cast:[`Harriet Andersson`],p:`A woman's descent into psychosis unfolds over one tense island summer, the first of Bergman's "Faith Trilogy."`},
+{id:'wf007',cat:'wf',t:`Sundays and Cybèle`,y:`1962`,d:`Serge Bourguignon`,c:`France`,g:`Drama`,cast:[],p:`A traumatized war veteran forms an unusual friendship with a young orphan girl.`},
+{id:'wf008',cat:'wf',t:`8½`,y:`1963`,d:`Federico Fellini`,c:`Italy`,g:`Drama`,cast:[`Marcello Mastroianni`],p:`A blocked film director's fantasies and memories blur together; widely considered a landmark of cinematic self-reflection.`},
+{id:'wf009',cat:'wf',t:`Yesterday, Today and Tomorrow`,y:`1964`,d:`Vittorio De Sica`,c:`Italy`,g:`Comedy`,cast:[`Sophia Loren`,`Marcello Mastroianni`],p:`Three comic vignettes of love and desire starring De Sica's frequent leading pair.`},
+{id:'wf010',cat:'wf',t:`The Shop on Main Street`,y:`1965`,d:`Ján Kadár, Elmar Klos`,c:`Czechoslovakia`,g:`Drama`,cast:[],p:`A carpenter is appointed "Aryanizer" of an elderly Jewish widow's shop under Nazi occupation.`},
+{id:'wf011',cat:'wf',t:`A Man and a Woman`,y:`1966`,d:`Claude Lelouch`,c:`France`,g:`Romance`,cast:[`Anouk Aimée`],p:`A widow and widower fall in love, told with the film's iconic looping musical theme.`},
+{id:'wf012',cat:'wf',t:`Closely Watched Trains`,y:`1967`,d:`Jiří Menzel`,c:`Czechoslovakia`,g:`Comedy / Drama`,cast:[],p:`A young railway apprentice's coming-of-age is interrupted by wartime sabotage.`},
+{id:'wf013',cat:'wf',t:`War and Peace`,y:`1968`,d:`Sergei Bondarchuk`,c:`Soviet Union`,g:`Epic`,cast:[],p:`A monumental, multi-part adaptation of Tolstoy's novel, among the most expensive films ever made at the time.`},
+{id:'wf014',cat:'wf',t:`Z`,y:`1969`,d:`Costa-Gavras`,c:`Algeria / France`,g:`Political Thriller`,cast:[`Yves Montand`],p:`A political assassination thriller loosely based on the real murder of a Greek politician.`},
+{id:'wf015',cat:'wf',t:`Investigation of a Citizen Above Suspicion`,y:`1970`,d:`Elio Petri`,c:`Italy`,g:`Thriller`,cast:[`Gian Maria Volonté`],p:`A police chief murders his mistress and taunts investigators, confident his position places him beyond suspicion.`},
+{id:'wf016',cat:'wf',t:`The Garden of the Finzi-Continis`,y:`1971`,d:`Vittorio De Sica`,c:`Italy`,g:`Drama`,cast:[],p:`A wealthy Jewish family in Fascist Italy retreats behind their garden walls as persecution closes in.`},
+{id:'wf017',cat:'wf',t:`The Discreet Charm of the Bourgeoisie`,y:`1972`,d:`Luis Buñuel`,c:`France`,g:`Comedy`,cast:[],p:`A surreal comedy in which a group of friends' dinner plans are endlessly, absurdly interrupted.`},
+{id:'wf018',cat:'wf',t:`Day for Night`,y:`1973`,d:`François Truffaut`,c:`France`,g:`Comedy / Drama`,cast:[`Jacqueline Bisset`],p:`A film-within-a-film comedy about the chaos of shooting a movie.`},
+{id:'wf019',cat:'wf',t:`Amarcord`,y:`1974`,d:`Federico Fellini`,c:`Italy`,g:`Comedy / Drama`,cast:[],p:`A nostalgic, episodic portrait of Fellini's adolescence in a small Italian coastal town under Fascism.`},
+{id:'wf020',cat:'wf',t:`Dersu Uzala`,y:`1975`,d:`Akira Kurosawa`,c:`Soviet Union / Japan`,g:`Adventure`,cast:[],p:`A Russian surveyor's friendship with an elderly Siberian hunter-guide, Kurosawa's only non-Japanese-language film.`},
+{id:'wf021',cat:'wf',t:`Black and White in Color`,y:`1976`,d:`Jean-Jacques Annaud`,c:`Ivory Coast / France`,g:`Comedy / War`,cast:[],p:`Colonial French settlers in Africa comically bumble into combat with a nearby German outpost during WWI.`},
+{id:'wf022',cat:'wf',t:`Madame Rosa`,y:`1977`,d:`Moshé Mizrahi`,c:`France`,g:`Drama`,cast:[`Simone Signoret`],p:`An aging Holocaust survivor cares for the children of Parisian prostitutes.`},
+{id:'wf023',cat:'wf',t:`Get Out Your Handkerchiefs`,y:`1978`,d:`Bertrand Blier`,c:`France`,g:`Comedy`,cast:[`Gérard Depardieu`],p:`A husband tries increasingly absurd schemes to cure his wife's chronic sadness.`},
+{id:'wf024',cat:'wf',t:`The Tin Drum`,y:`1979`,d:`Volker Schlöndorff`,c:`West Germany`,g:`Drama`,cast:[],p:`A boy who wills himself to stop growing narrates his family's history through Nazi Germany, adapted from Günter Grass's novel.`},
+{id:'wf025',cat:'wf',t:`Moscow Does Not Believe in Tears`,y:`1980`,d:`Vladimir Menshov`,c:`Soviet Union`,g:`Drama`,cast:[],p:`Follows three women's diverging fortunes in Moscow across two decades.`},
+{id:'wf026',cat:'wf',t:`Mephisto`,y:`1981`,d:`István Szabó`,c:`Hungary`,g:`Drama`,cast:[`Klaus Maria Brandauer`],p:`An ambitious actor compromises himself to thrive under the Nazi regime.`},
+{id:'wf027',cat:'wf',t:`To Begin Again`,y:`1982`,d:`José Luis Garci`,c:`Spain`,g:`Drama`,cast:[],p:`An elderly Spanish Nobel laureate returns home to reconnect with a lost love.`},
+{id:'wf028',cat:'wf',t:`Fanny and Alexander`,y:`1983`,d:`Ingmar Bergman`,c:`Sweden`,g:`Drama`,cast:[],p:`A richly detailed family saga seen through two children's eyes in turn-of-the-century Sweden.`},
+{id:'wf029',cat:'wf',t:`Dangerous Moves`,y:`1984`,d:`Richard Dembo`,c:`Switzerland`,g:`Drama`,cast:[],p:`A psychological duel between an aging chess champion and his younger challenger at a world championship.`},
+{id:'wf030',cat:'wf',t:`The Official Story`,y:`1985`,d:`Luis Puenzo`,c:`Argentina`,g:`Drama`,cast:[],p:`A woman gradually uncovers the truth that her adopted daughter may be a child of the "disappeared."`},
+{id:'wf031',cat:'wf',t:`The Assault`,y:`1986`,d:`Fons Rademakers`,c:`Netherlands`,g:`Drama`,cast:[],p:`A man spends decades piecing together the truth of a wartime massacre that killed his family.`},
+{id:'wf032',cat:'wf',t:`Babette's Feast`,y:`1987`,d:`Gabriel Axel`,c:`Denmark`,g:`Drama`,cast:[],p:`A French refugee cook prepares an extravagant feast for her austere Danish hosts.`},
+{id:'wf033',cat:'wf',t:`Pelle the Conqueror`,y:`1988`,d:`Bille August`,c:`Denmark`,g:`Drama`,cast:[`Max von Sydow`],p:`A Swedish father and son endure hardship as farm laborers in 19th-century Denmark.`},
+{id:'wf034',cat:'wf',t:`Cinema Paradiso`,y:`1989`,d:`Giuseppe Tornatore`,c:`Italy`,g:`Drama`,cast:[],p:`A filmmaker recalls his childhood friendship with a small-town cinema projectionist.`},
+{id:'wf035',cat:'wf',t:`Journey of Hope`,y:`1990`,d:`Xavier Koller`,c:`Switzerland`,g:`Drama`,cast:[],p:`A Turkish family's perilous, ultimately tragic journey seeking a better life in Switzerland.`},
+{id:'wf036',cat:'wf',t:`Mediterraneo`,y:`1991`,d:`Gabriele Salvatores`,c:`Italy`,g:`Comedy / War`,cast:[],p:`Stranded Italian soldiers find unexpected peace on a remote Greek island during WWII.`},
+{id:'wf037',cat:'wf',t:`Indochine`,y:`1992`,d:`Régis Wargnier`,c:`France`,g:`Drama / Romance`,cast:[`Catherine Deneuve`],p:`A French rubber-plantation owner and her adopted Vietnamese daughter navigate love amid colonial upheaval.`},
+{id:'wf038',cat:'wf',t:`Belle Époque`,y:`1993`,d:`Fernando Trueba`,c:`Spain`,g:`Comedy`,cast:[],p:`A young army deserter is drawn into the romantic entanglements of a widower's four daughters.`},
+{id:'wf039',cat:'wf',t:`Burnt by the Sun`,y:`1994`,d:`Nikita Mikhalkov`,c:`Russia`,g:`Drama`,cast:[],p:`A Soviet military hero's idyllic countryside life unravels during Stalin's purges.`},
+{id:'wf040',cat:'wf',t:`Antonia's Line`,y:`1995`,d:`Marleen Gorris`,c:`Netherlands`,g:`Drama`,cast:[],p:`A multi-generational saga of women building an independent, matriarchal community in rural Holland.`},
+{id:'wf041',cat:'wf',t:`Kolya`,y:`1996`,d:`Jan Svěrák`,c:`Czech Republic`,g:`Comedy / Drama`,cast:[],p:`A bachelor cellist reluctantly becomes the guardian of a young Russian boy.`},
+{id:'wf042',cat:'wf',t:`Character`,y:`1997`,d:`Mike van Diem`,c:`Netherlands`,g:`Drama`,cast:[],p:`A bailiff's estranged, illegitimate son rises through a law firm as their bitter rivalry deepens.`},
+{id:'wf043',cat:'wf',t:`Life Is Beautiful`,y:`1998`,d:`Roberto Benigni`,c:`Italy`,g:`Comedy / Drama`,cast:[`Roberto Benigni`],p:`A father shields his young son from the horror of a concentration camp by turning it into an elaborate game.`},
+{id:'wf044',cat:'wf',t:`All About My Mother`,y:`1999`,d:`Pedro Almodóvar`,c:`Spain`,g:`Drama`,cast:[`Cecilia Roth`],p:`A mother searches for her dead son's father amid a vivid community of women in Barcelona.`},
+{id:'wf045',cat:'wf',t:`Crouching Tiger, Hidden Dragon`,y:`2000`,d:`Ang Lee`,c:`Taiwan`,g:`Wuxia / Action`,cast:[`Chow Yun-fat`,`Michelle Yeoh`],p:`A sweeping martial-arts epic of stolen swords and forbidden love.`},
+{id:'wf046',cat:'wf',t:`No Man's Land`,y:`2001`,d:`Danis Tanović`,c:`Bosnia and Herzegovina`,g:`War / Dark Comedy`,cast:[],p:`Two enemy soldiers from the Bosnian War are trapped together in a trench with a live mine between them.`},
+{id:'wf047',cat:'wf',t:`Nowhere in Africa`,y:`2002`,d:`Caroline Link`,c:`Germany`,g:`Drama`,cast:[],p:`A Jewish family flees Nazi Germany to build a new life on a Kenyan farm.`},
+{id:'wf048',cat:'wf',t:`The Barbarian Invasions`,y:`2003`,d:`Denys Arcand`,c:`Canada`,g:`Drama`,cast:[],p:`A dying professor reconnects with estranged friends and family in his final days.`},
+{id:'wf049',cat:'wf',t:`The Sea Inside`,y:`2004`,d:`Alejandro Amenábar`,c:`Spain`,g:`Drama`,cast:[`Javier Bardem`],p:`A quadriplegic man's decades-long legal fight for the right to end his life.`},
+{id:'wf050',cat:'wf',t:`Tsotsi`,y:`2005`,d:`Gavin Hood`,c:`South Africa`,g:`Drama`,cast:[],p:`A young Johannesburg gang leader is transformed after accidentally kidnapping a baby during a carjacking.`},
+{id:'wf051',cat:'wf',t:`The Lives of Others`,y:`2006`,d:`Florian Henckel von Donnersmarck`,c:`Germany`,g:`Drama / Thriller`,cast:[],p:`An East German secret police agent grows conflicted while surveilling a playwright and his lover.`},
+{id:'wf052',cat:'wf',t:`The Counterfeiters`,y:`2007`,d:`Stefan Ruzowitzky`,c:`Austria`,g:`War Drama`,cast:[],p:`Jewish concentration-camp prisoners are forced to forge foreign currency to fund the Nazi war effort.`},
+{id:'wf053',cat:'wf',t:`Departures`,y:`2008`,d:`Yōjirō Takita`,c:`Japan`,g:`Drama`,cast:[],p:`A failed cellist stumbles into work preparing the dead for funerals in traditional Japanese rites.`},
+{id:'wf054',cat:'wf',t:`The Secret in Their Eyes`,y:`2009`,d:`Juan José Campanella`,c:`Argentina`,g:`Thriller / Romance`,cast:[],p:`A retired legal counselor revisits a decades-old unsolved murder case.`},
+{id:'wf055',cat:'wf',t:`In a Better World`,y:`2010`,d:`Susanne Bier`,c:`Denmark`,g:`Drama`,cast:[],p:`Interweaves a doctor's work in an African refugee camp with his son's bullying crisis back home in Denmark.`},
+{id:'wf056',cat:'wf',t:`A Separation`,y:`2011`,d:`Asghar Farhadi`,c:`Iran`,g:`Drama`,cast:[],p:`A couple's divorce and a caregiver dispute spiral into a tense moral and legal reckoning.`},
+{id:'wf057',cat:'wf',t:`Amour`,y:`2012`,d:`Michael Haneke`,c:`Austria`,g:`Drama`,cast:[`Jean-Louis Trintignant`,`Emmanuelle Riva`],p:`An elderly husband cares for his wife after a stroke leaves her increasingly incapacitated.`},
+{id:'wf058',cat:'wf',t:`The Great Beauty`,y:`2013`,d:`Paolo Sorrentino`,c:`Italy`,g:`Drama`,cast:[],p:`An aging Roman writer reflects on beauty, decadence, and disillusionment across the city's high society.`},
+{id:'wf059',cat:'wf',t:`Ida`,y:`2014`,d:`Paweł Pawlikowski`,c:`Poland`,g:`Drama`,cast:[],p:`A young novitiate nun discovers her Jewish heritage and her family's wartime fate before taking her vows.`},
+{id:'wf060',cat:'wf',t:`Son of Saul`,y:`2015`,d:`László Nemes`,c:`Hungary`,g:`War Drama`,cast:[],p:`A Sonderkommando prisoner at Auschwitz risks everything to give a boy's body a proper burial.`},
+{id:'wf061',cat:'wf',t:`The Salesman`,y:`2016`,d:`Asghar Farhadi`,c:`Iran`,g:`Drama`,cast:[],p:`A couple's production of Death of a Salesman parallels a violent home invasion that upends their marriage.`},
+{id:'wf062',cat:'wf',t:`A Fantastic Woman`,y:`2017`,d:`Sebastián Lelio`,c:`Chile`,g:`Drama`,cast:[],p:`A transgender woman faces prejudice and suspicion from her late partner's family after his sudden death.`},
+{id:'wf063',cat:'wf',t:`Roma`,y:`2018`,d:`Alfonso Cuarón`,c:`Mexico`,g:`Drama`,cast:[],p:`A domestic worker's quiet resilience anchors a Mexico City family through upheaval, filmed in luminous black and white.`},
+{id:'wf064',cat:'wf',t:`Parasite`,y:`2019`,d:`Bong Joon-ho`,c:`South Korea`,g:`Thriller / Drama`,cast:[`Song Kang-ho`],p:`A poor family infiltrates a wealthy household's staff; also won Best Picture that year, the first film to do both.`},
+{id:'wf065',cat:'wf',t:`Another Round`,y:`2020`,d:`Thomas Vinterberg`,c:`Denmark`,g:`Comedy / Drama`,cast:[`Mads Mikkelsen`],p:`Four teachers test a theory that a small, constant blood-alcohol level might improve their lives.`},
+{id:'wf066',cat:'wf',t:`Drive My Car`,y:`2021`,d:`Ryusuke Hamaguchi`,c:`Japan`,g:`Drama`,cast:[],p:`A widowed theater director processes grief through a stage production and his enigmatic driver.`},
+{id:'wf067',cat:'wf',t:`All Quiet on the Western Front`,y:`2022`,d:`Edward Berger`,c:`Germany`,g:`War`,cast:[],p:`A new, brutal German-language adaptation of the WWI anti-war classic.`},
+{id:'wf068',cat:'wf',t:`The Zone of Interest`,y:`2023`,d:`Jonathan Glazer`,c:`UK`,g:`Drama`,cast:[],p:`The Auschwitz commandant's family builds an idyllic domestic life on the other side of the camp wall.`},
+{id:'wf069',cat:'wf',t:`I'm Still Here`,y:`2024`,d:`Walter Salles`,c:`Brazil`,g:`Drama`,cast:[`Fernanda Torres`],p:`A mother searches for answers after her husband is disappeared by Brazil's military dictatorship.`},
+
+/* ---------- BEST ANIMATED FEATURE (24) ---------- */
+{id:'af001',cat:'af',t:`Shrek`,y:`2001`,d:`Andrew Adamson, Vicky Jenson`,c:`USA`,g:`Animation / Comedy`,cast:[`Mike Myers`,`Eddie Murphy`],p:`An ogre's swamp is invaded by fairy-tale exiles, launching DreamWorks' irreverent take on fantasy tropes.`},
+{id:'af002',cat:'af',t:`Spirited Away`,y:`2002`,d:`Hayao Miyazaki`,c:`Japan`,g:`Animation / Fantasy`,cast:[],p:`A girl navigates a spirit world of bathhouses and shape-shifting deities to save her transformed parents.`},
+{id:'af003',cat:'af',t:`Finding Nemo`,y:`2003`,d:`Andrew Stanton`,c:`USA`,g:`Animation / Adventure`,cast:[`Albert Brooks`,`Ellen DeGeneres`],p:`An anxious clownfish crosses the ocean searching for his kidnapped son.`},
+{id:'af004',cat:'af',t:`The Incredibles`,y:`2004`,d:`Brad Bird`,c:`USA`,g:`Animation / Action`,cast:[`Craig T. Nelson`,`Holly Hunter`],p:`A family of retired superheroes is pulled back into action.`},
+{id:'af005',cat:'af',t:`Wallace & Gromit: The Curse of the Were-Rabbit`,y:`2005`,d:`Nick Park, Steve Box`,c:`UK`,g:`Animation / Comedy`,cast:[],p:`The stop-motion inventor and his dog hunt a giant rabbit terrorizing a village's vegetable competition.`},
+{id:'af006',cat:'af',t:`Happy Feet`,y:`2006`,d:`George Miller`,c:`USA / Australia`,g:`Animation / Musical`,cast:[],p:`An emperor penguin who can't sing but can dance searches for his place among his colony.`},
+{id:'af007',cat:'af',t:`Ratatouille`,y:`2007`,d:`Brad Bird`,c:`USA`,g:`Animation / Comedy`,cast:[`Patton Oswalt`],p:`A rat with a gourmet's palate secretly cooks at a prestigious Parisian restaurant.`},
+{id:'af008',cat:'af',t:`WALL-E`,y:`2008`,d:`Andrew Stanton`,c:`USA`,g:`Animation / Sci-Fi`,cast:[],p:`A lonely trash-compacting robot on an abandoned Earth falls for a sleek scout robot from space.`},
+{id:'af009',cat:'af',t:`Up`,y:`2009`,d:`Pete Docter`,c:`USA`,g:`Animation / Adventure`,cast:[`Ed Asner`],p:`A grieving widower ties thousands of balloons to his house to fulfill a lifelong promise to his late wife.`},
+{id:'af010',cat:'af',t:`Toy Story 3`,y:`2010`,d:`Lee Unkrich`,c:`USA`,g:`Animation / Adventure`,cast:[`Tom Hanks`,`Tim Allen`],p:`Andy's toys face life at a daycare center as their owner leaves for college.`},
+{id:'af011',cat:'af',t:`Rango`,y:`2011`,d:`Gore Verbinski`,c:`USA`,g:`Animation / Western`,cast:[`Johnny Depp`],p:`A lost pet chameleon becomes an unlikely sheriff in a lawless desert town.`},
+{id:'af012',cat:'af',t:`Brave`,y:`2012`,d:`Mark Andrews, Brenda Chapman`,c:`USA`,g:`Animation / Adventure`,cast:[`Kelly Macdonald`],p:`A headstrong Scottish princess defies tradition and a fateful wish reshapes her family.`},
+{id:'af013',cat:'af',t:`Frozen`,y:`2013`,d:`Chris Buck, Jennifer Lee`,c:`USA`,g:`Animation / Musical`,cast:[`Idina Menzel`,`Kristen Bell`],p:`A princess sets off to reconnect with her sister, whose icy powers have frozen their kingdom.`},
+{id:'af014',cat:'af',t:`Big Hero 6`,y:`2014`,d:`Don Hall, Chris Williams`,c:`USA`,g:`Animation / Action`,cast:[],p:`A young roboticist and an inflatable healthcare robot team up with friends to investigate his brother's death.`},
+{id:'af015',cat:'af',t:`Inside Out`,y:`2015`,d:`Pete Docter`,c:`USA`,g:`Animation / Comedy`,cast:[`Amy Poehler`],p:`Personified emotions navigate the mind of a girl adjusting to a difficult family move.`},
+{id:'af016',cat:'af',t:`Zootopia`,y:`2016`,d:`Byron Howard, Rich Moore`,c:`USA`,g:`Animation / Comedy`,cast:[`Ginnifer Goodwin`,`Jason Bateman`],p:`A rookie rabbit cop and a con-artist fox investigate a conspiracy in a city of anthropomorphic animals.`},
+{id:'af017',cat:'af',t:`Coco`,y:`2017`,d:`Lee Unkrich`,c:`USA`,g:`Animation / Musical`,cast:[],p:`A young boy crosses into the Land of the Dead on Día de los Muertos to uncover his family's musical past.`},
+{id:'af018',cat:'af',t:`Spider-Man: Into the Spider-Verse`,y:`2018`,d:`Bob Persichetti, Peter Ramsey, Rodney Rothman`,c:`USA`,g:`Animation / Action`,cast:[],p:`A Brooklyn teenager becomes Spider-Man and meets alternate-universe Spider-people, told in a groundbreaking comic-book animation style.`},
+{id:'af019',cat:'af',t:`Toy Story 4`,y:`2019`,d:`Josh Cooley`,c:`USA`,g:`Animation / Adventure`,cast:[`Tom Hanks`],p:`Woody helps a reluctant new handmade toy find its place while questioning his own purpose.`},
+{id:'af020',cat:'af',t:`Soul`,y:`2020`,d:`Pete Docter`,c:`USA`,g:`Animation / Fantasy`,cast:[`Jamie Foxx`],p:`A jazz musician's soul gets stranded before birth in a realm shaping personalities for Earth.`},
+{id:'af021',cat:'af',t:`Encanto`,y:`2021`,d:`Byron Howard, Jared Bush`,c:`USA`,g:`Animation / Musical`,cast:[],p:`The only ordinary member of a magical Colombian family tries to save their fading powers.`},
+{id:'af022',cat:'af',t:`Guillermo del Toro's Pinocchio`,y:`2022`,d:`Guillermo del Toro, Mark Gustafson`,c:`USA / Mexico`,g:`Animation / Fantasy`,cast:[],p:`A darker, stop-motion retelling of the wooden puppet's story, set in Fascist Italy.`},
+{id:'af023',cat:'af',t:`The Boy and the Heron`,y:`2023`,d:`Hayao Miyazaki`,c:`Japan`,g:`Animation / Fantasy`,cast:[],p:`A grieving boy follows a talking heron into a fantastical world tied to his family's past.`},
+{id:'af024',cat:'af',t:`Flow`,y:`2024`,d:`Gints Zilbalodis`,c:`Latvia`,g:`Animation / Adventure`,cast:[],p:`A solitary cat and other displaced animals band together to survive a mysterious flood, told entirely without dialogue.`},
+
+/* ---------- BEST DOCUMENTARY FEATURE (82) ---------- */
+{id:'df001',cat:'df',t:`Desert Victory`,y:`1943`,d:`—`,c:`UK`,g:`War Documentary`,cast:[],p:`Chronicles the Allied victory over Rommel's forces at the Second Battle of El Alamein using real combat footage.`},
+{id:'df002',cat:'df',t:`The Fighting Lady`,y:`1944`,d:`—`,c:`USA`,g:`War Documentary`,cast:[],p:`Follows a US Navy aircraft carrier's crew through Pacific combat operations.`},
+{id:'df003',cat:'df',t:`The True Glory`,y:`1945`,d:`Garson Kanin, Carol Reed`,c:`USA / UK`,g:`War Documentary`,cast:[],p:`A joint American-British account of the Allied campaign in Europe from D-Day to victory.`},
+{id:'df004',cat:'df',t:`Seeds of Destiny`,y:`1946`,d:`—`,c:`USA`,g:`Documentary`,cast:[],p:`Documents post-WWII humanitarian relief efforts for children in war-ravaged Europe.`},
+{id:'df005',cat:'df',t:`Design for Death`,y:`1947`,d:`Theodor Geisel, Helen Geisel`,c:`USA`,g:`Historical Documentary`,cast:[],p:`Traces the roots of Japanese militarism through history and propaganda, made by the creator of Dr. Seuss.`},
+{id:'df006',cat:'df',t:`The Secret Land`,y:`1948`,d:`—`,c:`USA`,g:`Documentary`,cast:[],p:`Documents Operation Highjump, the US Navy's postwar Antarctic expedition.`},
+{id:'df007',cat:'df',t:`Daybreak in Udi`,y:`1949`,d:`Terry Bishop`,c:`UK`,g:`Documentary`,cast:[],p:`Follows a rural Nigerian community building a maternity clinic under British colonial administration.`},
+{id:'df008',cat:'df',t:`The Titan: Story of Michelangelo`,y:`1950`,d:`Robert Snyder`,c:`USA / Switzerland`,g:`Biographical Documentary`,cast:[],p:`A survey of Michelangelo's life and sculpture, narrated over his major works.`},
+{id:'df009',cat:'df',t:`Kon-Tiki`,y:`1951`,d:`Thor Heyerdahl`,c:`Norway`,g:`Adventure Documentary`,cast:[`Thor Heyerdahl`],p:`Documents Heyerdahl's real 1947 raft voyage across the Pacific to test a theory of ancient migration.`},
+{id:'df010',cat:'df',t:`The Sea Around Us`,y:`1952`,d:`Irwin Allen`,c:`USA`,g:`Nature Documentary`,cast:[],p:`A survey of ocean life and science, based on Rachel Carson's bestselling book.`},
+{id:'df011',cat:'df',t:`The Living Desert`,y:`1953`,d:`James Algar`,c:`USA`,g:`Nature Documentary`,cast:[],p:`A Disney nature documentary revealing the surprising abundance of life in the American desert.`},
+{id:'df012',cat:'df',t:`The Vanishing Prairie`,y:`1954`,d:`James Algar`,c:`USA`,g:`Nature Documentary`,cast:[],p:`Chronicles the wildlife and vanishing ecosystems of the American prairie.`},
+{id:'df013',cat:'df',t:`Helen Keller in Her Story`,y:`1955`,d:`Nancy Hamilton`,c:`USA`,g:`Biographical Documentary`,cast:[`Helen Keller`],p:`A biographical portrait of Helen Keller's life and advocacy work.`},
+{id:'df014',cat:'df',t:`The Silent World`,y:`1956`,d:`Jacques Cousteau, Louis Malle`,c:`France`,g:`Nature Documentary`,cast:[],p:`Cousteau's underwater exploration documentary, among the first films shot extensively beneath the sea.`},
+{id:'df015',cat:'df',t:`Albert Schweitzer`,y:`1957`,d:`Jerome Hill`,c:`USA`,g:`Biographical Documentary`,cast:[`Albert Schweitzer`],p:`A portrait of the physician-missionary and his hospital in French Equatorial Africa.`},
+{id:'df016',cat:'df',t:`White Wilderness`,y:`1958`,d:`James Algar`,c:`USA`,g:`Nature Documentary`,cast:[],p:`A Disney nature documentary of Arctic wildlife, later controversial for its staged scenes.`},
+{id:'df017',cat:'df',t:`Serengeti Shall Not Die`,y:`1959`,d:`Bernhard Grzimek`,c:`West Germany`,g:`Nature Documentary`,cast:[],p:`Advocates for African wildlife conservation amid the Serengeti's threatened ecosystem.`},
+{id:'df018',cat:'df',t:`The Horse with the Flying Tail`,y:`1960`,d:`Larry Lansburgh`,c:`USA`,g:`Documentary`,cast:[],p:`Follows an American show-jumping horse's journey to Olympic competition.`},
+{id:'df019',cat:'df',t:`Sky Above and Mud Beneath`,y:`1961`,d:`Pierre-Dominique Gaisseau`,c:`France`,g:`Adventure Documentary`,cast:[],p:`Documents an expedition trekking across New Guinea's remote interior.`},
+{id:'df020',cat:'df',t:`Black Fox: The Rise and Fall of Adolf Hitler`,y:`1962`,d:`Louis Clyde Stoumen`,c:`USA`,g:`Historical Documentary`,cast:[],p:`Traces Hitler's rise using the Reynard the Fox fable as a framing device.`},
+{id:'df021',cat:'df',t:`Robert Frost: A Lover's Quarrel with the World`,y:`1963`,d:`Robert Hughes`,c:`USA`,g:`Biographical Documentary`,cast:[`Robert Frost`],p:`A portrait of the poet drawn from his own readings and reflections.`},
+{id:'df022',cat:'df',t:`World Without Sun`,y:`1964`,d:`Jacques Cousteau`,c:`France`,g:`Nature Documentary`,cast:[],p:`Cousteau's crew lives for weeks in an underwater station to study life beneath the sea.`},
+{id:'df023',cat:'df',t:`The Eleanor Roosevelt Story`,y:`1965`,d:`Richard Kaplan`,c:`USA`,g:`Biographical Documentary`,cast:[`Eleanor Roosevelt`],p:`A biographical portrait of the former First Lady's public life and humanitarian work.`},
+{id:'df024',cat:'df',t:`The War Game`,y:`1966`,d:`Peter Watkins`,c:`UK`,g:`Docudrama`,cast:[],p:`A harrowing, docudrama-style depiction of a fictional nuclear strike on Britain, banned from British TV for two decades.`},
+{id:'df025',cat:'df',t:`The Anderson Platoon`,y:`1967`,d:`Pierre Schoendoerffer`,c:`France`,g:`War Documentary`,cast:[],p:`Embeds with a US Army platoon during active combat in the Vietnam War.`},
+{id:'df026',cat:'df',t:`Journey into Self`,y:`1968`,d:`—`,c:`USA`,g:`Documentary`,cast:[],p:`Documents an experimental group-therapy encounter session.`},
+{id:'df027',cat:'df',t:`Arthur Rubinstein: The Love of Life`,y:`1969`,d:`—`,c:`USA`,g:`Biographical / Music Documentary`,cast:[`Arthur Rubinstein`],p:`A portrait of the celebrated concert pianist.`},
+{id:'df028',cat:'df',t:`Woodstock`,y:`1970`,d:`Michael Wadleigh`,c:`USA`,g:`Music Documentary`,cast:[],p:`An immersive chronicle of the legendary 1969 music festival and its performers.`},
+{id:'df029',cat:'df',t:`The Hellstrom Chronicle`,y:`1971`,d:`Walon Green`,c:`USA`,g:`Nature Documentary`,cast:[],p:`A pseudo-scientific documentary arguing insects may ultimately outlast humanity.`},
+{id:'df030',cat:'df',t:`Marjoe`,y:`1972`,d:`Howard Smith, Sarah Kernochan`,c:`USA`,g:`Documentary`,cast:[`Marjoe Gortner`],p:`A former child evangelist exposes the theatrical tricks of the traveling revival circuit.`},
+{id:'df031',cat:'df',t:`The Great American Cowboy`,y:`1973`,d:`Kieth Merrill`,c:`USA`,g:`Sports Documentary`,cast:[],p:`Follows rodeo cowboys competing on the professional circuit.`},
+{id:'df032',cat:'df',t:`Hearts and Minds`,y:`1974`,d:`Peter Davis`,c:`USA`,g:`War Documentary`,cast:[],p:`A searing examination of the Vietnam War's origins and its impact on both nations.`},
+{id:'df033',cat:'df',t:`The Man Who Skied Down Everest`,y:`1975`,d:`—`,c:`Japan / Canada`,g:`Adventure Documentary`,cast:[`Yuichiro Miura`],p:`Documents Yuichiro Miura's attempt to ski down Mount Everest.`},
+{id:'df034',cat:'df',t:`Harlan County, USA`,y:`1976`,d:`Barbara Kopple`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Embeds with Kentucky coal miners during a bitter, sometimes violent strike.`},
+{id:'df035',cat:'df',t:`Who Are the DeBolts? And Where Did They Get Nineteen Kids?`,y:`1977`,d:`John Korty`,c:`USA`,g:`Documentary`,cast:[],p:`Profiles a California family that adopted a large number of children with disabilities.`},
+{id:'df036',cat:'df',t:`Scared Straight!`,y:`1978`,d:`Arnold Shapiro`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Juvenile offenders are confronted by inmates in a prison program meant to deter them from crime.`},
+{id:'df037',cat:'df',t:`Best Boy`,y:`1979`,d:`Ira Wohl`,c:`USA`,g:`Documentary`,cast:[],p:`Follows the filmmaker's cousin, a middle-aged man with an intellectual disability, as his elderly parents plan for his future.`},
+{id:'df038',cat:'df',t:`From Mao to Mozart: Isaac Stern in China`,y:`1980`,d:`Murray Lerner`,c:`USA`,g:`Music Documentary`,cast:[`Isaac Stern`],p:`Violinist Isaac Stern tours China shortly after it reopened to Western culture.`},
+{id:'df039',cat:'df',t:`Genocide`,y:`1981`,d:`Arnold Schwartzman`,c:`USA / Israel`,g:`Historical Documentary`,cast:[],p:`Chronicles the Holocaust using archival footage and survivor testimony.`},
+{id:'df040',cat:'df',t:`Just Another Missing Kid`,y:`1982`,d:`John Zaritsky`,c:`Canada`,g:`Documentary`,cast:[],p:`Follows a father's search for answers after his son disappears in the United States.`},
+{id:'df041',cat:'df',t:`He Makes Me Feel Like Dancin'`,y:`1983`,d:`Emile Ardolino`,c:`USA`,g:`Documentary`,cast:[],p:`Profiles a former dancer teaching ballet to New York City public school children.`},
+{id:'df042',cat:'df',t:`The Times of Harvey Milk`,y:`1984`,d:`Rob Epstein`,c:`USA`,g:`Biographical Documentary`,cast:[`Harvey Milk`],p:`Chronicles the life and assassination of San Francisco's first openly gay city supervisor.`},
+{id:'df043',cat:'df',t:`Broken Rainbow`,y:`1985`,d:`Maria Florio, Victoria Mudd`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Documents the forced relocation of Navajo and Hopi families from disputed tribal land.`},
+{id:'df044',cat:'df',t:`Artie Shaw: Time Is All You've Got`,y:`1986`,d:`Brigitte Berman`,c:`USA`,g:`Biographical / Music Documentary`,cast:[`Artie Shaw`],p:`A portrait of the celebrated bandleader and clarinetist's life and career.`},
+{id:'df045',cat:'df',t:`Down and Out in America`,y:`1987`,d:`Lee Grant`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Examines poverty and homelessness in 1980s America.`},
+{id:'df046',cat:'df',t:`Hôtel Terminus: The Life and Times of Klaus Barbie`,y:`1988`,d:`Marcel Ophüls`,c:`France / USA`,g:`Historical Documentary`,cast:[],p:`Investigates the Gestapo officer known as the "Butcher of Lyon" and his postwar protection by intelligence agencies.`},
+{id:'df047',cat:'df',t:`Common Threads: Stories from the Quilt`,y:`1989`,d:`Rob Epstein, Jeffrey Friedman`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Tells the AIDS crisis through personal stories behind panels of the NAMES Memorial Quilt.`},
+{id:'df048',cat:'df',t:`American Dream`,y:`1990`,d:`Barbara Kopple`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Follows a bitter, ultimately failed labor strike at a Minnesota meatpacking plant.`},
+{id:'df049',cat:'df',t:`In the Shadow of the Stars`,y:`1991`,d:`Irving Saraf, Allie Light`,c:`USA`,g:`Music Documentary`,cast:[],p:`Profiles chorus members of the San Francisco Opera pursuing their own moments in the spotlight.`},
+{id:'df050',cat:'df',t:`The Panama Deception`,y:`1992`,d:`Barbara Trent`,c:`USA`,g:`Political Documentary`,cast:[],p:`A critical examination of the 1989 US invasion of Panama and its aftermath.`},
+{id:'df051',cat:'df',t:`I Am a Promise: The Children of Stanton Elementary School`,y:`1993`,d:`Susan Raymond, Alan Raymond`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`Follows students and their principal at an under-resourced inner-city Philadelphia school.`},
+{id:'df052',cat:'df',t:`Maya Lin: A Strong Clear Vision`,y:`1994`,d:`Freida Lee Mock`,c:`USA`,g:`Biographical Documentary`,cast:[`Maya Lin`],p:`Profiles the designer of the Vietnam Veterans Memorial and her subsequent public art career.`},
+{id:'df053',cat:'df',t:`Anne Frank Remembered`,y:`1995`,d:`Jon Blair`,c:`UK`,g:`Historical Documentary`,cast:[],p:`Traces Anne Frank's life and hiding using testimony from those who knew her family.`},
+{id:'df054',cat:'df',t:`When We Were Kings`,y:`1996`,d:`Leon Gast`,c:`USA`,g:`Sports Documentary`,cast:[`Muhammad Ali`,`George Foreman`],p:`Chronicles the 1974 "Rumble in the Jungle" bout between Muhammad Ali and George Foreman in Zaire.`},
+{id:'df055',cat:'df',t:`The Long Way Home`,y:`1997`,d:`Mark Jonathan Harris`,c:`USA`,g:`Historical Documentary`,cast:[],p:`Follows Holocaust survivors' difficult path from Europe's displaced-persons camps to the founding of Israel.`},
+{id:'df056',cat:'df',t:`The Personals: Improvisations on Romance in the Golden Years`,y:`1998`,d:`Keiko Ibi`,c:`USA`,g:`Documentary`,cast:[],p:`Follows elderly participants writing and performing a play about placing personal ads.`},
+{id:'df057',cat:'df',t:`One Day in September`,y:`1999`,d:`Kevin Macdonald`,c:`UK`,g:`Sports / Political Documentary`,cast:[],p:`Reconstructs the 1972 Munich Olympics hostage crisis and massacre.`},
+{id:'df058',cat:'df',t:`Into the Arms of Strangers: Stories of the Kindertransport`,y:`2000`,d:`Mark Jonathan Harris`,c:`UK / USA`,g:`Historical Documentary`,cast:[],p:`Tells the story of Jewish children evacuated from Nazi Europe to Britain before WWII.`},
+{id:'df059',cat:'df',t:`Murder on a Sunday Morning`,y:`2001`,d:`Jean-Xavier de Lestrade`,c:`France / USA`,g:`True Crime Documentary`,cast:[],p:`Follows the defense of a Black teenager wrongfully accused of murder in Florida.`},
+{id:'df060',cat:'df',t:`Bowling for Columbine`,y:`2002`,d:`Michael Moore`,c:`USA`,g:`Political Documentary`,cast:[`Michael Moore`],p:`Examines America's gun culture in the wake of the Columbine High School shooting.`},
+{id:'df061',cat:'df',t:`The Fog of War`,y:`2003`,d:`Errol Morris`,c:`USA`,g:`Political Documentary`,cast:[`Robert McNamara`],p:`Former defense secretary Robert McNamara reflects on the lessons — and errors — of a life shaping American war policy.`},
+{id:'df062',cat:'df',t:`Born into Brothels`,y:`2004`,d:`Zana Briski, Ross Kauffman`,c:`USA / India`,g:`Social Issue Documentary`,cast:[],p:`Teaches photography to children growing up in Kolkata's red-light district.`},
+{id:'df063',cat:'df',t:`March of the Penguins`,y:`2005`,d:`Luc Jacquet`,c:`France`,g:`Nature Documentary`,cast:[],p:`Follows emperor penguins through their grueling annual breeding migration in Antarctica.`},
+{id:'df064',cat:'df',t:`An Inconvenient Truth`,y:`2006`,d:`Davis Guggenheim`,c:`USA`,g:`Political / Science Documentary`,cast:[`Al Gore`],p:`Al Gore's slideshow-turned-film making the case for urgent action on climate change.`},
+{id:'df065',cat:'df',t:`Taxi to the Dark Side`,y:`2007`,d:`Alex Gibney`,c:`USA`,g:`Political Documentary`,cast:[],p:`Investigates the death of an Afghan taxi driver in US military custody and the broader use of torture.`},
+{id:'df066',cat:'df',t:`Man on Wire`,y:`2008`,d:`James Marsh`,c:`UK`,g:`Documentary`,cast:[`Philippe Petit`],p:`Recreates Philippe Petit's illegal 1974 high-wire walk between the Twin Towers.`},
+{id:'df067',cat:'df',t:`The Cove`,y:`2009`,d:`Louie Psihoyos`,c:`USA`,g:`Nature / Political Documentary`,cast:[`Ric O'Barry`],p:`A covert investigation exposes the annual dolphin hunt in Taiji, Japan.`},
+{id:'df068',cat:'df',t:`Inside Job`,y:`2010`,d:`Charles Ferguson`,c:`USA`,g:`Political Documentary`,cast:[],p:`A systemic account of the causes behind the 2008 global financial crisis.`},
+{id:'df069',cat:'df',t:`Undefeated`,y:`2011`,d:`T.J. Martin, Daniel Lindsay`,c:`USA`,g:`Sports Documentary`,cast:[],p:`Follows an underfunded Memphis high school football team and its volunteer coach through a turnaround season.`},
+{id:'df070',cat:'df',t:`Searching for Sugar Man`,y:`2012`,d:`Malik Bendjelloul`,c:`Sweden / UK`,g:`Music Documentary`,cast:[],p:`Fans in South Africa search for a forgotten American musician, unaware of his real fate.`},
+{id:'df071',cat:'df',t:`20 Feet from Stardom`,y:`2013`,d:`Morgan Neville`,c:`USA`,g:`Music Documentary`,cast:[],p:`Profiles the uncredited backup singers behind decades of famous recordings.`},
+{id:'df072',cat:'df',t:`Citizenfour`,y:`2014`,d:`Laura Poitras`,c:`USA / Germany`,g:`Political Documentary`,cast:[`Edward Snowden`],p:`Filmed in real time as NSA contractor Edward Snowden leaks classified surveillance documents.`},
+{id:'df073',cat:'df',t:`Amy`,y:`2015`,d:`Asif Kapadia`,c:`UK`,g:`Music Documentary`,cast:[`Amy Winehouse`],p:`Traces singer Amy Winehouse's rise to fame and her death from alcohol-related causes, built from archival footage.`},
+{id:'df074',cat:'df',t:`O.J.: Made in America`,y:`2016`,d:`Ezra Edelman`,c:`USA`,g:`True Crime Documentary`,cast:[`O.J. Simpson`],p:`A sprawling account of O.J. Simpson's fame, trial, and its collision with race in America.`},
+{id:'df075',cat:'df',t:`Icarus`,y:`2017`,d:`Bryan Fogel`,c:`USA`,g:`Sports / Political Documentary`,cast:[],p:`A personal doping experiment stumbles into exposing Russia's state-sponsored Olympic doping program.`},
+{id:'df076',cat:'df',t:`Free Solo`,y:`2018`,d:`Elizabeth Chai Vasarhelyi, Jimmy Chin`,c:`USA`,g:`Sports Documentary`,cast:[`Alex Honnold`],p:`Follows climber Alex Honnold's attempt to scale El Capitan without ropes.`},
+{id:'df077',cat:'df',t:`American Factory`,y:`2019`,d:`Julia Reichert, Steven Bognar`,c:`USA`,g:`Social Issue Documentary`,cast:[],p:`A Chinese company reopens a shuttered Ohio factory, exposing cultural and labor friction.`},
+{id:'df078',cat:'df',t:`My Octopus Teacher`,y:`2020`,d:`Pippa Ehrlich, James Reed`,c:`South Africa`,g:`Nature Documentary`,cast:[],p:`A filmmaker forms an unlikely yearlong bond with a wild octopus off South Africa's coast.`},
+{id:'df079',cat:'df',t:`Summer of Soul`,y:`2021`,d:`Questlove`,c:`USA`,g:`Music Documentary`,cast:[],p:`Rediscovered footage of the 1969 Harlem Cultural Festival, shelved for decades.`},
+{id:'df080',cat:'df',t:`Navalny`,y:`2022`,d:`Daniel Roher`,c:`USA / UK / Czech Republic`,g:`Political Documentary`,cast:[`Alexei Navalny`],p:`Follows Russian opposition leader Alexei Navalny investigating his own poisoning.`},
+{id:'df081',cat:'df',t:`20 Days in Mariupol`,y:`2023`,d:`Mstyslav Chernov`,c:`Ukraine`,g:`War Documentary`,cast:[],p:`An AP journalist's frontline footage from the besieged Ukrainian city in the war's opening weeks.`},
+{id:'df082',cat:'df',t:`No Other Land`,y:`2024`,d:`Basel Adra, Yuval Abraham, and collective`,c:`Palestine / Norway`,g:`Political Documentary`,cast:[],p:`A Palestinian activist and an Israeli journalist document the demolition of West Bank villages.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'reel-archive-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ bp:{date:null,newDone:0}, wf:{date:null,newDone:0}, af:{date:null,newDone:0}, df:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ bp:20, wf:15, af:5, df:15 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'bp';
+
+const filmsById = {};
+FILMS.forEach(f=>filmsById[f.id]=f);
+const filmsByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ filmsByCategory[k] = FILMS.filter(f=>f.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = filmsByCategory[catKey];
+  const dueReviews = pool.filter(f=>{
+    const s = state.srs[f.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(f=>!state.srs[f.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(f=>combined.push({filmId:f.id,isNew:false}));
+  newToAdd.forEach(f=>combined.push({filmId:f.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(filmId){
+  const s = state.srs[filmId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const filmId = currentItem.filmId;
+  const wasNew = currentItem.isNew && !state.srs[filmId];
+  let s = state.srs[filmId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[filmId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderStrip();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+filmsByCategory[key].length+' films</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderStrip();
+      renderCurrentCard();
+      document.getElementById('docWarning').classList.toggle('show', key==='df');
+    });
+    wrap.appendChild(btn);
+  });
+  document.getElementById('docWarning').classList.toggle('show', activeCategory==='df');
+}
+
+function renderStrip(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('stripFill').style.width = pct+'%';
+  document.getElementById('stripLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const f = filmsById[currentItem.filmId];
+  const meta = CATEGORIES[f.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontTitle').textContent = f.t;
+  document.getElementById('frontYear').textContent = f.y;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('frontTint').style.setProperty('--tint', meta.tint);
+
+  document.getElementById('backTitle').textContent = f.t;
+  document.getElementById('backYear').textContent = f.y+' · '+meta.name;
+  document.getElementById('backDirector').textContent = f.d;
+  document.getElementById('backCountry').textContent = f.c;
+  document.getElementById('backGenre').textContent = f.g;
+
+  const castRow = document.getElementById('backCastRow');
+  if(f.cast && f.cast.length>0){
+    castRow.style.display = '';
+    document.getElementById('backCast').textContent = f.cast.join(', ');
+  } else {
+    castRow.style.display = 'none';
+  }
+  document.getElementById('backProfile').textContent = f.p;
+
+  const previews = previewIntervals(f.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const today = todayStr();
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderFilmList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderFilmList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = FILMS.slice().sort((a,b)=> a.y.localeCompare(b.y) || a.t.localeCompare(b.t));
+  if(browseCategory!=='all') list = list.filter(f=>f.cat===browseCategory);
+  if(query){
+    list = list.filter(f=> normalize(f.t).includes(query) || normalize(f.d).includes(query) || normalize(f.c).includes(query) || normalize(f.g).includes(query));
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No films match that search.</div>';
+    return;
+  }
+  list.forEach(f=>{
+    const meta = CATEGORIES[f.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    const castLine = (f.cast && f.cast.length) ? '<br>Featuring: '+f.cast.join(', ') : '';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+f.t+'</span>'+
+        '<span class="row-years">'+f.y+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.short+' · '+f.c+' · '+f.g+'</div>'+
+      '<div class="row-detail">Director: '+f.d+'<br>'+f.p+castLine+'</div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = FILMS.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = filmsByCategory[key].length;
+    const learnedInCat = filmsByCategory[key].filter(f=>state.srs[f.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = FILMS.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(filmsByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>filmsByCategory[key].length) v = filmsByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderStrip();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderStrip();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderFilmList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderFilmList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderStrip();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

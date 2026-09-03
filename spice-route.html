@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Spice Route — Spices of the World</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Yeseva+One&family=Mulish:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg-0:#2a1810;
+  --bg-1:#35211a;
+  --bg-2:#402a1c;
+  --saffron:#e0a52c;
+  --saffron-bright:#f0c05a;
+  --paprika:#c1442d;
+  --paprika-bright:#d9634a;
+  --cream:#f5ead2;
+  --cream-alt:#efe0bf;
+  --ink:#2a1810;
+  --ink-soft:#6b5138;
+  --cream-dim:#d9c5a0;
+  --shadow:rgba(10,5,2,.55);
+  --rule:rgba(42,24,16,.22);
+  --tint-seeds:#a5722f;
+  --tint-bark:#a5502e;
+  --tint-fruits:#c1442d;
+  --tint-flowers:#e0a52c;
+  --tint-leaves:#6b7d3f;
+  --tint-blends:#b8631f;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #40291a 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Mulish', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.stall{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#402a1c,#291b12);
+  border:2px solid var(--saffron);border-radius:8px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.stall h1{
+  margin:0;font-family:'Yeseva One',serif;font-weight:400;
+  font-size:1.85rem;letter-spacing:.01em;color:var(--saffron-bright);
+}
+.stall .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Grind progress ---------- */
+.grind-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.grind-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#180f09,#291b12);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.grind-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--paprika),var(--saffron));
+  transition:width .5s ease;position:relative;
+}
+.grind-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.3);
+}
+.grind-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:100px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Yeseva One',serif;font-weight:400;font-size:.88rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Mulish',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--saffron));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#4d3220;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(224,165,44,.25);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Yeseva One',serif;font-weight:400;font-size:.98rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Mulish',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--saffron);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#4d3220;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(224,165,44,.2);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--saffron-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Spice tin card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 35%, #4d3220, #241811 75%);
+  border:3px solid var(--tint,var(--saffron));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.6rem;margin-bottom:10px;}
+.front-name{font-family:'Yeseva One',serif;font-weight:400;font-size:1.55rem;line-height:1.2;color:var(--saffron-bright);}
+.front-cat{margin-top:14px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:600;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Yeseva One',serif;font-weight:400;font-size:1.25rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--paprika);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Yeseva One',serif;font-weight:400;font-size:.9rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Mulish',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Mulish',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--paprika-bright);color:var(--paprika-bright);}
+.stamp.hard{border-color:var(--saffron);color:var(--saffron-bright);}
+.stamp.good{border-color:var(--tint-leaves);color:#9db877;}
+.stamp.easy{border-color:var(--saffron-bright);background:rgba(224,165,44,.12);color:var(--saffron-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(224,165,44,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Yeseva One',serif;font-weight:400;font-size:1.3rem;color:var(--saffron-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(224,165,44,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Mulish',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(224,165,44,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Mulish',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--saffron);border-color:var(--saffron);color:#241811;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(224,165,44,.18);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Yeseva One',serif;font-weight:400;font-size:1.02rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--saffron-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(224,165,44,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Yeseva One',serif;font-weight:400;font-size:1.7rem;color:var(--paprika);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Yeseva One',serif;font-weight:400;letter-spacing:.02em;color:var(--saffron-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--saffron-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--saffron-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid rgba(224,165,44,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Mulish',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid var(--paprika-bright);background:transparent;
+  color:var(--paprika-bright);font-family:'Yeseva One',serif;font-weight:400;cursor:pointer;font-size:.92rem;
+}
+.btn:hover{background:rgba(193,68,45,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--paprika-bright);border-radius:6px;
+  background:rgba(193,68,45,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--paprika-bright);color:#fff;background:var(--paprika);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .stall h1{font-size:1.5rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.85rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.76rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.76rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.grind-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="stall">
+      <h1>The Spice Route</h1>
+      <p class="subtitle">Spices of the world · seed to shelf</p>
+    </div>
+  </div>
+
+  <div class="grind-wrap">
+    <div class="grind-track">
+      <div class="grind-fill" id="grindFill"></div>
+    </div>
+    <div class="grind-label" id="grindLabel">0 / 10 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Taste<small>study</small></button>
+    <button class="tab" data-tab="browse">Pantry<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🌶️</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Origin</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Flavor</span>
+                <span class="back-value" id="backFlavor">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Common form</span>
+                <span class="back-value" id="backForm">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>The stall's closed for today</h3>
+        <p>Nothing left to study in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Pantry</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, origin, or flavor…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Spices learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in the pantry</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through Spice Blends won't eat into your Seeds & Pods allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all six sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total spices currently in the pantry: <strong id="catalogSize">0</strong>, across Seeds & Pods, Bark/Root & Rhizome, Dried Fruits/Berries & Pods, Flowers & Buds, Aromatic Leaves, and Spice Blends & Mixtures.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Origins, flavor descriptions, and common forms are general culinary summaries meant as a study aid — regional traditions, exact species, and preparation vary widely, so treat these as a helpful starting point rather than a single authoritative reference. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Spices of the world, six categories
+   ========================================================= */
+const CATEGORIES = {
+  seeds:   {name:"Seeds & Pods", short:"Seeds", icon:"🌰", tint:"var(--tint-seeds)"},
+  bark:    {name:"Bark, Root & Rhizome", short:"Root", icon:"🫚", tint:"var(--tint-bark)"},
+  fruits:  {name:"Dried Fruits, Berries & Pods", short:"Fruits", icon:"🌶️", tint:"var(--tint-fruits)"},
+  flowers: {name:"Flowers & Buds", short:"Flowers", icon:"🌼", tint:"var(--tint-flowers)"},
+  leaves:  {name:"Aromatic Leaves", short:"Leaves", icon:"🌿", tint:"var(--tint-leaves)"},
+  blends:  {name:"Spice Blends & Mixtures", short:"Blends", icon:"🧂", tint:"var(--tint-blends)"}
+};
+
+const SPICES = [
+/* ---------- SEEDS & PODS (20) ---------- */
+{id:'se01',cat:'seeds',n:`Cumin`,origin:`Middle East, South Asia`,flavor:`Warm, earthy, slightly bitter`,form:`Whole seed or ground`,p:`A staple of Indian, Middle Eastern, and Mexican cuisines, often toasted to deepen its flavor.`},
+{id:'se02',cat:'seeds',n:`Coriander`,origin:`Mediterranean, Middle East`,flavor:`Citrusy, slightly sweet, nutty`,form:`Whole seed or ground`,p:`The dried seed of the same plant that produces fresh cilantro leaves.`},
+{id:'se03',cat:'seeds',n:`Fennel`,origin:`Mediterranean`,flavor:`Sweet, anise-like, licorice`,form:`Whole seed or ground`,p:`Often chewed after meals in India as a breath freshener and digestive aid.`},
+{id:'se04',cat:'seeds',n:`Mustard Seed`,origin:`Mediterranean, Central Asia`,flavor:`Pungent, sharp, slightly bitter`,form:`Whole (yellow/brown/black) or ground`,p:`The source of prepared mustard condiment, and a common tempering spice in Indian cooking.`},
+{id:'se05',cat:'seeds',n:`Caraway`,origin:`Europe, Western Asia`,flavor:`Warm, anise-like, slightly peppery`,form:`Whole seed`,p:`Classic flavoring for rye bread and many Central European dishes.`},
+{id:'se06',cat:'seeds',n:`Fenugreek`,origin:`Mediterranean, South Asia`,flavor:`Bitter, slightly sweet, maple-like`,form:`Whole seed or ground`,p:`Its seeds give many curry powders and imitation maple flavorings their characteristic aroma.`},
+{id:'se07',cat:'seeds',n:`Nigella (Kalonji)`,origin:`South Asia, Middle East`,flavor:`Peppery, slightly bitter, oniony`,form:`Whole seed`,p:`Small black seeds sprinkled on naan bread, sometimes mislabeled "black cumin."`},
+{id:'se08',cat:'seeds',n:`Ajwain (Carom)`,origin:`South Asia`,flavor:`Sharp, thyme-like, slightly bitter`,form:`Whole seed`,p:`Contains thymol, giving it a flavor reminiscent of thyme but much more intense.`},
+{id:'se09',cat:'seeds',n:`Anise`,origin:`Eastern Mediterranean`,flavor:`Sweet, licorice-like`,form:`Whole seed or ground`,p:`Used to flavor anise-based spirits like ouzo, sambuca, and pastis.`},
+{id:'se10',cat:'seeds',n:`Celery Seed`,origin:`Mediterranean, India`,flavor:`Bitter, grassy, celery-like`,form:`Whole seed or ground`,p:`The tiny seed of wild celery, a key ingredient in celery salt.`},
+{id:'se11',cat:'seeds',n:`Poppy Seed`,origin:`Eastern Mediterranean, Central Asia`,flavor:`Nutty, mild`,form:`Whole seed`,p:`Used both as a baking topping in the West and ground into rich pastes in South Asia.`},
+{id:'se12',cat:'seeds',n:`Sesame Seed`,origin:`Africa, India`,flavor:`Nutty, toasty`,form:`Whole seed, or pressed into oil/tahini`,p:`One of the oldest cultivated oilseed crops, dating back over 5,000 years.`},
+{id:'se13',cat:'seeds',n:`Green Cardamom`,origin:`South India`,flavor:`Sweet, floral, camphor-like`,form:`Whole pod or ground seed`,p:`Sometimes called the "queen of spices," among the most expensive by weight after saffron and vanilla.`},
+{id:'se14',cat:'seeds',n:`Black Cardamom`,origin:`Eastern Himalayas`,flavor:`Smoky, resinous, menthol-like`,form:`Whole pod`,p:`Dried over an open fire, giving it a distinctive smokiness absent from its green cousin.`},
+{id:'se15',cat:'seeds',n:`Dill Seed`,origin:`Mediterranean, Southwest Asia`,flavor:`Caraway-like, slightly bitter`,form:`Whole seed`,p:`The dried seed of the same plant as fresh dill weed, sharper and more concentrated.`},
+{id:'se16',cat:'seeds',n:`Annatto`,origin:`Tropical Americas`,flavor:`Earthy, slightly peppery, subtly sweet`,form:`Whole seed, ground, or paste`,p:`Used primarily for its vivid orange-red color rather than its mild flavor.`},
+{id:'se17',cat:'seeds',n:`Nutmeg`,origin:`Indonesia (Banda Islands)`,flavor:`Warm, sweet, slightly nutty`,form:`Whole seed, grated fresh`,p:`One-half of a fruit that also yields mace, the lacy covering around its shell.`},
+{id:'se18',cat:'seeds',n:`Mace`,origin:`Indonesia (Banda Islands)`,flavor:`Warm, like nutmeg but more delicate`,form:`Whole blade or ground`,p:`The bright red, lacy aril that surrounds the nutmeg seed before drying to a golden-brown.`},
+{id:'se19',cat:'seeds',n:`Grains of Paradise`,origin:`West Africa`,flavor:`Peppery, with citrus and floral notes`,form:`Whole seed`,p:`A relative of ginger and cardamom once used across Europe as a black pepper substitute.`},
+{id:'se20',cat:'seeds',n:`Black Cumin (Shahi Jeera)`,origin:`Iran, Kashmir, Central Asia`,flavor:`Sweeter, more delicate than regular cumin`,form:`Whole seed`,p:`A prized, harder-to-find relative of common cumin used in refined Mughlai cuisine.`},
+
+/* ---------- BARK, ROOT & RHIZOME (14) ---------- */
+{id:'ba01',cat:'bark',n:`Cinnamon`,origin:`Sri Lanka (Ceylon cinnamon)`,flavor:`Sweet, warm, delicate`,form:`Whole quill (bark) or ground`,p:`True "Ceylon" cinnamon is thinner and more delicate than the more common cassia sold as cinnamon.`},
+{id:'ba02',cat:'bark',n:`Cassia`,origin:`China, Southeast Asia`,flavor:`Bold, sweet, slightly bitter`,form:`Whole bark or ground`,p:`What most of the world actually buys as "cinnamon," thicker and more pungent than true cinnamon.`},
+{id:'ba03',cat:'bark',n:`Ginger`,origin:`Southeast Asia`,flavor:`Spicy, warm, slightly sweet`,form:`Fresh root, dried, or ground`,p:`One of the earliest spices traded along ancient maritime routes between Asia and Europe.`},
+{id:'ba04',cat:'bark',n:`Turmeric`,origin:`South Asia`,flavor:`Earthy, bitter, slightly peppery`,form:`Fresh root or ground`,p:`A rhizome whose curcumin compound gives curries their signature golden-yellow color.`},
+{id:'ba05',cat:'bark',n:`Galangal`,origin:`Southeast Asia`,flavor:`Sharp, citrusy, piney`,form:`Fresh root or dried slices`,p:`A ginger relative essential to Thai tom kha soup, with a sharper, more medicinal bite.`},
+{id:'ba06',cat:'bark',n:`Horseradish`,origin:`Eastern Europe, Western Asia`,flavor:`Hot, pungent, sinus-clearing`,form:`Fresh grated root`,p:`Its heat comes from compounds released only when the root is cut or grated.`},
+{id:'ba07',cat:'bark',n:`Wasabi`,origin:`Japan`,flavor:`Intensely hot, then fades quickly`,form:`Fresh grated rhizome or paste`,p:`True wasabi is rare and expensive; most "wasabi" served worldwide is dyed horseradish.`},
+{id:'ba08',cat:'bark',n:`Licorice Root`,origin:`Southern Europe, Asia`,flavor:`Sweet, anise-like`,form:`Dried root, extract`,p:`Roughly fifty times sweeter than sugar by weight, thanks to its glycyrrhizin compound.`},
+{id:'ba09',cat:'bark',n:`Asafoetida (Hing)`,origin:`Iran, Afghanistan`,flavor:`Pungent raw, savory and onion-like when cooked`,form:`Resin, usually sold ground`,p:`A dried tree-sap resin with an intense raw odor that mellows into a savory note when fried in oil.`},
+{id:'ba10',cat:'bark',n:`Angelica Root`,origin:`Northern Europe`,flavor:`Sweet, herbal, slightly musky`,form:`Dried root`,p:`Once believed to ward off plague, now mostly used to flavor gin and liqueurs.`},
+{id:'ba11',cat:'bark',n:`Orris Root`,origin:`Mediterranean (iris rhizome)`,flavor:`Delicate, violet-like`,form:`Dried, powdered`,p:`The dried rhizome of certain iris species, prized in perfumery for its violet scent.`},
+{id:'ba12',cat:'bark',n:`Sassafras`,origin:`Eastern North America`,flavor:`Root-beer-like, slightly medicinal`,form:`Dried bark or root`,p:`Once the primary flavoring in root beer, before safety concerns limited its use.`},
+{id:'ba13',cat:'bark',n:`Fingerroot (Krachai)`,origin:`Southeast Asia`,flavor:`Peppery, citrusy, earthy`,form:`Fresh root`,p:`A lesser-known ginger relative common in Thai curry pastes and fish dishes.`},
+{id:'ba14',cat:'bark',n:`Gentian Root`,origin:`European mountains`,flavor:`Intensely bitter`,form:`Dried root`,p:`One of the most bitter substances used in cooking, key to many amaro and bitters recipes.`},
+
+/* ---------- DRIED FRUITS, BERRIES & PODS (17) ---------- */
+{id:'fr01',cat:'fruits',n:`Black Pepper`,origin:`South India (Malabar Coast)`,flavor:`Sharp, pungent, woody`,form:`Whole peppercorn or ground`,p:`Once so valuable it was used as currency and collateral, earning the nickname "black gold."`},
+{id:'fr02',cat:'fruits',n:`White Pepper`,origin:`South India, Southeast Asia`,flavor:`Milder, earthier than black pepper`,form:`Whole or ground`,p:`Made from the same berry as black pepper, with the outer skin soaked off before drying.`},
+{id:'fr03',cat:'fruits',n:`Pink Peppercorn`,origin:`South America (Peruvian pepper tree)`,flavor:`Sweet, fruity, mildly peppery`,form:`Whole dried berry`,p:`Not a true pepper at all, but the dried berry of a South American shrub.`},
+{id:'fr04',cat:'fruits',n:`Sichuan Peppercorn`,origin:`China`,flavor:`Citrusy, with a distinctive tingling numbness`,form:`Whole dried husk`,p:`Produces a unique tingly, buzzing sensation called "ma," central to Sichuan cuisine.`},
+{id:'fr05',cat:'fruits',n:`Allspice`,origin:`Caribbean, Central America`,flavor:`Like a blend of cinnamon, clove, and nutmeg`,form:`Whole dried berry or ground`,p:`A single dried berry, despite tasting like a combination of several other spices.`},
+{id:'fr06',cat:'fruits',n:`Juniper Berry`,origin:`Europe, Northern Hemisphere`,flavor:`Piney, resinous, slightly citrusy`,form:`Whole dried berry`,p:`The defining flavor of gin, which takes its name from the Dutch word for juniper.`},
+{id:'fr07',cat:'fruits',n:`Sumac`,origin:`Middle East, Mediterranean`,flavor:`Tart, tangy, lemony`,form:`Ground dried berries`,p:`Used across Middle Eastern cooking to add bright acidity, before lemons were widely available.`},
+{id:'fr08',cat:'fruits',n:`Star Anise`,origin:`China, Vietnam`,flavor:`Sweet, strong licorice`,form:`Whole star-shaped pod or ground`,p:`The star-shaped fruit of a magnolia relative, a key ingredient in Chinese five-spice and pho broth.`},
+{id:'fr09',cat:'fruits',n:`Vanilla`,origin:`Mexico (originally)`,flavor:`Sweet, floral, rich`,form:`Whole pod (bean), extract, or paste`,p:`The fruit of an orchid vine, and after saffron, one of the most labor-intensive spices to produce.`},
+{id:'fr10',cat:'fruits',n:`Paprika`,origin:`Central America (peppers), popularized in Hungary and Spain`,flavor:`Sweet to hot, smoky (Spanish)`,form:`Ground dried peppers`,p:`Hungary's national spice, ranging from sweet and mild to hot, and often smoked in Spain.`},
+{id:'fr11',cat:'fruits',n:`Cayenne Pepper`,origin:`Central and South America`,flavor:`Hot, sharp`,form:`Ground dried chili`,p:`Named for a city in French Guiana, though the pepper likely originated further inland.`},
+{id:'fr12',cat:'fruits',n:`Chili Flakes`,origin:`Americas (chili peppers)`,flavor:`Hot, varies by pepper blend`,form:`Crushed dried chili with seeds`,p:`Commonly a blend of several dried chili varieties, giving pizzerias' shakers their familiar heat.`},
+{id:'fr13',cat:'fruits',n:`Tamarind`,origin:`Africa, naturalized in South Asia`,flavor:`Sour, tangy, slightly sweet`,form:`Pulp, paste, or concentrate`,p:`The sour pulp inside the tree's pod, central to pad thai, curries, and many chutneys.`},
+{id:'fr14',cat:'fruits',n:`Amchur`,origin:`South Asia`,flavor:`Sour, tangy, fruity`,form:`Ground dried green mango`,p:`A souring agent used where fresh lemon or tamarind isn't traditionally used.`},
+{id:'fr15',cat:'fruits',n:`Long Pepper`,origin:`South and Southeast Asia`,flavor:`Hotter and more complex than black pepper`,form:`Whole dried catkin`,p:`Europe's dominant pepper in antiquity, before black pepper eventually displaced it.`},
+{id:'fr16',cat:'fruits',n:`Rose Hip`,origin:`Northern Hemisphere (wild roses)`,flavor:`Tart, fruity, slightly floral`,form:`Dried, whole or ground`,p:`The vitamin-C-rich fruit left behind after a rose's petals fall.`},
+{id:'fr17',cat:'fruits',n:`Schisandra Berry`,origin:`China, Russia`,flavor:`Famously all five tastes at once`,form:`Dried whole berry`,p:`Called "five-flavor fruit" in Chinese, said to taste sweet, sour, salty, bitter, and pungent simultaneously.`},
+
+/* ---------- FLOWERS & BUDS (7) ---------- */
+{id:'fl01',cat:'flowers',n:`Clove`,origin:`Indonesia (Maluku Islands)`,flavor:`Intensely warm, sweet, slightly numbing`,form:`Whole dried flower bud or ground`,p:`The dried, unopened flower bud of a tropical evergreen, once worth more than gold by weight.`},
+{id:'fl02',cat:'flowers',n:`Saffron`,origin:`Middle East, cultivated widely in Iran`,flavor:`Floral, honey-like, slightly bitter`,form:`Whole dried thread`,p:`The world's most expensive spice by weight, requiring roughly 150,000 hand-picked flowers per kilogram.`},
+{id:'fl03',cat:'flowers',n:`Caper`,origin:`Mediterranean`,flavor:`Briny, tangy, slightly floral`,form:`Pickled unopened flower bud`,p:`The pickled flower bud of a Mediterranean shrub, picked before it can bloom.`},
+{id:'fl04',cat:'flowers',n:`Dried Rosebuds`,origin:`Middle East, Persia`,flavor:`Floral, subtly sweet`,form:`Whole dried bud or petals`,p:`Ground into Persian and Middle Eastern spice blends for a delicate perfumed note.`},
+{id:'fl05',cat:'flowers',n:`Safflower`,origin:`Middle East, South Asia`,flavor:`Mild, slightly bitter`,form:`Dried petals`,p:`Sometimes called "poor man's saffron" for its similar golden color at a fraction of the cost.`},
+{id:'fl06',cat:'flowers',n:`Calendula`,origin:`Southern Europe, Mediterranean`,flavor:`Mild, slightly peppery`,form:`Dried petals`,p:`Another saffron-colored substitute; its petals are sometimes called "pot marigold."`},
+{id:'fl07',cat:'flowers',n:`Osmanthus`,origin:`China`,flavor:`Apricot-like, sweet, floral`,form:`Dried flowers`,p:`Used to scent tea, wine, and desserts across southern China.`},
+
+/* ---------- AROMATIC LEAVES (10) ---------- */
+{id:'le01',cat:'leaves',n:`Bay Leaf`,origin:`Mediterranean`,flavor:`Herbal, slightly bitter, menthol-like`,form:`Whole dried leaf`,p:`Used whole in slow-cooked dishes and always removed before serving.`},
+{id:'le02',cat:'leaves',n:`Curry Leaf`,origin:`South Asia`,flavor:`Citrusy, slightly bitter, aromatic`,form:`Fresh or dried leaf`,p:`Despite the name, unrelated to curry powder; it's essential to South Indian tempering.`},
+{id:'le03',cat:'leaves',n:`Kaffir Lime Leaf`,origin:`Southeast Asia`,flavor:`Intensely citrusy, floral`,form:`Fresh or dried leaf`,p:`The glossy, double-lobed leaf of the makrut lime tree, central to Thai curries.`},
+{id:'le04',cat:'leaves',n:`Kasuri Methi`,origin:`South Asia`,flavor:`Bitter, maple-like, aromatic`,form:`Dried leaf`,p:`Dried fenugreek leaves, crumbled over finished dishes for a distinctive aroma.`},
+{id:'le05',cat:'leaves',n:`Pandan Leaf`,origin:`Southeast Asia`,flavor:`Sweet, grassy, vanilla-like`,form:`Fresh or dried leaf`,p:`Sometimes called "Asia's vanilla" for the fragrance it lends to rice and desserts.`},
+{id:'le06',cat:'leaves',n:`Lemongrass`,origin:`South and Southeast Asia`,flavor:`Citrusy, floral, gingery`,form:`Fresh stalk or dried`,p:`Its lower stalk is pounded or sliced thin to release its intense citrus aroma.`},
+{id:'le07',cat:'leaves',n:`Epazote`,origin:`Mexico, Central America`,flavor:`Pungent, medicinal, slightly minty`,form:`Fresh or dried leaf`,p:`Traditionally cooked with beans in Mexican cuisine, said to reduce their gassiness.`},
+{id:'le08',cat:'leaves',n:`Filé Powder`,origin:`Southeastern United States`,flavor:`Earthy, root-beer-like`,form:`Ground dried leaf`,p:`Ground dried sassafras leaves, used to thicken and flavor Louisiana gumbo.`},
+{id:'le09',cat:'leaves',n:`Culantro`,origin:`Caribbean, Latin America`,flavor:`Stronger, more pungent than cilantro`,form:`Fresh or dried leaf`,p:`Despite its name, a different plant from cilantro, with a much more intense flavor.`},
+{id:'le10',cat:'leaves',n:`Betel Leaf`,origin:`South and Southeast Asia`,flavor:`Peppery, slightly bitter`,form:`Fresh whole leaf`,p:`Traditionally wrapped around areca nut and spices as a digestive after-meal chew.`},
+
+/* ---------- SPICE BLENDS & MIXTURES (22) ---------- */
+{id:'bl01',cat:'blends',n:`Garam Masala`,origin:`North India`,flavor:`Warm, complex, aromatic`,form:`Dry ground blend`,p:`A warming blend, typically cinnamon, cardamom, cloves, and black pepper, added near the end of cooking.`},
+{id:'bl02',cat:'blends',n:`Curry Powder`,origin:`British colonial India`,flavor:`Warm, turmeric-forward`,form:`Dry ground blend`,p:`A British invention meant to approximate Indian flavors, rather than a traditional Indian blend itself.`},
+{id:'bl03',cat:'blends',n:`Chinese Five-Spice`,origin:`China`,flavor:`Balances all five taste elements`,form:`Dry ground blend`,p:`Traditionally star anise, cloves, cinnamon, Sichuan pepper, and fennel seed.`},
+{id:'bl04',cat:'blends',n:`Za'atar`,origin:`Levant (Lebanon, Syria, Palestine, Jordan)`,flavor:`Herbal, tangy, nutty`,form:`Dry blend`,p:`A blend of dried thyme, sumac, and toasted sesame seeds, often mixed with olive oil.`},
+{id:'bl05',cat:'blends',n:`Ras el Hanout`,origin:`Morocco, North Africa`,flavor:`Complex, warm, sometimes floral`,form:`Dry ground blend`,p:`The name means "top of the shop," traditionally each spice merchant's own signature mix.`},
+{id:'bl06',cat:'blends',n:`Berbere`,origin:`Ethiopia, Eritrea`,flavor:`Hot, fruity, complex`,form:`Dry ground blend or paste`,p:`The foundational spice blend of Ethiopian cuisine, built on chili peppers and fenugreek.`},
+{id:'bl07',cat:'blends',n:`Baharat`,origin:`Middle East, Gulf states`,flavor:`Warm, peppery, slightly sweet`,form:`Dry ground blend`,p:`Its name simply means "spices" in Arabic, varying widely by country and household.`},
+{id:'bl08',cat:'blends',n:`Advieh`,origin:`Iran (Persia)`,flavor:`Sweet, floral, warm`,form:`Dry ground blend`,p:`A Persian spice blend often featuring rose petals alongside cinnamon and cardamom.`},
+{id:'bl09',cat:'blends',n:`Old Bay Seasoning`,origin:`United States (Chesapeake Bay)`,flavor:`Peppery, celery-forward, slightly sweet`,form:`Dry ground blend`,p:`Invented in 1939, now inseparable from Maryland-style crab and seafood boils.`},
+{id:'bl10',cat:'blends',n:`Cajun Seasoning`,origin:`Louisiana, United States`,flavor:`Peppery, smoky, garlicky`,form:`Dry ground blend`,p:`Blends paprika, cayenne, garlic, and herbs, rooted in French-Acadian Louisiana cooking.`},
+{id:'bl11',cat:'blends',n:`Herbes de Provence`,origin:`Southern France`,flavor:`Herbal, floral, savory`,form:`Dry blend`,p:`A rustic blend of thyme, rosemary, savory, and often lavender, from southern France.`},
+{id:'bl12',cat:'blends',n:`Chaat Masala`,origin:`South Asia`,flavor:`Tangy, salty, savory`,form:`Dry ground blend`,p:`A tangy finishing spice built on dried mango and black salt, sprinkled over street snacks.`},
+{id:'bl13',cat:'blends',n:`Panch Phoron`,origin:`Bengal (India, Bangladesh)`,flavor:`Pungent, bittersweet, aromatic`,form:`Whole seed blend`,p:`A Bengali five-seed blend of cumin, fennel, fenugreek, mustard, and nigella, used unground.`},
+{id:'bl14',cat:'blends',n:`Shichimi Togarashi`,origin:`Japan`,flavor:`Spicy, citrusy, nutty`,form:`Dry ground blend`,p:`A seven-spice blend built on chili, orange peel, and sesame, common on noodle dishes.`},
+{id:'bl15',cat:'blends',n:`Dukkah`,origin:`Egypt`,flavor:`Nutty, earthy, toasty`,form:`Dry coarse blend`,p:`A crunchy mix of toasted nuts, seeds, and spices, traditionally eaten with bread and olive oil.`},
+{id:'bl16',cat:'blends',n:`Harissa`,origin:`Tunisia, North Africa`,flavor:`Hot, smoky, garlicky`,form:`Paste`,p:`A fiery chili paste central to Tunisian cuisine, now popular well beyond North Africa.`},
+{id:'bl17',cat:'blends',n:`Adobo Seasoning`,origin:`Spanish/Latin American and Philippine traditions`,flavor:`Garlicky, savory, tangy`,form:`Dry blend or wet marinade`,p:`The name describes both a Latin American dry spice mix and a distinct Filipino braising method.`},
+{id:'bl18',cat:'blends',n:`Jerk Seasoning`,origin:`Jamaica`,flavor:`Hot, sweet, warmly spiced`,form:`Dry rub or wet marinade`,p:`Built on Scotch bonnet chilies and allspice, rooted in Jamaica's Taíno and Maroon cooking traditions.`},
+{id:'bl19',cat:'blends',n:`Quatre Épices`,origin:`France`,flavor:`Warm, peppery, aromatic`,form:`Dry ground blend`,p:`French for "four spices," typically pepper, clove, nutmeg, and ginger, used in charcuterie.`},
+{id:'bl20',cat:'blends',n:`Sazón`,origin:`Caribbean, Latin America`,flavor:`Savory, earthy, colorful`,form:`Dry ground blend`,p:`Owes its signature red-orange color to annatto, a staple of Puerto Rican and Dominican cooking.`},
+{id:'bl21',cat:'blends',n:`Furikake`,origin:`Japan`,flavor:`Salty, savory, umami`,form:`Dry sprinkle blend`,p:`A savory rice topping usually built on dried seaweed, sesame, and bonito flakes.`},
+{id:'bl22',cat:'blends',n:`Zhug`,origin:`Yemen`,flavor:`Hot, herbal, garlicky`,form:`Paste`,p:`A fiery green chili paste brought to Israel by Yemenite Jewish immigrants, now a falafel-stand staple.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'spice-route-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ seeds:{date:null,newDone:0}, bark:{date:null,newDone:0}, fruits:{date:null,newDone:0}, flowers:{date:null,newDone:0}, leaves:{date:null,newDone:0}, blends:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ seeds:10, bark:10, fruits:10, flowers:10, leaves:10, blends:10 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'seeds';
+
+const spicesById = {};
+SPICES.forEach(s=>spicesById[s.id]=s);
+const spicesByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ spicesByCategory[k] = SPICES.filter(s=>s.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = spicesByCategory[catKey];
+  const dueReviews = pool.filter(s=>{
+    const st = state.srs[s.id];
+    return st && st.reps>0 && st.due && st.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(s=>!state.srs[s.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(s=>combined.push({spiceId:s.id,isNew:false}));
+  newToAdd.forEach(s=>combined.push({spiceId:s.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(spiceId){
+  const s = state.srs[spiceId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const spiceId = currentItem.spiceId;
+  const wasNew = currentItem.isNew && !state.srs[spiceId];
+  let s = state.srs[spiceId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[spiceId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderGrind();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+spicesByCategory[key].length+' spices</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderGrind();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderGrind(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('grindFill').style.width = pct+'%';
+  document.getElementById('grindLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const s = spicesById[currentItem.spiceId];
+  const meta = CATEGORIES[s.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = s.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = s.id.toUpperCase();
+
+  document.getElementById('backName').textContent = s.n;
+  document.getElementById('backOrigin').textContent = s.origin;
+  document.getElementById('backFlavor').textContent = s.flavor;
+  document.getElementById('backForm').textContent = s.form;
+  document.getElementById('backProfile').textContent = s.p;
+
+  const previews = previewIntervals(s.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderSpiceList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderSpiceList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = SPICES.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(s=>s.cat===browseCategory);
+  if(query){
+    list = list.filter(s=>
+      normalize(s.n).includes(query) ||
+      normalize(s.origin).includes(query) ||
+      normalize(s.flavor).includes(query)
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No spices match that search.</div>';
+    return;
+  }
+  list.forEach(s=>{
+    const meta = CATEGORIES[s.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+s.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+s.origin+'</div>'+
+      '<div class="row-detail">'+s.p+'<br><em>Flavor: '+s.flavor+' · Form: '+s.form+'</em></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = SPICES.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = spicesByCategory[key].length;
+    const learnedInCat = spicesByCategory[key].filter(s=>state.srs[s.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = SPICES.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(spicesByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>spicesByCategory[key].length) v = spicesByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderGrind();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderGrind();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderSpiceList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderSpiceList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderGrind();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>

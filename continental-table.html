@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Continental Table — Cuisines of Africa</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg-0:#1a1f2e;
+  --bg-1:#232a3d;
+  --bg-2:#2d3650;
+  --gold:#d9a441;
+  --gold-bright:#eec06a;
+  --terracotta:#c1602d;
+  --terracotta-bright:#d97e4f;
+  --cream:#f5ecd8;
+  --cream-alt:#efe0bf;
+  --ink:#241a12;
+  --ink-soft:#5c4530;
+  --cream-dim:#c3c9db;
+  --shadow:rgba(4,6,14,.55);
+  --rule:rgba(36,29,18,.22);
+  --tint-north:#2f8f9d;
+  --tint-west:#d9a441;
+  --tint-east:#a5342f;
+  --tint-central:#3f7d4a;
+  --tint-south:#c1602d;
+  --tint-islands:#2f9d8f;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #283249 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Work Sans', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.plate{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#2d3650,#1c2233);
+  border:2px solid var(--gold);border-radius:8px;
+  padding:0 0 14px;overflow:hidden;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.plate-stripes{
+  height:8px;width:100%;
+  background:repeating-linear-gradient(90deg, var(--gold) 0 16px, var(--terracotta) 16px 32px, var(--tint-central) 32px 48px, var(--tint-north) 48px 64px);
+}
+.plate h1{
+  margin:14px 0 0;font-family:'Alfa Slab One',serif;font-weight:400;
+  font-size:1.55rem;letter-spacing:.01em;color:var(--gold-bright);
+}
+.plate .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Progress ---------- */
+.progress-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.progress-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#12151f,#1c2233);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.progress-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--terracotta),var(--gold));
+  transition:width .5s ease;position:relative;
+}
+.progress-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.3);
+}
+.progress-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:100px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Alfa Slab One',serif;font-weight:400;font-size:.78rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Work Sans',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--gold));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#3a4463;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(217,164,65,.25);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Alfa Slab One',serif;font-weight:400;font-size:.85rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Work Sans',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--gold);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#3a4463;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(217,164,65,.2);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--gold-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Dish card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:330px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 40%, #2d3650, #171b28 75%);
+  border:1px solid var(--rule);
+  display:flex;flex-direction:column;
+  box-shadow:0 14px 30px var(--shadow);
+}
+.front-stripe{height:7px;width:100%;background:var(--tint,var(--gold));}
+.front-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
+.front-icon{font-size:2.4rem;margin-bottom:10px;}
+.front-name{font-family:'Alfa Slab One',serif;font-weight:400;font-size:1.35rem;line-height:1.2;color:var(--gold-bright);}
+.front-cat{margin-top:14px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:600;}
+.card-hint{padding-bottom:14px;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Alfa Slab One',serif;font-weight:400;font-size:1.15rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terracotta);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Alfa Slab One',serif;font-weight:400;font-size:.78rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Work Sans',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Work Sans',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:var(--tint-east);color:#d97a75;}
+.stamp.hard{border-color:var(--gold);color:var(--gold-bright);}
+.stamp.good{border-color:var(--tint-islands);color:#6fc9bd;}
+.stamp.easy{border-color:var(--gold-bright);background:rgba(217,164,65,.12);color:var(--gold-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(217,164,65,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Alfa Slab One',serif;font-weight:400;font-size:1.15rem;color:var(--gold-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(217,164,65,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Work Sans',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(217,164,65,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Work Sans',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--gold);border-color:var(--gold);color:#1c1508;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(217,164,65,.18);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Alfa Slab One',serif;font-weight:400;font-size:.95rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--gold-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(217,164,65,.2);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Alfa Slab One',serif;font-weight:400;font-size:1.6rem;color:var(--terracotta);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Alfa Slab One',serif;font-weight:400;letter-spacing:.02em;color:var(--gold-bright);font-size:1.02rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--gold-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid rgba(217,164,65,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Work Sans',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid var(--tint-east);background:transparent;
+  color:#d97a75;font-family:'Alfa Slab One',serif;font-weight:400;cursor:pointer;font-size:.85rem;
+}
+.btn:hover{background:rgba(165,52,47,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid var(--tint-east);border-radius:6px;
+  background:rgba(165,52,47,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:var(--tint-east);color:#fff;background:var(--tint-east);}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .plate h1{font-size:1.25rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.72rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.68rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.64rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.progress-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="plate">
+      <div class="plate-stripes"></div>
+      <h1>The Continental Table</h1>
+      <p class="subtitle">Cuisines of Africa · six regions, one continent</p>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 10 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Taste<small>study</small></button>
+    <button class="tab" data-tab="browse">Atlas<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-stripe" id="frontStripe"></div>
+              <div class="front-body">
+                <div class="front-icon" id="frontIcon">🥘</div>
+                <p class="front-name" id="frontName">—</p>
+                <p class="front-cat" id="frontCat">—</p>
+              </div>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Origin</span>
+                <span class="back-value" id="backCountry">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">What it is</span>
+                <span class="back-value" id="backDesc">—</span>
+              </div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>The table's cleared for today</h3>
+        <p>Nothing left to study in this section right now. Switch regions above, come back tomorrow for new cards, or visit <strong>Atlas</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by dish, country, or description…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Dishes learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total on the table</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By region</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per region</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each region tracks its own daily quota, so working through Southern Africa won't eat into your West Africa allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all six regions. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total dishes currently on the table: <strong id="catalogSize">0</strong>, across North Africa, West Africa, East Africa & the Horn, Central Africa, Southern Africa, and the Indian Ocean Islands.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Africa has 54 countries and thousands of distinct culinary traditions — this covers a curated set of well-documented, widely recognized dishes rather than every nation individually, and descriptions are general summaries meant as a study aid, not an authoritative or exhaustive reference. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Cuisines of Africa, six regions
+   ========================================================= */
+const CATEGORIES = {
+  north:   {name:"North Africa", short:"North", icon:"🫓", tint:"var(--tint-north)"},
+  west:    {name:"West Africa", short:"West", icon:"🍚", tint:"var(--tint-west)"},
+  east:    {name:"East Africa & the Horn", short:"East", icon:"🌶️", tint:"var(--tint-east)"},
+  central: {name:"Central Africa", short:"Central", icon:"🌿", tint:"var(--tint-central)"},
+  south:   {name:"Southern Africa", short:"Southern", icon:"🔥", tint:"var(--tint-south)"},
+  islands: {name:"Indian Ocean Islands", short:"Islands", icon:"🦞", tint:"var(--tint-islands)"}
+};
+
+const DISHES = [
+/* ---------- NORTH AFRICA (15) ---------- */
+{id:'no01',cat:'north',n:`Couscous`,country:`Morocco / Maghreb-wide`,desc:`Steamed semolina granules, usually topped with stew and vegetables`,p:`The Maghreb's iconic staple, traditionally steamed multiple times over a simmering pot in a couscoussier.`},
+{id:'no02',cat:'north',n:`Tagine`,country:`Morocco`,desc:`Slow-cooked stew of meat, vegetables, and dried fruit with warm spices`,p:`Named for the distinctive cone-lidded clay pot it's cooked and served in.`},
+{id:'no03',cat:'north',n:`Harira`,country:`Morocco`,desc:`Tomato-based soup with lentils, chickpeas, and meat`,p:`Traditionally served to break the daily fast during Ramadan.`},
+{id:'no04',cat:'north',n:`Shakshuka`,country:`Tunisia / North Africa`,desc:`Eggs poached in a spiced tomato-and-pepper sauce`,p:`Its name likely derives from a Berber word meaning "a mixture."`},
+{id:'no05',cat:'north',n:`Koshari`,country:`Egypt`,desc:`Rice, lentils, macaroni, and chickpeas topped with fried onions and tomato sauce`,p:`Considered Egypt's national dish, built entirely from humble pantry staples layered together.`},
+{id:'no06',cat:'north',n:`Ful Medames`,country:`Egypt`,desc:`Stewed fava beans with olive oil, lemon, and garlic`,p:`Eaten for breakfast across Egypt for thousands of years, among the oldest continuously eaten dishes on Earth.`},
+{id:'no07',cat:'north',n:`Molokhia`,country:`Egypt`,desc:`Stew made from finely chopped jute leaves, often with chicken or rabbit`,p:`Its name derives from an Arabic word for "royal," referencing a legend involving an ancient Egyptian pharaoh.`},
+{id:'no08',cat:'north',n:`Merguez`,country:`Maghreb-wide`,desc:`Spiced lamb or beef sausage, often flavored with harissa and cumin`,p:`A fiery, hand-sized sausage grilled over open coals across North Africa.`},
+{id:'no09',cat:'north',n:`Brik`,country:`Tunisia`,desc:`Thin pastry filled with egg, tuna, and herbs, then deep-fried`,p:`A crisp, delicate pastry parcel meant to be eaten carefully so the yolk doesn't burst out.`},
+{id:'no10',cat:'north',n:`Lablabi`,country:`Tunisia`,desc:`Chickpea soup served over torn bread with harissa and a poached egg`,p:`A humble street-food breakfast soup built around day-old bread.`},
+{id:'no11',cat:'north',n:`Pastilla (Bastilla)`,country:`Morocco`,desc:`Sweet-savory pie of pigeon or chicken, almonds, and cinnamon-dusted pastry`,p:`A celebratory dish blending sweet and savory flavors in the same bite.`},
+{id:'no12',cat:'north',n:`Mechoui`,country:`Maghreb-wide`,desc:`Whole roasted lamb, slow-cooked over an open fire or in a pit`,p:`Traditionally prepared for weddings and major celebrations.`},
+{id:'no13',cat:'north',n:`Ta'ameya`,country:`Egypt`,desc:`Deep-fried fritters made from mashed fava beans and herbs`,p:`Egypt's original falafel, made from fava beans rather than the chickpeas used in Levantine versions.`},
+{id:'no14',cat:'north',n:`Chermoula`,country:`Morocco`,desc:`Herb marinade of cilantro, garlic, lemon, and warm spices`,p:`A versatile marinade used for fish, poultry, and vegetables across Moroccan cooking.`},
+{id:'no15',cat:'north',n:`Zaalouk`,country:`Morocco`,desc:`Cooked eggplant and tomato salad, served as a dip or side`,p:`A smoky, garlicky cooked salad served as part of a spread of small Moroccan dishes.`},
+
+/* ---------- WEST AFRICA (15) ---------- */
+{id:'we01',cat:'west',n:`Jollof Rice`,country:`Nigeria / Ghana / Senegal`,desc:`Rice cooked in a tomato-and-pepper sauce with onions and spices`,p:`The subject of a good-natured, long-running rivalry between Nigeria and Ghana over whose version is best.`},
+{id:'we02',cat:'west',n:`Fufu`,country:`West & Central Africa`,desc:`Pounded starchy dough made from cassava, yam, or plantain`,p:`Traditionally pounded by hand with a mortar and pestle, then eaten by hand to scoop up soup or stew.`},
+{id:'we03',cat:'west',n:`Egusi Soup`,country:`Nigeria`,desc:`Thick soup made from ground melon seeds, leafy greens, and meat or fish`,p:`Its ground melon-seed base gives the soup a distinctive nutty richness and texture.`},
+{id:'we04',cat:'west',n:`Suya`,country:`Nigeria (Hausa origin)`,desc:`Skewered, spice-coated grilled meat`,p:`Coated in a peanut-based spice mix called yaji before grilling over open flame.`},
+{id:'we05',cat:'west',n:`Waakye`,country:`Ghana`,desc:`Rice and beans cooked together, often colored with dried millet leaves`,p:`Named for the Hausa word for beans, popular as a filling Ghanaian street breakfast.`},
+{id:'we06',cat:'west',n:`Banku`,country:`Ghana`,desc:`Fermented corn-and-cassava dough, cooked into a smooth paste`,p:`A tangy, fermented staple usually paired with grilled tilapia or pepper sauce.`},
+{id:'we07',cat:'west',n:`Thieboudienne`,country:`Senegal`,desc:`Rice cooked with fish, tomato, and mixed vegetables`,p:`Senegal's national dish, whose name literally means "rice and fish" in Wolof.`},
+{id:'we08',cat:'west',n:`Yassa`,country:`Senegal`,desc:`Chicken or fish marinated and cooked in lemon, onions, and mustard`,p:`A tangy, onion-heavy dish said to have originated in Senegal's Casamance region.`},
+{id:'we09',cat:'west',n:`Attiéké`,country:`Ivory Coast`,desc:`Fermented, grated cassava with a couscous-like texture`,p:`A staple side often served alongside grilled fish across Ivorian cuisine.`},
+{id:'we10',cat:'west',n:`Kedjenou`,country:`Ivory Coast`,desc:`Chicken or guinea fowl stewed slowly in a tightly sealed pot`,p:`Traditionally cooked over low heat in a sealed clay pot, letting the ingredients stew in their own juices.`},
+{id:'we11',cat:'west',n:`Domoda`,country:`The Gambia`,desc:`Peanut-based meat and vegetable stew`,p:`A rich groundnut stew closely related to peanut stews found across the West African region.`},
+{id:'we12',cat:'west',n:`Maafe (Groundnut Stew)`,country:`Mali / Senegal`,desc:`Meat stewed in a rich peanut sauce with vegetables`,p:`A West African peanut stew whose name derives from the Bambara word for the dish.`},
+{id:'we13',cat:'west',n:`Kelewele`,country:`Ghana`,desc:`Ripe plantains fried with ginger, chili, and warm spices`,p:`A beloved Ghanaian street snack, sweet, spicy, and deeply aromatic.`},
+{id:'we14',cat:'west',n:`Akara`,country:`Nigeria / Benin / Togo`,desc:`Deep-fried fritters made from mashed black-eyed peas`,p:`Brought to Brazil by enslaved West Africans, where it's still eaten today as acarajé.`},
+{id:'we15',cat:'west',n:`Fonio`,country:`Senegal / Mali / Guinea / Burkina Faso`,desc:`An ancient, tiny-grained cereal grain, cooked similarly to couscous`,p:`One of Africa's oldest cultivated grains, prized for cooking in minutes despite its tiny size.`},
+
+/* ---------- EAST AFRICA & THE HORN (15) ---------- */
+{id:'ea01',cat:'east',n:`Injera`,country:`Ethiopia / Eritrea`,desc:`Spongy, fermented flatbread made from teff flour`,p:`Both the plate and the utensil of Ethiopian and Eritrean meals, used to scoop up stews.`},
+{id:'ea02',cat:'east',n:`Doro Wat`,country:`Ethiopia`,desc:`Spicy chicken stew simmered in berbere spice and onions`,p:`Ethiopia's national dish, traditionally simmered for hours in a deeply spiced berbere sauce.`},
+{id:'ea03',cat:'east',n:`Tibs`,country:`Ethiopia`,desc:`Sautéed, spiced pieces of meat, often served sizzling`,p:`A quick-cooked dish often served alongside injera and slower-cooked stews.`},
+{id:'ea04',cat:'east',n:`Kitfo`,country:`Ethiopia`,desc:`Minced raw or lightly cooked beef seasoned with spiced butter and chili`,p:`Ethiopia's answer to steak tartare, seasoned with spiced clarified butter and chili powder.`},
+{id:'ea05',cat:'east',n:`Zigni`,country:`Eritrea`,desc:`Spicy stewed meat in a berbere-based sauce`,p:`Eritrea's close cousin to Ethiopian doro wat, reflecting the two nations' shared culinary roots.`},
+{id:'ea06',cat:'east',n:`Ugali`,country:`Kenya / Tanzania`,desc:`Stiff porridge made from maize flour and water`,p:`A dense cornmeal staple eaten across East Africa, similar to West African fufu in role.`},
+{id:'ea07',cat:'east',n:`Nyama Choma`,country:`Kenya / Tanzania`,desc:`Grilled meat, usually goat or beef`,p:`Literally "roasted meat" in Swahili, often the centerpiece of East African social gatherings.`},
+{id:'ea08',cat:'east',n:`Sukuma Wiki`,country:`Kenya / Tanzania`,desc:`Sautéed collard greens with onions and tomato`,p:`Its Swahili name means "to stretch the week," a cheap, filling green meant to make food last.`},
+{id:'ea09',cat:'east',n:`Pilau`,country:`East Africa (Swahili Coast)`,desc:`Spiced rice cooked with meat and aromatic whole spices`,p:`Reflects centuries of Arab, Indian, and Persian trade along the Swahili coast.`},
+{id:'ea10',cat:'east',n:`Samosa (Sambusa)`,country:`East Africa / Horn (Swahili Coast, Somalia)`,desc:`Fried pastry triangle filled with spiced meat or vegetables`,p:`Brought to East Africa by Indian and Arab traders, now a beloved regional snack in its own right.`},
+{id:'ea11',cat:'east',n:`Chapati`,country:`Kenya / Tanzania / Uganda`,desc:`Layered flatbread of South Asian origin, now a regional staple`,p:`Introduced by South Asian laborers and traders, now cooked daily across East African kitchens.`},
+{id:'ea12',cat:'east',n:`Matoke`,country:`Uganda`,desc:`Steamed and mashed green (unripe) bananas`,p:`Uganda's staple starch, savory rather than sweet despite being a type of banana.`},
+{id:'ea13',cat:'east',n:`Mandazi`,country:`East Africa (Swahili Coast)`,desc:`Lightly sweetened, fried dough similar to a doughnut`,p:`A popular East African breakfast fritter, often flavored with cardamom and coconut milk.`},
+{id:'ea14',cat:'east',n:`Bariis Iskukaris`,country:`Somalia`,desc:`Spiced rice dish, similar to pilau, often studded with raisins`,p:`Somalia's version of spiced rice, often colored with saffron or turmeric.`},
+{id:'ea15',cat:'east',n:`Isombe`,country:`Rwanda / Burundi`,desc:`Cassava leaves cooked with eggplant and ground peanut paste`,p:`A hearty greens dish central to Rwandan and Burundian home cooking.`},
+
+/* ---------- CENTRAL AFRICA (10) ---------- */
+{id:'ce01',cat:'central',n:`Moambe (Poulet Moambe)`,country:`DR Congo / Republic of Congo`,desc:`Chicken stewed in a rich palm-nut sauce`,p:`Widely considered the national dish of both Congos, built on a rich, red palm-fruit sauce.`},
+{id:'ce02',cat:'central',n:`Chikwangue (Kwanga)`,country:`DR Congo / Republic of Congo`,desc:`Fermented cassava dough, wrapped in leaves and steamed`,p:`A fermented cassava staple wrapped and steamed in leaves, giving it a distinctive tang and aroma.`},
+{id:'ce03',cat:'central',n:`Saka Saka (Pondu)`,country:`DR Congo / Republic of Congo`,desc:`Pounded cassava leaves stewed with palm oil`,p:`A staple greens dish made from pounded cassava leaves, found across Central Africa under various names.`},
+{id:'ce04',cat:'central',n:`Ndolé`,country:`Cameroon`,desc:`Stewed bitterleaf greens with peanuts and meat or fish`,p:`Widely regarded as Cameroon's national dish, balancing bitter greens with rich peanut sauce.`},
+{id:'ce05',cat:'central',n:`Poulet DG`,country:`Cameroon`,desc:`Sautéed chicken with fried plantains and mixed vegetables`,p:`Its name stands for "Directeur Général," reflecting its status as a dish fit for an executive.`},
+{id:'ce06',cat:'central',n:`Boule`,country:`Chad / Sahel region`,desc:`Millet or sorghum dough staple, similar to fufu, eaten with stew`,p:`A staple dough made from millet or sorghum, central to daily meals across the Sahel.`},
+{id:'ce07',cat:'central',n:`Gozo`,country:`Central African Republic`,desc:`Cassava- or corn-based pounded starch staple`,p:`The Central African Republic's version of the pounded starch staple found throughout the region.`},
+{id:'ce08',cat:'central',n:`Nyembwe (Poulet Nyembwe)`,country:`Gabon`,desc:`Chicken cooked in a palm-nut cream sauce`,p:`Gabon's take on palm-nut chicken stew, closely related to Congo's moambe.`},
+{id:'ce09',cat:'central',n:`Mbongo Tchobi`,country:`Cameroon (Douala)`,desc:`Dark, smoky stew of fish or meat in burnt-spice sauce`,p:`An intensely flavored stew from Cameroon's coastal Sawa people, colored by carefully burnt spices.`},
+{id:'ce10',cat:'central',n:`Liboke`,country:`DR Congo / Republic of Congo`,desc:`Fish or meat seasoned and steamed inside wrapped leaves`,p:`Food steamed and served in its own wrapped-leaf parcel, infusing it with a smoky aroma.`},
+
+/* ---------- SOUTHERN AFRICA (15) ---------- */
+{id:'so01',cat:'south',n:`Braai`,country:`South Africa`,desc:`Open-fire barbecue of meat, often a full social occasion`,p:`More a social occasion than a single dish, considered a cornerstone of South African culture.`},
+{id:'so02',cat:'south',n:`Biltong`,country:`South Africa / Namibia`,desc:`Air-dried, vinegar-and-spice-cured strips of meat`,p:`A spiced, air-dried snack meat predating refrigeration, distinct from American beef jerky in its curing method.`},
+{id:'so03',cat:'south',n:`Bobotie`,country:`South Africa`,desc:`Baked spiced minced meat topped with an egg custard layer`,p:`Often considered South Africa's national dish, reflecting Cape Malay culinary influence.`},
+{id:'so04',cat:'south',n:`Bunny Chow`,country:`South Africa (Durban)`,desc:`A hollowed-out bread loaf filled with curry`,p:`Invented by the Indian community in Durban, likely as a portable way to serve curry to laborers.`},
+{id:'so05',cat:'south',n:`Pap`,country:`South Africa`,desc:`Maize-meal porridge, similar to East Africa's ugali`,p:`Southern Africa's version of the maize-porridge staple found in many forms across the continent.`},
+{id:'so06',cat:'south',n:`Chakalaka`,country:`South Africa`,desc:`Spicy vegetable relish, typically tomato- and bean-based`,p:`A tangy, spicy relish typically served alongside pap or braai meat.`},
+{id:'so07',cat:'south',n:`Potjiekos`,country:`South Africa`,desc:`Stew slow-cooked in a cast-iron pot over open coals`,p:`Named for the three-legged cast-iron pot it's traditionally cooked in over an open fire.`},
+{id:'so08',cat:'south',n:`Sadza`,country:`Zimbabwe`,desc:`Stiff maize porridge, nearly identical to South African pap`,p:`Zimbabwe's staple starch, nearly identical in method to South African pap and Kenyan ugali.`},
+{id:'so09',cat:'south',n:`Nshima`,country:`Zambia / Malawi`,desc:`Maize-meal porridge, regional name for the same staple`,p:`Zambia and Malawi's name for the same maize-porridge staple found throughout the region.`},
+{id:'so10',cat:'south',n:`Muamba de Galinha`,country:`Angola`,desc:`Chicken stewed in palm oil with okra`,p:`Angola's take on the palm-oil chicken stew found across formerly Portuguese-influenced Africa.`},
+{id:'so11',cat:'south',n:`Piri Piri Chicken`,country:`Mozambique`,desc:`Chicken marinated and grilled in fiery chili sauce`,p:`Popularized worldwide via Mozambique's Portuguese colonial trade routes and the African bird's eye chili.`},
+{id:'so12',cat:'south',n:`Matapa`,country:`Mozambique`,desc:`Stewed cassava leaves with ground peanuts and coconut milk`,p:`A coastal Mozambican dish blending cassava leaves with coconut milk, reflecting Indian Ocean trade influence.`},
+{id:'so13',cat:'south',n:`Seswaa`,country:`Botswana`,desc:`Slow-cooked, pounded salted beef or goat`,p:`Botswana's national dish, traditionally boiled for hours then pounded until shredded.`},
+{id:'so14',cat:'south',n:`Vetkoek`,country:`South Africa`,desc:`Deep-fried dough bread, often filled with mince or jam`,p:`A deep-fried bread whose name literally means "fat cake" in Afrikaans.`},
+{id:'so15',cat:'south',n:`Umngqusho`,country:`South Africa (Xhosa)`,desc:`A stew of samp (crushed corn) and beans`,p:`A hearty Xhosa staple famously cited as one of Nelson Mandela's favorite dishes.`},
+
+/* ---------- INDIAN OCEAN ISLANDS (8) ---------- */
+{id:'is01',cat:'islands',n:`Romazava`,country:`Madagascar`,desc:`Beef stewed with leafy greens`,p:`Considered Madagascar's national dish, blending French and Malagasy culinary traditions.`},
+{id:'is02',cat:'islands',n:`Ravitoto`,country:`Madagascar`,desc:`Finely pounded cassava leaves cooked with pork`,p:`A staple Malagasy dish of finely pounded cassava leaves, often cooked with coconut milk.`},
+{id:'is03',cat:'islands',n:`Dholl Puri`,country:`Mauritius`,desc:`Flatbread stuffed with cooked, seasoned split peas`,p:`A beloved Mauritian street food reflecting the island's large Indian-descended population.`},
+{id:'is04',cat:'islands',n:`Rougaille`,country:`Mauritius`,desc:`Tomato-based Creole sauce cooked with meat or fish`,p:`A Creole tomato sauce base found across the Mascarene Islands, reflecting French, African, and Indian fusion.`},
+{id:'is05',cat:'islands',n:`Ladob`,country:`Seychelles / Comoros`,desc:`Sweet coconut-milk dessert with plantain or breadfruit`,p:`A comforting coconut-milk dish found across the Indian Ocean islands, sometimes made savory instead of sweet.`},
+{id:'is06',cat:'islands',n:`Mchuzi wa Pweza`,country:`Zanzibar (Tanzania)`,desc:`Spiced octopus curry cooked in coconut sauce`,p:`A Zanzibari coconut curry reflecting the island's centuries of spice trade with Oman, India, and Persia.`},
+{id:'is07',cat:'islands',n:`Zanzibar Pizza`,country:`Zanzibar (Tanzania)`,desc:`Stuffed, fried street-food flatbread`,p:`A street-food creation unique to Stone Town, more akin to a stuffed savory crepe than Italian pizza.`},
+{id:'is08',cat:'islands',n:`Langouste à la Vanille`,country:`Comoros`,desc:`Lobster cooked in a vanilla-infused sauce`,p:`Reflects Comoros's status as one of the world's top vanilla producers.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'continental-table-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ north:{date:null,newDone:0}, west:{date:null,newDone:0}, east:{date:null,newDone:0}, central:{date:null,newDone:0}, south:{date:null,newDone:0}, islands:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ north:10, west:10, east:10, central:10, south:10, islands:10 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active region section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'north';
+
+const dishesById = {};
+DISHES.forEach(d=>dishesById[d.id]=d);
+const dishesByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ dishesByCategory[k] = DISHES.filter(d=>d.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = dishesByCategory[catKey];
+  const dueReviews = pool.filter(d=>{
+    const s = state.srs[d.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(d=>!state.srs[d.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(d=>combined.push({dishId:d.id,isNew:false}));
+  newToAdd.forEach(d=>combined.push({dishId:d.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(dishId){
+  const s = state.srs[dishId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const dishId = currentItem.dishId;
+  const wasNew = currentItem.isNew && !state.srs[dishId];
+  let s = state.srs[dishId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[dishId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderProgress();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+dishesByCategory[key].length+' dishes</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderProgress();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderProgress(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const d = dishesById[currentItem.dishId];
+  const meta = CATEGORIES[d.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = d.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('frontStripe').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = d.id.toUpperCase();
+
+  document.getElementById('backName').textContent = d.n;
+  document.getElementById('backCountry').textContent = d.country;
+  document.getElementById('backDesc').textContent = d.desc;
+  document.getElementById('backProfile').textContent = d.p;
+
+  const previews = previewIntervals(d.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All regions']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderDishList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderDishList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = DISHES.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(d=>d.cat===browseCategory);
+  if(query){
+    list = list.filter(d=>
+      normalize(d.n).includes(query) ||
+      normalize(d.country).includes(query) ||
+      normalize(d.desc).includes(query)
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No dishes match that search.</div>';
+    return;
+  }
+  list.forEach(d=>{
+    const meta = CATEGORIES[d.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+d.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+d.country+'</div>'+
+      '<div class="row-detail">'+d.desc+'<br><em>'+d.p+'</em></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = DISHES.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By region</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = dishesByCategory[key].length;
+    const learnedInCat = dishesByCategory[key].filter(d=>state.srs[d.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = DISHES.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(dishesByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>dishesByCategory[key].length) v = dishesByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderProgress();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderProgress();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderDishList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderDishList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderProgress();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>
