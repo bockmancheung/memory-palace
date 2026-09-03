@@ -46,6 +46,21 @@
   let inRecovery = false;
   const listeners = [];
 
+  // Supabase redirects back here with #error=...&error_description=... (or
+  // ?error=... for the PKCE flow) when a reset/confirm link is invalid or
+  // already used -- most often because it expired, was clicked twice, or an
+  // email app's link-scanner "opened" it first and burned the one-time token
+  // before the person did. Capture that synchronously, before anything async
+  // (including the Supabase client itself) can consume/clear the URL.
+  let authError = null;
+  try {
+    const raw = (window.location.hash || '').replace(/^#/, '') || (window.location.search || '').replace(/^\?/, '');
+    const params = new URLSearchParams(raw);
+    if (params.get('error')) {
+      authError = params.get('error_description') || params.get('error');
+    }
+  } catch(e) {}
+
   function notify(){ listeners.forEach(fn => { try{ fn(currentUser); }catch(e){} }); }
 
   async function migrateLocalProgress(){
@@ -174,6 +189,8 @@
     isCloudEnabled: () => cloudEnabled,
     getUser: () => currentUser,
     isRecovering: () => inRecovery,
+    getAuthError: () => authError,
+    clearAuthError: () => { authError = null; },
     onChange: (fn) => { listeners.push(fn); },
     ready: () => ensureSession()
   };
@@ -243,6 +260,29 @@
 
     function renderPanel(){
       const user = window.AuthStorage.getUser();
+      const authErr = window.AuthStorage.getAuthError();
+      if (authErr && !window.AuthStorage.isRecovering()) {
+        panel.innerHTML =
+          '<h4>That link didn’t work</h4>' +
+          '<p>' + escapeHtml(authErr) + ' This usually means the link was already used, is more than an hour old, or your email app opened it to scan it before you clicked. Enter your email for a fresh one.</p>' +
+          '<input type="email" id="as-email" placeholder="Email" autocomplete="email">' +
+          '<button class="as-primary" id="as-resend">Send new reset email</button>' +
+          '<div class="as-msg" id="as-msg"></div>';
+        panel.querySelector('#as-resend').onclick = async () => {
+          const email = panel.querySelector('#as-email').value.trim();
+          const msg = panel.querySelector('#as-msg');
+          msg.className = 'as-msg'; msg.textContent = '';
+          if (!email) { msg.className='as-msg as-err'; msg.textContent='Enter your email first.'; return; }
+          try {
+            await window.AuthStorage.resetPassword(email);
+            window.AuthStorage.clearAuthError();
+            msg.className='as-msg as-ok'; msg.textContent='Reset email sent — check your inbox.';
+          } catch(e) {
+            msg.className='as-msg as-err'; msg.textContent=(e && e.message) || 'Could not send reset email.';
+          }
+        };
+        return;
+      }
       if (window.AuthStorage.isRecovering()) {
         panel.innerHTML =
           '<h4>Set a new password</h4>' +
@@ -345,8 +385,8 @@
       if (!wrap.contains(e.target)) panel.classList.remove('as-open');
     });
 
-    function openAndRenderIfRecovering(){
-      if (window.AuthStorage.isRecovering()) {
+    function openAndRenderIfNeeded(){
+      if (window.AuthStorage.isRecovering() || window.AuthStorage.getAuthError()) {
         panel.classList.add('as-open');
         renderPanel();
         return true;
@@ -356,13 +396,13 @@
 
     window.AuthStorage.onChange(() => {
       renderPill();
-      if (!openAndRenderIfRecovering() && panel.classList.contains('as-open')) renderPanel();
+      if (!openAndRenderIfNeeded() && panel.classList.contains('as-open')) renderPanel();
     });
     renderPill();
-    // Covers the case where the recovery link's auth event fired before this
-    // widget finished mounting (it's processed as soon as the Supabase client
-    // loads, which can be earlier than DOMContentLoaded).
-    openAndRenderIfRecovering();
+    // Covers the case where the recovery/error state was already known before
+    // this widget finished mounting (auth events fire as soon as the Supabase
+    // client loads, which can be earlier than DOMContentLoaded).
+    openAndRenderIfNeeded();
   }
 
   if (document.readyState === 'loading') {
