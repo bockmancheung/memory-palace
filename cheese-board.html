@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cheese Board — Cheeses of the World</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=Courier+Prime&display=swap');
+
+:root{
+  --bg-0:#171310;
+  --bg-1:#211b15;
+  --bg-2:#2b241c;
+  --copper:#8a5a2e;
+  --copper-bright:#b8804a;
+  --amber:#c9a45a;
+  --amber-bright:#e0c17a;
+  --cream:#f3ecdd;
+  --cream-alt:#eee1c9;
+  --ink:#241d14;
+  --ink-soft:#5c4e3a;
+  --cream-dim:#c3b8a4;
+  --shadow:rgba(4,2,0,.55);
+  --rule:rgba(36,29,20,.25);
+  --tint-soft:#d9b23c;
+  --tint-hard:#c9862f;
+  --tint-blue:#5b6fa8;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #2c2418 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Inter', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.board{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#2b241c,#191510);
+  border:2px solid var(--copper);border-radius:8px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.board h1{
+  margin:0;font-family:'Fraunces',serif;font-weight:700;font-style:italic;
+  font-size:1.9rem;letter-spacing:.01em;color:var(--amber-bright);
+}
+.board .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Pour progress ---------- */
+.pour-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.pour-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#0c0a07,#191510);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.pour-fill{
+  height:100%;width:0%;
+  background:linear-gradient(180deg,var(--amber-bright),var(--copper));
+  transition:width .5s ease;position:relative;
+}
+.pour-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.35);
+}
+.pour-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:105px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Inter',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--amber));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#382e20;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(138,90,46,.3);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.92rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Inter',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--amber);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#382e20;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(138,90,46,.25);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--amber-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Coaster card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 40%, #342c1e, #171310 75%);
+  border:3px solid var(--tint,var(--copper));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.6rem;margin-bottom:10px;}
+.front-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.55rem;line-height:1.15;color:var(--amber-bright);}
+.front-cat{margin-top:12px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:600;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:
+    linear-gradient(90deg, transparent 0 0, transparent 100%),
+    repeating-linear-gradient(180deg, transparent 0 6px, rgba(0,0,0,.03) 6px 7px),
+    linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.2rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-ingredients{
+  margin:8px 0;padding:10px 12px;background:rgba(138,90,46,.08);border-radius:6px;
+  font-family:'Courier Prime',monospace;font-size:.82rem;line-height:1.6;
+}
+.back-ingredients div{border-bottom:1px dotted rgba(36,29,20,.15);padding-bottom:2px;margin-bottom:2px;}
+.back-ingredients div:last-child{border-bottom:none;margin-bottom:0;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Inter',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Inter',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:#c25c5c;color:#e08080;}
+.stamp.hard{border-color:var(--copper);color:var(--copper-bright);}
+.stamp.good{border-color:#3f8f76;color:#5cc4a9;}
+.stamp.easy{border-color:var(--amber-bright);background:rgba(201,164,90,.12);color:var(--amber-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(201,164,90,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.2rem;color:var(--amber-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(138,90,46,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Inter',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(138,90,46,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Inter',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--amber);border-color:var(--amber);color:#241a06;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(138,90,46,.2);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--amber-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,90,46,.25);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.row-ingredients{margin:6px 0 0;font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--amber-bright);}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Fraunces',serif;font-weight:900;font-size:1.7rem;color:var(--copper);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Fraunces',serif;font-weight:700;letter-spacing:.02em;color:var(--amber-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--amber-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid rgba(138,90,46,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Inter',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid #c25c5c;background:transparent;
+  color:#e08080;font-family:'Fraunces',serif;font-weight:700;cursor:pointer;font-size:.9rem;
+}
+.btn:hover{background:rgba(194,92,92,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid #c25c5c;border-radius:6px;
+  background:rgba(194,92,92,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:#c25c5c;color:#fff;background:#8a3d3d;}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .board h1{font-size:1.5rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.8rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.75rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.7rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.pour-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="board">
+      <h1>The Cheese Board</h1>
+      <p class="subtitle">Cheeses of the world · rind to rind</p>
+    </div>
+  </div>
+
+  <div class="pour-wrap">
+    <div class="pour-track">
+      <div class="pour-fill" id="pourFill"></div>
+    </div>
+    <div class="pour-label" id="pourLabel">0 / 5 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Taste<small>study</small></button>
+    <button class="tab" data-tab="browse">Board<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🧀</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Style</span>
+                <span class="back-value" id="backStyle">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Milk & texture</span>
+                <span class="back-value" id="backBody">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Origin</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Pairs with</span>
+                <span class="back-value" id="backPairing">—</span>
+              </div>
+              <span class="back-label">Flavor notes</span>
+              <div class="back-ingredients" id="backNotes"></div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Board's empty for today</h3>
+        <p>Nothing left to taste in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Board</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, origin, or flavor note…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Cheeses learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total on the board</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through Soft & Fresh won't eat into your Hard & Aged allowance (or the others).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across all three sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total cheeses currently on the board: <strong id="catalogSize">0</strong>, across Soft & Fresh, Hard & Aged, and Blue & Washed-Rind.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Origins, textures, and flavor notes are general summaries meant as a study aid — actual character varies by producer, aging, and season, so treat these as a starting point rather than a single authoritative reference. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Cheeses of the world, by rind and texture
+   ========================================================= */
+const CATEGORIES = {
+  soft: {name:"Soft & Fresh", short:"Soft", icon:"🥛", tint:"var(--tint-soft)"},
+  hard: {name:"Hard & Aged", short:"Hard", icon:"🧀", tint:"var(--tint-hard)"},
+  blue: {name:"Blue & Washed-Rind", short:"Blue", icon:"🫐", tint:"var(--tint-blue)"}
+};
+
+const WINES = [
+/* ---------- SOFT & FRESH (11) ---------- */
+{id:'ch01',cat:'soft',n:`Brie`,origin:`Île-de-France, France`,body:`Cow's milk, soft-ripened, bloomy rind`,notes:[`Buttery`,`Mushroom`,`Cream`],pair:`Baguette, Champagne, honey`,p:`Named for the French region where it originated; Brie de Meaux was reportedly crowned "king of cheeses" at the Congress of Vienna in 1815.`},
+{id:'ch02',cat:'soft',n:`Camembert`,origin:`Normandy, France`,body:`Cow's milk, soft-ripened, bloomy rind`,notes:[`Earthy`,`Garlicky`,`Rich`],pair:`Crusty bread, apple cider`,p:`Similar to Brie but typically stronger and earthier, traditionally sold in small wooden boxes that let it travel well.`},
+{id:'ch03',cat:'soft',n:`Burrata`,origin:`Puglia, Italy`,body:`Cow's or buffalo milk, fresh`,notes:[`Milky`,`Sweet`,`Creamy`],pair:`Tomatoes, olive oil, basil`,p:`An outer shell of mozzarella hides a soft, cream-and-curd filling inside, meant to be cut open and eaten fresh within days of making.`},
+{id:'ch04',cat:'soft',n:`Fresh Mozzarella`,origin:`Campania, Italy`,body:`Buffalo or cow's milk, fresh, stretched-curd`,notes:[`Milky`,`Mild`,`Springy`],pair:`Tomato, basil, olive oil`,p:`Made using the "pasta filata" (stretched curd) technique, traditionally from water buffalo milk in its original Campania form.`},
+{id:'ch05',cat:'soft',n:`Ricotta`,origin:`Italy`,body:`Whey-based, fresh`,notes:[`Mild`,`Sweet`,`Grainy`],pair:`Honey, fruit, pasta fillings`,p:`Literally means "recooked" in Italian — it's made from the leftover whey of other cheesemaking, not milk directly.`},
+{id:'ch06',cat:'soft',n:`Chèvre`,origin:`Loire Valley, France`,body:`Goat's milk, fresh`,notes:[`Tangy`,`Earthy`,`Chalky`],pair:`Sauvignon Blanc, honey, walnuts`,p:`Its tangy, slightly gamey flavor comes from goat milk's distinct fatty acids, and its chalky texture is prized in French cuisine.`},
+{id:'ch07',cat:'soft',n:`Halloumi`,origin:`Cyprus`,body:`Sheep and goat milk, semi-firm, brined`,notes:[`Salty`,`Squeaky`,`Milky`],pair:`Grilled vegetables, watermelon`,p:`Its high melting point means it can be pan-fried or grilled without collapsing, making it one of the few cheeses meant to be cooked whole.`},
+{id:'ch08',cat:'soft',n:`Queso Fresco`,origin:`Mexico`,body:`Cow's milk, fresh, crumbly`,notes:[`Mild`,`Salty`,`Tangy`],pair:`Tacos, beans, salads`,p:`A staple of Mexican cooking valued for staying firm and not melting when heated, so it's crumbled on top of dishes rather than cooked into them.`},
+{id:'ch09',cat:'soft',n:`Mascarpone`,origin:`Lombardy, Italy`,body:`Cow's cream, fresh, ultra-rich`,notes:[`Sweet`,`Buttery`,`Silky`],pair:`Coffee, fruit, tiramisu`,p:`Technically not a true cheese but a cultured cream, prized for its silky richness and best known as the base of tiramisu.`},
+{id:'ch10',cat:'soft',n:`Boursin`,origin:`Normandy, France`,body:`Cow's milk, fresh, herbed`,notes:[`Garlicky`,`Herby`,`Creamy`],pair:`Crackers, crusty bread`,p:`Invented in 1957 as one of the first commercially mass-marketed flavored soft cheeses, credited with popularizing herb-and-garlic cheese spreads worldwide.`},
+{id:'ch11',cat:'soft',n:`Taleggio`,origin:`Lombardy, Italy`,body:`Cow's milk, soft, washed-rind`,notes:[`Fruity`,`Tangy`,`Meaty`],pair:`Polenta, pears, Barolo`,p:`Despite its pungent, washed rind, its interior is surprisingly mild, fruity, and creamy once you get past the smell.`},
+
+/* ---------- HARD & AGED (11) ---------- */
+{id:'ch12',cat:'hard',n:`Parmigiano-Reggiano`,origin:`Emilia-Romagna, Italy`,body:`Cow's milk, hard, aged 12-36+ months`,notes:[`Nutty`,`Savory`,`Crystalline`],pair:`Balsamic vinegar, pasta, Lambrusco`,p:`Aged for a minimum of 12 months by law, its crunchy white crystals are clusters of the amino acid tyrosine, a sign of long aging.`},
+{id:'ch13',cat:'hard',n:`Aged Gouda`,origin:`South Holland, Netherlands`,body:`Cow's milk, hard, aged 1-5 years`,notes:[`Caramel`,`Butterscotch`,`Nutty`],pair:`Dark beer, dried fruit`,p:`Young Gouda is mild and rubbery, but aged for years it develops crunchy protein crystals and a deep caramel sweetness.`},
+{id:'ch14',cat:'hard',n:`Manchego`,origin:`La Mancha, Spain`,body:`Sheep's milk, semi-hard, aged 2-12 months`,notes:[`Nutty`,`Grassy`,`Tangy`],pair:`Quince paste, Rioja, olives`,p:`Made exclusively from the milk of Manchega sheep native to Spain's arid central plateau, with a distinctive zigzag rind pattern from traditional woven molds.`},
+{id:'ch15',cat:'hard',n:`Pecorino Romano`,origin:`Lazio, Italy`,body:`Sheep's milk, hard, aged 8+ months`,notes:[`Salty`,`Sharp`,`Tangy`],pair:`Pasta carbonara, cacio e pepe`,p:`One of the oldest cheeses on record, reportedly part of Roman legionaries' rations nearly 2,000 years ago.`},
+{id:'ch16',cat:'hard',n:`Gruyère`,origin:`Fribourg, Switzerland`,body:`Cow's milk, hard, aged 5-12+ months`,notes:[`Nutty`,`Earthy`,`Slightly sweet`],pair:`Fondue, French onion soup`,p:`One of the classic melting cheeses of the Alps, forming the backbone of both Swiss fondue and French onion soup.`},
+{id:'ch17',cat:'hard',n:`Comté`,origin:`Franche-Comté, France`,body:`Cow's milk, hard, aged 4-24 months`,notes:[`Nutty`,`Fruity`,`Brothy`],pair:`Jura wine, walnuts`,p:`Each wheel is graded on a 20-point scale by professional tasters before it's allowed to carry the Comté name, and flavor varies by season and pasture.`},
+{id:'ch18',cat:'hard',n:`Aged Cheddar`,origin:`Somerset, England`,body:`Cow's milk, hard, aged 1-5+ years`,notes:[`Sharp`,`Nutty`,`Tangy`],pair:`Apple, chutney, stout`,p:`Traditionally wrapped in cloth ("clothbound") and aged in caves; the name is not protected, so "cheddar" is made worldwide today.`},
+{id:'ch19',cat:'hard',n:`Asiago (Aged)`,origin:`Veneto, Italy`,body:`Cow's milk, hard, aged 9+ months`,notes:[`Sharp`,`Nutty`,`Fruity`],pair:`Prosecco, cured meats`,p:`Fresh Asiago is mild and semi-soft, but aged versions harden into a completely different, sharp grating cheese.`},
+{id:'ch20',cat:'hard',n:`Grana Padano`,origin:`Po River Valley, Italy`,body:`Cow's milk, hard, aged 9-24 months`,notes:[`Nutty`,`Savory`,`Mild`],pair:`Risotto, pasta`,p:`Parmigiano-Reggiano's milder, less strictly regulated cousin, actually invented earlier, by medieval monks seeking to preserve surplus milk.`},
+{id:'ch21',cat:'hard',n:`Mimolette`,origin:`Lille, France`,body:`Cow's milk, hard, aged 6-24 months`,notes:[`Nutty`,`Caramel`,`Fruity`],pair:`Cider, dark beer`,p:`Its bright orange color and pockmarked rind come from annatto dye and cheese mites deliberately introduced to help it age.`},
+{id:'ch22',cat:'hard',n:`Cotija`,origin:`Michoacán, Mexico`,body:`Cow's milk, hard, aged, crumbly`,notes:[`Salty`,`Sharp`,`Milky`],pair:`Elote, tacos, beans`,p:`Named for the town of Cotija and often called "Mexican Parmesan" for the way it's grated or crumbled over finished dishes.`},
+
+/* ---------- BLUE & WASHED-RIND (11) ---------- */
+{id:'ch23',cat:'blue',n:`Roquefort`,origin:`Aveyron, France`,body:`Sheep's milk, blue-veined, cave-aged`,notes:[`Sharp`,`Salty`,`Tangy`],pair:`Sauternes, honey, walnuts`,p:`Legally must be aged in the natural limestone caves of Roquefort-sur-Soulzon, where wild Penicillium mold spores occur naturally.`},
+{id:'ch24',cat:'blue',n:`Gorgonzola`,origin:`Lombardy, Italy`,body:`Cow's milk, blue-veined`,notes:[`Pungent`,`Creamy`,`Tangy`],pair:`Pears, walnuts, polenta`,p:`Comes in two styles — young "dolce" (sweet, creamy) and aged "piccante" (sharp, crumbly) — from the same recipe.`},
+{id:'ch25',cat:'blue',n:`Stilton`,origin:`Leicestershire, England`,body:`Cow's milk, blue-veined`,notes:[`Rich`,`Earthy`,`Tangy`],pair:`Port wine, walnuts, pears`,p:`A protected regional name in the UK — it can legally only be made in three English counties, and never in the village of Stilton itself.`},
+{id:'ch26',cat:'blue',n:`Danablu (Danish Blue)`,origin:`Denmark`,body:`Cow's milk, blue-veined`,notes:[`Sharp`,`Salty`,`Creamy`],pair:`Dark rye bread, honey`,p:`Invented in the early 20th century as a Danish answer to Roquefort, now one of the most widely exported blue cheeses in the world.`},
+{id:'ch27',cat:'blue',n:`Cabrales`,origin:`Asturias, Spain`,body:`Mixed cow, sheep & goat milk, blue-veined`,notes:[`Intense`,`Sharp`,`Pungent`],pair:`Cider, crusty bread`,p:`Aged in natural mountain caves and considered one of the strongest, most pungent blue cheeses made anywhere.`},
+{id:'ch28',cat:'blue',n:`Époisses`,origin:`Burgundy, France`,body:`Cow's milk, washed-rind, soft`,notes:[`Pungent`,`Meaty`,`Rich`],pair:`Burgundy wine, crusty bread`,p:`Washed regularly in brine and marc brandy as it ages, giving it such a powerful smell it's banned on some public transit systems in France.`},
+{id:'ch29',cat:'blue',n:`Munster`,origin:`Alsace, France`,body:`Cow's milk, washed-rind, soft`,notes:[`Pungent`,`Tangy`,`Meaty`],pair:`Cumin seeds, Gewürztraminer`,p:`Traditionally eaten sprinkled with cumin seeds, a pairing dating back centuries in the Alsace region.`},
+{id:'ch30',cat:'blue',n:`Limburger`,origin:`Historic Duchy of Limburg`,body:`Cow's milk, washed-rind, soft`,notes:[`Pungent`,`Meaty`,`Tangy`],pair:`Dark rye, mustard, onion`,p:`Notorious for a smell often compared to body odor, caused by the same bacterium, Brevibacterium linens, found on human skin.`},
+{id:'ch31',cat:'blue',n:`Reblochon`,origin:`Savoie, France`,body:`Cow's milk, washed-rind, soft`,notes:[`Nutty`,`Creamy`,`Mild pungency`],pair:`Potatoes (tartiflette), Savoie wine`,p:`Legend says it was created by farmers who secretly under-milked their cows to avoid tax on milk yield, then finished milking after the tax collector left.`},
+{id:'ch32',cat:'blue',n:`Fontina`,origin:`Aosta Valley, Italy`,body:`Cow's milk, semi-soft, washed-rind`,notes:[`Nutty`,`Earthy`,`Buttery`],pair:`Fonduta, mushrooms`,p:`Made high in the Italian Alps and traditionally melted into "fonduta," Italy's answer to Swiss fondue.`},
+{id:'ch33',cat:'blue',n:`Morbier`,origin:`Franche-Comté, France`,body:`Cow's milk, semi-soft, ash-layered`,notes:[`Earthy`,`Fruity`,`Mild`],pair:`Jura wine, crusty bread`,p:`Recognizable by the thin line of edible ash running through its center, originally used to protect an incomplete morning curd until more was added later in the day.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'cheese-board-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ soft:{date:null,newDone:0}, hard:{date:null,newDone:0}, blue:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ soft:6, hard:6, blue:6 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'soft';
+
+const winesById = {};
+WINES.forEach(w=>winesById[w.id]=w);
+const winesByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ winesByCategory[k] = WINES.filter(w=>w.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = winesByCategory[catKey];
+  const dueReviews = pool.filter(w=>{
+    const s = state.srs[w.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(w=>!state.srs[w.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(w=>combined.push({wineId:w.id,isNew:false}));
+  newToAdd.forEach(w=>combined.push({wineId:w.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(wineId){
+  const s = state.srs[wineId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const wineId = currentItem.wineId;
+  const wasNew = currentItem.isNew && !state.srs[wineId];
+  let s = state.srs[wineId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[wineId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderPour();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+winesByCategory[key].length+' cards</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderPour();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderPour(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('pourFill').style.width = pct+'%';
+  document.getElementById('pourLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const w = winesById[currentItem.wineId];
+  const meta = CATEGORIES[w.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = w.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = w.id.toUpperCase();
+
+  document.getElementById('backName').textContent = w.n;
+  document.getElementById('backStyle').textContent = meta.name;
+  document.getElementById('backBody').textContent = w.body;
+  document.getElementById('backOrigin').textContent = w.origin;
+  document.getElementById('backPairing').textContent = w.pair;
+
+  const notesWrap = document.getElementById('backNotes');
+  notesWrap.innerHTML = '';
+  w.notes.forEach(line=>{
+    const div = document.createElement('div');
+    div.textContent = line;
+    notesWrap.appendChild(div);
+  });
+  document.getElementById('backProfile').textContent = w.p;
+
+  const previews = previewIntervals(w.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderWineList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
+}
+
+function renderWineList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = WINES.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(w=>w.cat===browseCategory);
+  if(query){
+    list = list.filter(w=>
+      normalize(w.n).includes(query) ||
+      normalize(w.origin).includes(query) ||
+      w.notes.some(t=>normalize(t).includes(query))
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">Nothing matches that search.</div>';
+    return;
+  }
+  list.forEach(w=>{
+    const meta = CATEGORIES[w.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+w.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+w.body+' · '+w.origin+'</div>'+
+      '<div class="row-detail">'+w.p+'<div class="row-ingredients">'+w.notes.join(' · ')+'</div></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = WINES.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = winesByCategory[key].length;
+    const learnedInCat = winesByCategory[key].filter(w=>state.srs[w.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = WINES.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(winesByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>winesByCategory[key].length) v = winesByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderPour();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderPour();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderWineList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderWineList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderPour();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>
