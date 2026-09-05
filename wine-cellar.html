@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wine Cellar — Varietals of the World</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=Courier+Prime&display=swap');
+
+:root{
+  --bg-0:#170d13;
+  --bg-1:#20141c;
+  --bg-2:#2b1c26;
+  --copper:#8a2140;
+  --copper-bright:#b8355c;
+  --amber:#c9a45a;
+  --amber-bright:#e0c17a;
+  --cream:#f3e9dd;
+  --cream-alt:#eee0cf;
+  --ink:#241620;
+  --ink-soft:#5c4a52;
+  --cream-dim:#c3b7c0;
+  --shadow:rgba(4,2,6,.55);
+  --rule:rgba(36,22,32,.25);
+  --tint-white:#c9a227;
+  --tint-red:#8a1f3d;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, #2c1a24 0%, transparent 65%),
+    var(--bg-0);
+  color:var(--cream);
+  font-family:'Inter', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:780px;margin:0 auto;padding:18px 16px 40px;}
+
+/* ---------- Header ---------- */
+.header{display:flex;justify-content:center;padding:8px 0 6px;}
+.board{
+  position:relative;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#2b1c26,#190f16);
+  border:2px solid var(--copper);border-radius:8px;
+  padding:16px 20px 14px;text-align:center;
+  box-shadow:0 8px 24px var(--shadow);
+}
+.board h1{
+  margin:0;font-family:'Fraunces',serif;font-weight:700;font-style:italic;
+  font-size:1.9rem;letter-spacing:.01em;color:var(--amber-bright);
+}
+.board .subtitle{
+  margin:5px 0 0;font-size:.72rem;letter-spacing:.06em;color:var(--cream-dim);
+  text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Pour progress ---------- */
+.pour-wrap{margin:16px auto 4px;max-width:520px;padding:0 4px;}
+.pour-track{
+  position:relative;height:20px;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#0c0a0e,#190f16);
+  border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+}
+.pour-fill{
+  height:100%;width:0%;
+  background:linear-gradient(180deg,var(--amber-bright),var(--copper));
+  transition:width .5s ease;position:relative;
+}
+.pour-fill::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.35);
+}
+.pour-label{
+  text-align:center;margin-top:6px;font-size:.68rem;letter-spacing:.05em;
+  color:var(--cream-dim);text-transform:uppercase;font-weight:600;
+}
+
+/* ---------- Section tabs ---------- */
+.section-tabs{display:flex;gap:6px;margin:16px 0 4px;flex-wrap:wrap;}
+.section-tab{
+  flex:1;min-width:105px;padding:9px 6px 8px;border-radius:8px;cursor:pointer;
+  background:var(--bg-2);border:2px solid transparent;color:var(--cream-dim);
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  transition:.15s;
+}
+.section-tab .icon{font-size:1.1rem;}
+.section-tab small{font-family:'Inter',sans-serif;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;font-weight:600;opacity:.8;}
+.section-tab.active{background:var(--cream);color:var(--ink);border-color:var(--tint,var(--amber));box-shadow:0 4px 12px var(--shadow);}
+.section-tab.active small{color:var(--ink-soft);}
+.section-tab:not(.active):hover{background:#382530;color:var(--cream);}
+
+/* ---------- Tabs (top-level) ---------- */
+.tabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap;}
+.tab{
+  flex:1;min-width:100px;
+  background:var(--bg-2);color:var(--cream-dim);
+  border:1px solid rgba(138,33,64,.3);border-bottom:none;
+  border-radius:8px 8px 0 0;
+  padding:9px 8px 8px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.92rem;
+  transition:.15s;position:relative;top:2px;
+}
+.tab small{display:block;font-family:'Inter',sans-serif;font-size:.56rem;letter-spacing:.08em;color:var(--cream-dim);opacity:.7;text-transform:uppercase;margin-top:2px;font-weight:600;}
+.tab.active{
+  background:var(--cream);color:var(--ink);top:0;
+  border-color:var(--amber);box-shadow:0 -3px 8px rgba(0,0,0,.3);
+}
+.tab.active small{color:var(--ink-soft);opacity:.85;}
+.tab:not(.active):hover{background:#382530;color:var(--cream);}
+
+main{background:var(--bg-1);border:1px solid rgba(138,33,64,.25);border-radius:0 10px 10px 10px;padding:20px 16px 26px;box-shadow:0 8px 24px var(--shadow);}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ---------- Study session bar ---------- */
+.session-bar{
+  display:flex;justify-content:center;gap:14px;margin-bottom:16px;
+  font-size:.75rem;letter-spacing:.04em;font-weight:600;
+  color:var(--amber-bright);text-transform:uppercase;
+}
+.session-bar .dot{opacity:.5;}
+
+/* ---------- Coaster card ---------- */
+.card-scene{perspective:1600px;max-width:420px;margin:0 auto;}
+.card{
+  position:relative;min-height:320px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  cursor:pointer;
+}
+.card.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;overflow:hidden;}
+.card-face.front{
+  background:radial-gradient(circle at 50% 40%, #331f2b, #170d13 75%);
+  border:3px solid var(--tint,var(--copper));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px var(--shadow);text-align:center;padding:20px;
+}
+.front-icon{font-size:2.6rem;margin-bottom:10px;}
+.front-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.55rem;line-height:1.15;color:var(--amber-bright);}
+.front-cat{margin-top:12px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-dim);opacity:.7;font-weight:700;}
+.card-id{position:absolute;top:12px;right:16px;font-size:.6rem;color:var(--cream-dim);opacity:.5;font-weight:600;}
+.card-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-dim);opacity:.55;font-weight:600;}
+
+.card-face.back{
+  transform:rotateY(180deg);
+  background:
+    linear-gradient(90deg, transparent 0 0, transparent 100%),
+    repeating-linear-gradient(180deg, transparent 0 6px, rgba(0,0,0,.03) 6px 7px),
+    linear-gradient(160deg,var(--cream-alt),var(--cream) 70%);
+  border:1px solid #c9a45a;
+  box-shadow:0 14px 30px var(--shadow);
+  padding:16px 18px 14px;color:var(--ink);overflow-y:auto;
+}
+.back-name{font-family:'Fraunces',serif;font-weight:900;font-size:1.2rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed var(--rule);}
+.back-row{margin-bottom:8px;}
+.back-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);font-weight:700;display:block;margin-bottom:1px;}
+.back-value{font-size:.88rem;font-weight:500;}
+.back-ingredients{
+  margin:8px 0;padding:10px 12px;background:rgba(138,33,64,.08);border-radius:6px;
+  font-family:'Courier Prime',monospace;font-size:.82rem;line-height:1.6;
+}
+.back-ingredients div{border-bottom:1px dotted rgba(36,22,32,.15);padding-bottom:2px;margin-bottom:2px;}
+.back-ingredients div:last-child{border-bottom:none;margin-bottom:0;}
+.back-profile{font-size:.87rem;line-height:1.42;margin:8px 0 0;font-style:italic;color:var(--ink-soft);}
+
+/* ---------- Rating buttons ---------- */
+.rating-row{display:flex;gap:8px;max-width:460px;margin:18px auto 0;}
+.stamp{
+  flex:1;padding:10px 4px 8px;border-radius:6px;cursor:pointer;
+  font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;
+  border:2px solid;background:transparent;color:var(--cream);
+  transition:transform .08s ease, box-shadow .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.stamp small{font-family:'Inter',sans-serif;font-size:.56rem;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:600;}
+.stamp em{font-style:normal;font-family:'Inter',sans-serif;font-size:.6rem;opacity:.65;margin-top:2px;}
+.stamp:active{transform:scale(.93);}
+.stamp.again{border-color:#c25c5c;color:#e08080;}
+.stamp.hard{border-color:var(--copper);color:var(--copper-bright);}
+.stamp.good{border-color:#3f8f76;color:#5cc4a9;}
+.stamp.easy{border-color:var(--amber-bright);background:rgba(201,164,90,.12);color:var(--amber-bright);}
+.stamp:hover{box-shadow:0 0 0 3px rgba(201,164,90,.15);}
+
+.empty-state{text-align:center;padding:50px 10px;max-width:420px;margin:0 auto;}
+.empty-state h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.2rem;color:var(--amber-bright);margin-bottom:8px;}
+.empty-state p{color:var(--cream-dim);font-size:.92rem;line-height:1.5;}
+
+/* ---------- Browse ---------- */
+.browse-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.search-box{
+  width:100%;padding:9px 12px;border-radius:6px;border:1px solid rgba(138,33,64,.4);
+  background:var(--bg-2);color:var(--cream);font-family:'Inter',sans-serif;font-size:.95rem;
+}
+.search-box::placeholder{color:var(--cream-dim);}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:5px 11px;border-radius:20px;border:1px solid rgba(138,33,64,.4);
+  background:transparent;color:var(--cream-dim);font-size:.72rem;cursor:pointer;
+  font-family:'Inter',sans-serif;letter-spacing:.02em;font-weight:600;
+}
+.chip.active{background:var(--amber);border-color:var(--amber);color:#241206;}
+
+.author-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.author-row{
+  background:var(--bg-2);border:1px solid rgba(138,33,64,.2);border-radius:6px;
+  padding:10px 12px;cursor:pointer;
+}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.row-name{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--cream);}
+.row-meta{font-size:.76rem;color:var(--amber-bright);margin-top:3px;font-weight:600;}
+.row-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,33,64,.25);font-size:.86rem;line-height:1.45;color:var(--cream-dim);}
+.author-row.open .row-detail{display:block;}
+.row-ingredients{margin:6px 0 0;font-family:'Courier Prime',monospace;font-size:.78rem;color:var(--amber-bright);}
+.no-results{text-align:center;color:var(--cream-dim);padding:30px 10px;font-style:italic;}
+
+/* ---------- Stats ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.stat-card{
+  background:var(--cream);color:var(--ink);border-radius:6px;padding:14px 12px;text-align:center;
+  border:1px solid #c9a45a;box-shadow:0 6px 14px var(--shadow);
+}
+.stat-num{font-family:'Fraunces',serif;font-weight:900;font-size:1.7rem;color:var(--copper);}
+.stat-label{font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;font-weight:700;}
+.stats-by-section{margin-top:18px;}
+.stats-by-section h4{font-family:'Fraunces',serif;font-weight:700;letter-spacing:.02em;color:var(--amber-bright);font-size:1.05rem;margin-bottom:8px;}
+.section-stat-row{display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;font-size:.85rem;}
+.section-stat-row span.label{color:var(--cream-dim);}
+.section-stat-row span.value{color:var(--amber-bright);font-weight:700;}
+
+/* ---------- Settings ---------- */
+.settings-row{margin-bottom:20px;}
+.settings-row label{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:6px;font-weight:700;}
+.settings-row input[type=number]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid rgba(138,33,64,.4);
+  background:var(--bg-2);color:var(--cream);font-size:1rem;font-family:'Inter',sans-serif;
+}
+.limit-grid{display:flex;flex-wrap:wrap;gap:14px;}
+.limit-item{display:flex;flex-direction:column;gap:4px;}
+.limit-item span{font-size:.68rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.settings-hint{font-size:.8rem;color:var(--cream-dim);margin-top:6px;max-width:460px;line-height:1.4;}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid #c25c5c;background:transparent;
+  color:#e08080;font-family:'Fraunces',serif;font-weight:700;cursor:pointer;font-size:.9rem;
+}
+.btn:hover{background:rgba(194,92,92,.15);}
+.confirm-box{
+  display:none;margin-top:10px;padding:12px;border:1px solid #c25c5c;border-radius:6px;
+  background:rgba(194,92,92,.1);
+}
+.confirm-box.show{display:block;}
+.confirm-box p{margin:0 0 10px;font-size:.86rem;color:var(--cream);}
+.confirm-actions{display:flex;gap:8px;}
+.confirm-actions .btn.danger{border-color:#c25c5c;color:#fff;background:#8a3d3d;}
+
+footer.footnote{
+  text-align:center;color:var(--cream-dim);font-size:.72rem;opacity:.65;
+  max-width:540px;margin:22px auto 0;line-height:1.55;
+}
+
+@media (max-width:480px){
+  .board h1{font-size:1.5rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .tab{font-size:.8rem;padding:8px 6px 7px;}
+  .section-tab{font-size:.75rem;min-width:0;}
+  .rating-row{gap:5px;}
+  .stamp{font-size:.7rem;padding:9px 2px 7px;}
+  .card-face.back{padding:12px 14px 12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card,.pour-fill{transition:none !important;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="shared/supabase-config.js"></script>
+<script src="shared/auth.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="board">
+      <h1>The Wine Cellar</h1>
+      <p class="subtitle">Varietals of the world · glass by glass</p>
+    </div>
+  </div>
+
+  <div class="pour-wrap">
+    <div class="pour-track">
+      <div class="pour-fill" id="pourFill"></div>
+    </div>
+    <div class="pour-label" id="pourLabel">0 / 5 new today</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="study">Taste<small>study</small></button>
+    <button class="tab" data-tab="browse">Cellar<small>browse</small></button>
+    <button class="tab" data-tab="stats">Stats<small>stats</small></button>
+    <button class="tab" data-tab="settings">Settings<small>settings</small></button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="panel-study">
+      <div class="section-tabs" id="sectionTabs"></div>
+
+      <div class="session-bar" style="margin-top:16px;">
+        <span id="newCountLabel">New: 0</span>
+        <span class="dot">·</span>
+        <span id="dueCountLabel">Reviews due: 0</span>
+      </div>
+
+      <div id="studyArea">
+        <div class="card-scene">
+          <div class="card" id="card">
+            <div class="card-face front" id="cardFront">
+              <div class="card-id" id="cardIdFront"></div>
+              <div class="front-icon" id="frontIcon">🍷</div>
+              <p class="front-name" id="frontName">—</p>
+              <p class="front-cat" id="frontCat">—</p>
+              <p class="card-hint">Tap to reveal</p>
+            </div>
+            <div class="card-face back" id="cardBack">
+              <p class="back-name" id="backName">—</p>
+              <div class="back-row">
+                <span class="back-label">Style</span>
+                <span class="back-value" id="backStyle">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Body</span>
+                <span class="back-value" id="backBody">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Classic origin</span>
+                <span class="back-value" id="backOrigin">—</span>
+              </div>
+              <div class="back-row">
+                <span class="back-label">Pairs with</span>
+                <span class="back-value" id="backPairing">—</span>
+              </div>
+              <span class="back-label">Tasting notes</span>
+              <div class="back-ingredients" id="backNotes"></div>
+              <p class="back-profile" id="backProfile">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rating-row" id="ratingRow">
+          <button class="stamp again" data-rating="again">Again<small>again</small><em id="prevAgain">soon</em></button>
+          <button class="stamp hard" data-rating="hard">Hard<small>hard</small><em id="prevHard"></em></button>
+          <button class="stamp good" data-rating="good">Good<small>good</small><em id="prevGood"></em></button>
+          <button class="stamp easy" data-rating="easy">Easy<small>easy</small><em id="prevEasy"></em></button>
+        </div>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>Cellar's closed for today</h3>
+        <p>Nothing left to taste in this section right now. Switch sections above, come back tomorrow for new cards, or visit <strong>Cellar</strong> to browse the full list at your own pace.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-browse">
+      <div class="browse-controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search by name, region, or tasting note…">
+        <div class="chip-row" id="categoryChips"></div>
+      </div>
+      <div class="author-list" id="authorList"></div>
+    </section>
+
+    <section class="panel" id="panel-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Wines learned</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total in the cellar</div></div>
+        <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-label">Current streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statLongest">0</div><div class="stat-label">Longest streak</div></div>
+        <div class="stat-card"><div class="stat-num" id="statReviews">0</div><div class="stat-label">Total reviews</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRetention">—</div><div class="stat-label">Retention rate</div></div>
+      </div>
+      <div class="stats-by-section" id="statsBySection">
+        <h4>By section</h4>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="settings-row">
+        <label>Daily new-card limit, per section</label>
+        <div class="limit-grid" id="limitGrid"></div>
+        <p class="settings-hint">Each section tracks its own daily quota, so working through White wines won't eat into your Red wine allowance (or vice versa).</p>
+      </div>
+      <div class="settings-row">
+        <label>Reset progress</label>
+        <button class="btn" id="resetBtn">Reset all progress</button>
+        <div class="confirm-box" id="confirmBox">
+          <p>This clears every card's history, your streak, and stats across both sections. This can't be undone. Are you sure?</p>
+          <div class="confirm-actions">
+            <button class="btn danger" id="confirmYes">Yes, reset everything</button>
+            <button class="btn" id="confirmNo">Cancel</button>
+          </div>
+        </div>
+        <p class="settings-hint">Total wines currently in the cellar: <strong id="catalogSize">0</strong>, across White and Red.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footnote">
+    Origins, styles, and tasting notes are general summaries meant as a study aid — actual character varies enormously by producer, region, and vintage, so treat these as a starting point rather than a single authoritative reference. Progress is saved automatically on this device, and syncs to your account across devices if you sign in (top right).
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA — Popular white and red wine varietals of the world
+   ========================================================= */
+const CATEGORIES = {
+  white: {name:"White Wine", short:"White", icon:"🥂", tint:"var(--tint-white)"},
+  red:   {name:"Red Wine", short:"Red", icon:"🍷", tint:"var(--tint-red)"}
+};
+
+const WINES = [
+/* ---------- WHITE WINE (16) ---------- */
+{id:'w01',cat:'white',n:`Chardonnay`,origin:`Burgundy, France`,body:`Medium to full-bodied`,notes:[`Green apple`,`Butter`,`Vanilla (if oaked)`],pair:`Roast chicken, buttery pasta, lobster`,p:`The world's most planted white grape, ranging from lean and steely (Chablis) to rich and buttery (California) depending on oak and malolactic fermentation.`},
+{id:'w02',cat:'white',n:`Sauvignon Blanc`,origin:`Loire Valley, France & Marlborough, New Zealand`,body:`Light to medium-bodied`,notes:[`Gooseberry`,`Grapefruit`,`Fresh-cut grass`],pair:`Goat cheese, seafood, green salads`,p:`Known for zesty, high acidity; New Zealand's Marlborough region built its global reputation on an intensely aromatic style of this grape.`},
+{id:'w03',cat:'white',n:`Riesling`,origin:`Mosel & Rheingau, Germany`,body:`Light to medium (dry to sweet)`,notes:[`Green apple`,`Lime`,`Petrol (with age)`],pair:`Spicy Asian food, pork, smoked fish`,p:`One of the few grapes equally prized bone-dry and lusciously sweet, and among the longest-aging white wines in the world.`},
+{id:'w04',cat:'white',n:`Pinot Grigio / Pinot Gris`,origin:`Veneto & Friuli, Italy / Alsace, France`,body:`Light-bodied`,notes:[`Pear`,`Lemon`,`Almond`],pair:`Light seafood, salads, appetizers`,p:`Same grape, two personalities — crisp and neutral as Italian Pinot Grigio, richer and spicier as Alsatian Pinot Gris.`},
+{id:'w05',cat:'white',n:`Moscato (Muscat Blanc)`,origin:`Piedmont, Italy (Asti)`,body:`Light, low-alcohol, often sweet & lightly sparkling`,notes:[`Orange blossom`,`Peach`,`Honey`],pair:`Fruit desserts, spicy food`,p:`Moscato d'Asti is gently fizzy and low in alcohol (around 5%), making it a popular brunch and dessert pour.`},
+{id:'w06',cat:'white',n:`Gewürztraminer`,origin:`Alsace, France`,body:`Medium to full-bodied, aromatic`,notes:[`Lychee`,`Rose`,`Ginger spice`],pair:`Thai and Indian food, aromatic cheeses`,p:`One of the most instantly recognizable wines by smell alone, thanks to its intensely floral, spiced aroma.`},
+{id:'w07',cat:'white',n:`Chenin Blanc`,origin:`Loire Valley, France & Stellenbosch, South Africa`,body:`Light to full (dry to sweet, still or sparkling)`,notes:[`Apple`,`Honey`,`Wet wool`],pair:`Pork, curries, soft cheeses`,p:`One of the most versatile grapes in the world, made in styles ranging from bone-dry to the nobly sweet Vouvray.`},
+{id:'w08',cat:'white',n:`Viognier`,origin:`Condrieu, Rhône Valley, France`,body:`Full-bodied, aromatic`,notes:[`Peach`,`Apricot`,`Honeysuckle`],pair:`Lobster, creamy sauces, spiced dishes`,p:`Nearly went extinct in the 1960s before a handful of Condrieu growers revived it; now planted worldwide.`},
+{id:'w09',cat:'white',n:`Albariño`,origin:`Rías Baixas, Galicia, Spain`,body:`Light to medium-bodied`,notes:[`Lime`,`Peach`,`Saline minerality`],pair:`Shellfish, grilled fish, tapas`,p:`Its thick skins evolved to withstand Galicia's damp Atlantic climate, and it's practically the region's signature seafood wine.`},
+{id:'w10',cat:'white',n:`Sémillon`,origin:`Bordeaux, France & Hunter Valley, Australia`,body:`Medium to full-bodied`,notes:[`Fig`,`Honey`,`Lanolin`],pair:`Roast pork; sweet styles pair with blue cheese`,p:`Usually blended with Sauvignon Blanc in Bordeaux, but stands alone as a long-aging dry white in Australia's Hunter Valley, and is the backbone of sweet Sauternes.`},
+{id:'w11',cat:'white',n:`Grüner Veltliner`,origin:`Wachau, Austria`,body:`Light to medium-bodied`,notes:[`White pepper`,`Lime`,`Celery`],pair:`Schnitzel, asparagus, sushi`,p:`Austria's signature grape, prized for a distinctive peppery spice note found in few other whites.`},
+{id:'w12',cat:'white',n:`Torrontés`,origin:`Salta, Argentina`,body:`Light to medium-bodied, dry`,notes:[`Jasmine`,`Tangerine`,`Honeysuckle`],pair:`Ceviche, spicy empanadas`,p:`Intensely floral on the nose like Muscat, but finishes crisp and dry rather than sweet.`},
+{id:'w13',cat:'white',n:`Vermentino`,origin:`Sardinia & Liguria, Italy`,body:`Light to medium-bodied`,notes:[`Citrus`,`Herbs`,`Sea spray`],pair:`Grilled fish, pesto, light pasta`,p:`Thrives near the Mediterranean coast, producing bright, saline whites built for seafood.`},
+{id:'w14',cat:'white',n:`Verdejo`,origin:`Rueda, Spain`,body:`Light to medium-bodied`,notes:[`Fennel`,`Grapefruit`,`Fresh herbs`],pair:`Seafood tapas, salads`,p:`Spain's answer to Sauvignon Blanc, grown almost exclusively around the town of Rueda.`},
+{id:'w15',cat:'white',n:`Trebbiano (Ugni Blanc)`,origin:`Central Italy / Cognac region, France`,body:`Light-bodied, high acid, neutral`,notes:[`Lemon`,`Green apple`],pair:`Light antipasti, simple seafood`,p:`One of the most widely planted grapes on Earth — mostly for everyday Italian whites, but also the base wine distilled into both Cognac and Armagnac.`},
+{id:'w16',cat:'white',n:`Fiano`,origin:`Campania, Italy (Avellino)`,body:`Medium-bodied`,notes:[`Honey`,`Hazelnut`,`Baked apple`],pair:`Shellfish, roasted vegetables`,p:`An ancient grape grown in Roman times and revived in the 20th century, prized for its nutty richness despite a lighter alcohol level.`},
+
+/* ---------- RED WINE (16) ---------- */
+{id:'r01',cat:'red',n:`Cabernet Sauvignon`,origin:`Bordeaux, France & Napa Valley, USA`,body:`Full-bodied, high tannin`,notes:[`Blackcurrant`,`Cedar`,`Green pepper`],pair:`Steak, lamb, aged cheddar`,p:`The world's most planted red grape, a natural cross of Cabernet Franc and Sauvignon Blanc discovered in 17th-century France.`},
+{id:'r02',cat:'red',n:`Merlot`,origin:`Bordeaux, France (Right Bank)`,body:`Medium to full-bodied, softer tannin`,notes:[`Plum`,`Black cherry`,`Cocoa`],pair:`Roast chicken, tomato pasta, mild cheeses`,p:`Often blended with Cabernet Sauvignon to soften its firm tannins, and forms the backbone of Bordeaux's famed Château Pétrus.`},
+{id:'r03',cat:'red',n:`Pinot Noir`,origin:`Burgundy, France & Willamette Valley, USA`,body:`Light to medium-bodied, delicate tannin`,notes:[`Cherry`,`Raspberry`,`Forest floor`],pair:`Salmon, duck, mushroom dishes`,p:`Famously thin-skinned and finicky to grow, but capable of producing some of the most sought-after and expensive wines in the world.`},
+{id:'r04',cat:'red',n:`Syrah / Shiraz`,origin:`Rhône Valley, France & Barossa Valley, Australia`,body:`Full-bodied`,notes:[`Blackberry`,`Black pepper`,`Smoked meat`],pair:`Grilled red meat, barbecue, game`,p:`The same grape goes by two names — restrained and peppery as French Syrah, bold and jammy as Australian Shiraz.`},
+{id:'r05',cat:'red',n:`Malbec`,origin:`Cahors, France (originally) & Mendoza, Argentina`,body:`Full-bodied`,notes:[`Plum`,`Blackberry`,`Cocoa`],pair:`Grilled steak, empanadas`,p:`A minor Bordeaux blending grape in France that became a national icon after taking root in Argentina's high-altitude Mendoza vineyards.`},
+{id:'r06',cat:'red',n:`Zinfandel`,origin:`California, USA (Primitivo in Italy)`,body:`Full-bodied, high alcohol`,notes:[`Blackberry jam`,`Black pepper`,`Baking spice`],pair:`Barbecue ribs, pizza, burgers`,p:`Genetically identical to southern Italy's Primitivo grape, though it became California's own signature red.`},
+{id:'r07',cat:'red',n:`Sangiovese`,origin:`Tuscany, Italy (Chianti, Brunello di Montalcino)`,body:`Medium to full-bodied, high acid`,notes:[`Sour cherry`,`Dried herbs`,`Leather`],pair:`Tomato-based pasta, pizza, grilled meats`,p:`Tuscany's defining red grape, responsible for both everyday Chianti and the prestigious, long-aging Brunello di Montalcino.`},
+{id:'r08',cat:'red',n:`Tempranillo`,origin:`Rioja & Ribera del Duero, Spain`,body:`Medium to full-bodied`,notes:[`Red plum`,`Tobacco`,`Vanilla (from oak)`],pair:`Roast lamb, chorizo, aged Manchego`,p:`Spain's signature red, traditionally aged for years in American oak barrels that give it its classic vanilla-and-leather character.`},
+{id:'r09',cat:'red',n:`Grenache / Garnacha`,origin:`Southern Rhône, France & Priorat, Spain`,body:`Medium to full-bodied, high alcohol`,notes:[`Strawberry`,`White pepper`,`Dried fig`],pair:`Lamb stew, roasted vegetables`,p:`Rarely bottled alone in France, where it's the backbone of Châteauneuf-du-Pape blends alongside Syrah and Mourvèdre (the "GSM" blend).`},
+{id:'r10',cat:'red',n:`Nebbiolo`,origin:`Piedmont, Italy (Barolo, Barbaresco)`,body:`Full-bodied, very high tannin & acid`,notes:[`Rose petal`,`Tar`,`Dried cherry`],pair:`Truffle dishes, braised meats, aged cheeses`,p:`Produces Barolo, nicknamed "the king of wines," known for pale color but formidable tannin that can take decades to soften.`},
+{id:'r11',cat:'red',n:`Pinotage`,origin:`Stellenbosch, South Africa`,body:`Medium to full-bodied`,notes:[`Smoked meat`,`Dark plum`,`Earthy`],pair:`Braai (South African barbecue), game meats`,p:`South Africa's own grape, bred in 1925 by crossing Pinot Noir with Cinsault.`},
+{id:'r12',cat:'red',n:`Carménère`,origin:`Colchagua Valley, Chile`,body:`Medium to full-bodied`,notes:[`Green bell pepper`,`Blackberry`,`Smoke`],pair:`Grilled meats, stews`,p:`Once a classic Bordeaux grape thought extinct after the phylloxera epidemic, until it was rediscovered thriving in Chile in the 1990s, misidentified as Merlot for decades.`},
+{id:'r13',cat:'red',n:`Barbera`,origin:`Piedmont, Italy`,body:`Medium-bodied, high acid, low tannin`,notes:[`Red cherry`,`Blackberry`,`Low bitterness`],pair:`Pizza, cured meats, tomato dishes`,p:`Piedmont's everyday red, prized for bright acidity that stands up well to rich, tomato-based food.`},
+{id:'r14',cat:'red',n:`Gamay`,origin:`Beaujolais, France`,body:`Light-bodied, low tannin`,notes:[`Banana`,`Red berries`,`Bubblegum (in Nouveau)`],pair:`Charcuterie, roast chicken, light appetizers`,p:`The grape behind Beaujolais Nouveau, famously released just weeks after harvest each November.`},
+{id:'r15',cat:'red',n:`Cabernet Franc`,origin:`Loire Valley, France (Chinon)`,body:`Medium-bodied`,notes:[`Raspberry`,`Bell pepper`,`Graphite`],pair:`Roast pork, herbed dishes`,p:`A parent grape (with Sauvignon Blanc) of Cabernet Sauvignon, but on its own makes lighter, herbaceous reds in the Loire Valley.`},
+{id:'r16',cat:'red',n:`Montepulciano`,origin:`Abruzzo, Italy`,body:`Medium to full-bodied, soft tannin`,notes:[`Dark plum`,`Blackberry`,`Earthy spice`],pair:`Grilled sausages, hearty pasta`,p:`An easy-drinking, affordable Italian red often confused with the Tuscan town of the same name, which actually grows Sangiovese.`}
+];
+
+/* =========================================================
+   STORAGE — AuthStorage (shared/auth.js) handles this: local
+   browser storage for guests, plus account sync when signed in.
+   ========================================================= */
+const PROGRESS_KEY = 'wine-cellar-progress';
+let state = null;
+
+function defaultState(){
+  return {
+    srs:{},
+    daily:{ white:{date:null,newDone:0}, red:{date:null,newDone:0} },
+    streak:{lastDate:null,current:0,longest:0,totalReviews:0,totalCorrect:0},
+    settings:{ dailyLimit:{ white:8, red:8 } }
+  };
+}
+
+function mergeDefaults(parsed){
+  const def = defaultState();
+  const merged = Object.assign({}, def, parsed);
+  merged.srs = parsed.srs || {};
+  merged.daily = Object.assign({}, def.daily, parsed.daily||{});
+  Object.keys(def.daily).forEach(k=>{ merged.daily[k] = Object.assign({date:null,newDone:0}, (parsed.daily||{})[k]||{}); });
+  merged.streak = Object.assign({}, def.streak, parsed.streak||{});
+  merged.settings = { dailyLimit: Object.assign({}, def.settings.dailyLimit, (parsed.settings||{}).dailyLimit||{}) };
+  return merged;
+}
+
+async function loadState(){
+  try{
+    const raw = await AuthStorage.get(PROGRESS_KEY);
+    if(raw) return mergeDefaults(JSON.parse(raw));
+  }catch(e){ console.error('Could not load progress:', e); }
+  return defaultState();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{ await AuthStorage.set(PROGRESS_KEY, json); }
+  catch(e){ console.error('Could not save progress anywhere:', e); }
+}
+
+/* =========================================================
+   DATE HELPERS
+   ========================================================= */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function addDays(dateStr, days){
+  const d = dateStr ? new Date(dateStr+'T00:00:00') : new Date();
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function yesterdayOf(dateStr){ return addDays(dateStr,-1); }
+
+/* =========================================================
+   SESSION / SRS ENGINE (per active category section)
+   ========================================================= */
+let queue = [];
+let currentItem = null;
+let activeCategory = 'white';
+
+const winesById = {};
+WINES.forEach(w=>winesById[w.id]=w);
+const winesByCategory = {};
+Object.keys(CATEGORIES).forEach(k=>{ winesByCategory[k] = WINES.filter(w=>w.cat===k); });
+
+function ensureDailyReset(catKey){
+  const t = todayStr();
+  const d = state.daily[catKey];
+  if(d.date !== t){ d.date = t; d.newDone = 0; }
+}
+
+function buildQueue(catKey){
+  ensureDailyReset(catKey);
+  const today = todayStr();
+  const pool = winesByCategory[catKey];
+  const dueReviews = pool.filter(w=>{
+    const s = state.srs[w.id];
+    return s && s.reps>0 && s.due && s.due<=today;
+  }).sort((a,b)=> (state.srs[a.id].due).localeCompare(state.srs[b.id]?.due||''));
+  const remainingSlots = Math.max(0, state.settings.dailyLimit[catKey] - state.daily[catKey].newDone);
+  const newCandidates = pool.filter(w=>!state.srs[w.id]);
+  for(let i=newCandidates.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [newCandidates[i],newCandidates[j]] = [newCandidates[j],newCandidates[i]];
+  }
+  const newToAdd = newCandidates.slice(0, remainingSlots);
+  const combined = [];
+  dueReviews.forEach(w=>combined.push({wineId:w.id,isNew:false}));
+  newToAdd.forEach(w=>combined.push({wineId:w.id,isNew:true}));
+  return combined;
+}
+
+function updateStreak(){
+  const today = todayStr();
+  if(state.streak.lastDate !== today){
+    if(state.streak.lastDate === yesterdayOf(today)) state.streak.current += 1;
+    else state.streak.current = 1;
+    state.streak.lastDate = today;
+    state.streak.longest = Math.max(state.streak.longest, state.streak.current);
+  }
+}
+
+function previewIntervals(wineId){
+  const s = state.srs[wineId] || {ease:2.5, interval:0, reps:0};
+  const previews = { again:'soon' };
+  const hardInt = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+  previews.hard = fmtDays(hardInt);
+  let goodInt;
+  if(s.reps===0) goodInt = 1; else if(s.reps===1) goodInt = 6; else goodInt = Math.max(1,Math.round(s.interval*s.ease));
+  previews.good = fmtDays(goodInt);
+  const easyInt = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+  previews.easy = fmtDays(easyInt);
+  return previews;
+}
+function fmtDays(n){
+  if(n<1) return '<1d';
+  if(n===1) return '1d';
+  if(n<30) return n+'d';
+  if(n<365) return Math.round(n/30)+'mo';
+  return Math.round(n/365)+'y';
+}
+
+function answer(rating){
+  if(!currentItem) return;
+  const wineId = currentItem.wineId;
+  const wasNew = currentItem.isNew && !state.srs[wineId];
+  let s = state.srs[wineId] || {ease:2.5, interval:0, reps:0, due:null};
+  const today = todayStr();
+
+  if(rating==='again'){
+    s.ease = Math.max(1.3, s.ease-0.2);
+    s.reps = 0; s.interval = 0; s.due = today;
+    queue.shift();
+    const insertPos = Math.min(queue.length, 3+Math.floor(Math.random()*3));
+    queue.splice(insertPos,0,currentItem);
+  } else {
+    if(rating==='hard'){
+      s.interval = s.reps===0 ? 1 : Math.max(1, Math.round(s.interval*1.2));
+      s.ease = Math.max(1.3, s.ease-0.15);
+    } else if(rating==='good'){
+      if(s.reps===0) s.interval = 1; else if(s.reps===1) s.interval = 6; else s.interval = Math.max(1,Math.round(s.interval*s.ease));
+    } else if(rating==='easy'){
+      s.interval = s.reps===0 ? 4 : Math.max(1,Math.round(s.interval*s.ease*1.3));
+      s.ease = s.ease+0.15;
+    }
+    s.reps += 1; s.due = addDays(today, s.interval);
+    queue.shift();
+  }
+  state.srs[wineId] = s;
+  if(wasNew) state.daily[activeCategory].newDone += 1;
+  state.streak.totalReviews += 1;
+  if(rating!=='again') state.streak.totalCorrect += 1;
+  updateStreak();
+  saveState();
+  renderPour();
+  renderCurrentCard();
+}
+
+/* =========================================================
+   RENDERING — Study panel
+   ========================================================= */
+function renderSectionTabs(){
+  const wrap = document.getElementById('sectionTabs');
+  wrap.innerHTML = '';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const btn = document.createElement('button');
+    btn.className = 'section-tab'+(key===activeCategory?' active':'');
+    btn.style.setProperty('--tint', meta.tint);
+    btn.innerHTML = '<span class="icon">'+meta.icon+'</span>'+meta.short+'<small>'+winesByCategory[key].length+' wines</small>';
+    btn.addEventListener('click', ()=>{
+      activeCategory = key;
+      queue = buildQueue(activeCategory);
+      renderSectionTabs();
+      renderPour();
+      renderCurrentCard();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderPour(){
+  ensureDailyReset(activeCategory);
+  const limit = state.settings.dailyLimit[activeCategory];
+  const done = Math.min(state.daily[activeCategory].newDone, limit);
+  const pct = limit>0 ? Math.round((done/limit)*100) : 0;
+  document.getElementById('pourFill').style.width = pct+'%';
+  document.getElementById('pourLabel').textContent = done+' / '+limit+' new today · '+CATEGORIES[activeCategory].short;
+}
+
+function renderCurrentCard(){
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+
+  if(queue.length===0){
+    document.getElementById('studyArea').style.display = 'none';
+    document.getElementById('emptyState').hidden = false;
+    updateSessionBar();
+    return;
+  }
+  document.getElementById('studyArea').style.display = '';
+  document.getElementById('emptyState').hidden = true;
+
+  currentItem = queue[0];
+  const w = winesById[currentItem.wineId];
+  const meta = CATEGORIES[w.cat];
+
+  document.getElementById('frontIcon').textContent = meta.icon;
+  document.getElementById('frontName').textContent = w.n;
+  document.getElementById('frontCat').textContent = meta.name;
+  document.getElementById('cardFront').style.setProperty('--tint', meta.tint);
+  document.getElementById('cardIdFront').textContent = w.id.toUpperCase();
+
+  document.getElementById('backName').textContent = w.n;
+  document.getElementById('backStyle').textContent = meta.name;
+  document.getElementById('backBody').textContent = w.body;
+  document.getElementById('backOrigin').textContent = w.origin;
+  document.getElementById('backPairing').textContent = w.pair;
+
+  const notesWrap = document.getElementById('backNotes');
+  notesWrap.innerHTML = '';
+  w.notes.forEach(line=>{
+    const div = document.createElement('div');
+    div.textContent = line;
+    notesWrap.appendChild(div);
+  });
+  document.getElementById('backProfile').textContent = w.p;
+
+  const previews = previewIntervals(w.id);
+  document.getElementById('prevAgain').textContent = previews.again;
+  document.getElementById('prevHard').textContent = previews.hard;
+  document.getElementById('prevGood').textContent = previews.good;
+  document.getElementById('prevEasy').textContent = previews.easy;
+
+  document.getElementById('ratingRow').style.visibility = 'hidden';
+  updateSessionBar();
+}
+
+function updateSessionBar(){
+  const newLeftInQueue = queue.filter(q=>q.isNew).length;
+  const dueLeftInQueue = queue.filter(q=>!q.isNew).length;
+  document.getElementById('newCountLabel').textContent = 'New: '+newLeftInQueue+' (of '+state.settings.dailyLimit[activeCategory]+'/day)';
+  document.getElementById('dueCountLabel').textContent = 'Reviews due: '+dueLeftInQueue;
+}
+
+function flipCard(){
+  const card = document.getElementById('card');
+  const willShow = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  document.getElementById('ratingRow').style.visibility = willShow ? 'visible' : 'hidden';
+}
+
+/* =========================================================
+   RENDERING — Browse panel
+   ========================================================= */
+let browseCategory = 'all';
+
+function initBrowseChips(){
+  const wrap = document.getElementById('categoryChips');
+  const options = [['all','All sections']].concat(Object.entries(CATEGORIES).map(([k,v])=>[k,v.icon+' '+v.name]));
+  options.forEach(([key,label])=>{
+    const btn = document.createElement('button');
+    btn.className = 'chip'+(key==='all'?' active':'');
+    btn.textContent = label;
+    btn.addEventListener('click', ()=>{
+      browseCategory = key;
+      document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      renderWineList();
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+function normalize(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+}
+
+function renderWineList(){
+  const listEl = document.getElementById('authorList');
+  const query = normalize(document.getElementById('searchBox').value.trim());
+  let list = WINES.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  if(browseCategory!=='all') list = list.filter(w=>w.cat===browseCategory);
+  if(query){
+    list = list.filter(w=>
+      normalize(w.n).includes(query) ||
+      normalize(w.origin).includes(query) ||
+      w.notes.some(t=>normalize(t).includes(query))
+    );
+  }
+  listEl.innerHTML = '';
+  if(list.length===0){
+    listEl.innerHTML = '<div class="no-results">No wines match that search.</div>';
+    return;
+  }
+  list.forEach(w=>{
+    const meta = CATEGORIES[w.cat];
+    const row = document.createElement('div');
+    row.className = 'author-row';
+    row.innerHTML =
+      '<div class="row-top">'+
+        '<span class="row-name">'+meta.icon+' '+w.n+'</span>'+
+      '</div>'+
+      '<div class="row-meta">'+meta.name+' · '+w.body+' · '+w.origin+'</div>'+
+      '<div class="row-detail">'+w.p+'<div class="row-ingredients">'+w.notes.join(' · ')+'</div></div>';
+    row.addEventListener('click', ()=> row.classList.toggle('open'));
+    listEl.appendChild(row);
+  });
+}
+
+/* =========================================================
+   RENDERING — Stats panel
+   ========================================================= */
+function renderStats(){
+  const learned = Object.keys(state.srs).length;
+  document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statTotal').textContent = WINES.length;
+  document.getElementById('statStreak').textContent = state.streak.current;
+  document.getElementById('statLongest').textContent = state.streak.longest;
+  document.getElementById('statReviews').textContent = state.streak.totalReviews;
+  const retention = state.streak.totalReviews>0 ? Math.round(100*state.streak.totalCorrect/state.streak.totalReviews)+'%' : '—';
+  document.getElementById('statRetention').textContent = retention;
+
+  const wrap = document.getElementById('statsBySection');
+  wrap.innerHTML = '<h4>By section</h4>';
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const total = winesByCategory[key].length;
+    const learnedInCat = winesByCategory[key].filter(w=>state.srs[w.id]).length;
+    const row = document.createElement('div');
+    row.className = 'section-stat-row';
+    row.innerHTML = '<span class="label">'+meta.icon+' '+meta.name+'</span><span class="value">'+learnedInCat+' / '+total+'</span>';
+    wrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   SETTINGS PANEL
+   ========================================================= */
+function initSettings(){
+  document.getElementById('catalogSize').textContent = WINES.length;
+  const grid = document.getElementById('limitGrid');
+  Object.entries(CATEGORIES).forEach(([key,meta])=>{
+    const item = document.createElement('div');
+    item.className = 'limit-item';
+    const span = document.createElement('span');
+    span.textContent = meta.icon+' '+meta.short;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = String(winesByCategory[key].length);
+    input.value = state.settings.dailyLimit[key];
+    input.addEventListener('change', ()=>{
+      let v = parseInt(input.value,10);
+      if(isNaN(v)||v<1) v = 1;
+      if(v>winesByCategory[key].length) v = winesByCategory[key].length;
+      input.value = v;
+      state.settings.dailyLimit[key] = v;
+      saveState();
+      if(key===activeCategory){
+        queue = buildQueue(activeCategory);
+        renderPour();
+        renderCurrentCard();
+      }
+    });
+    item.appendChild(span);
+    item.appendChild(input);
+    grid.appendChild(item);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.add('show');
+  });
+  document.getElementById('confirmNo').addEventListener('click', ()=>{
+    document.getElementById('confirmBox').classList.remove('show');
+  });
+  document.getElementById('confirmYes').addEventListener('click', async ()=>{
+    state = defaultState();
+    await saveState();
+    document.getElementById('confirmBox').classList.remove('show');
+    queue = buildQueue(activeCategory);
+    renderPour();
+    renderCurrentCard();
+    renderStats();
+    document.querySelectorAll('#limitGrid input').forEach((input,i)=>{
+      const key = Object.keys(CATEGORIES)[i];
+      input.value = state.settings.dailyLimit[key];
+    });
+  });
+}
+
+/* =========================================================
+   TOP-LEVEL TABS
+   ========================================================= */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+      if(tab.dataset.tab==='browse') renderWineList();
+      if(tab.dataset.tab==='stats') renderStats();
+    });
+  });
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+function initKeyboard(){
+  document.addEventListener('keydown', (e)=>{
+    if(!document.getElementById('panel-study').classList.contains('active')) return;
+    const card = document.getElementById('card');
+    if(e.code==='Space'){ e.preventDefault(); flipCard(); return; }
+    if(card.classList.contains('flipped')){
+      if(e.key==='1') answer('again');
+      if(e.key==='2') answer('hard');
+      if(e.key==='3') answer('good');
+      if(e.key==='4') answer('easy');
+    }
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+async function init(){
+  state = await loadState();
+  ensureDailyReset(activeCategory);
+
+  document.getElementById('card').addEventListener('click', flipCard);
+  document.querySelectorAll('.stamp').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const card = document.getElementById('card');
+      if(!card.classList.contains('flipped')) return;
+      answer(btn.dataset.rating);
+    });
+  });
+
+  document.getElementById('searchBox').addEventListener('input', renderWineList);
+
+  renderSectionTabs();
+  initBrowseChips();
+  initSettings();
+  initTabs();
+  initKeyboard();
+
+  queue = buildQueue(activeCategory);
+  renderPour();
+  renderCurrentCard();
+  renderStats();
+}
+
+init();
+</script>
+</body>
+</html>
